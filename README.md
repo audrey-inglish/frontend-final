@@ -1,5 +1,5 @@
 # Project Details
-## Summary Elevator Pitch
+## Summary (Elevator Pitch)
 Turn class notes into productive study sessions. Students upload their notes and/or topic lists, and the agent guides them through a study session with practice quizzes, flashcards, and evaluations of progress. The study materials and methods adapt based on user performance, emphasizing weak areas and continually quizzing until the agent has determined that a sufficient level of mastery has been reached.
 
 The user can review AI actions (like flashcard generation or grading decisions) and control when to move forward in their study flow.
