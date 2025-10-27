@@ -50,9 +50,11 @@ Working with pictures/pdfs.
 
 
 
-
+---
 ---
 ## Project Schedule
+
+[ Note: This schedule is subject to change. Depending on what Alex recommends, I may dedicate more time to planning up-front and shift all tasks accordingly. ]
 
 ### 1 - Oct 29: Basic Project Structure & Deployment
 Deploy a basic typescript "Hello World" app to Kubernetes. Tests and linting should automatically run in the pipeline.
