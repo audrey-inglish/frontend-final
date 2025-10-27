@@ -2,3 +2,5 @@ todo.md
 brainstorm.md
 projectplan.md
 planning/
+*.code-workspace
+settings.json

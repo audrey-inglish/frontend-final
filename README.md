@@ -9,7 +9,7 @@ Audrey Inglish (Solo)
 
 ## Rough List of Features
 - User uploads study materials (ideally, this would take multiple formats -- pdf, plain text, markdown).
-- AI parses notes and gathers a list of key concepts.
+- AI parses notes and gathers a list of key concepts. These concepts are saved to the course dashboard.
 - **Flashcard Mode:** AI generates a series of flashcards with questions/terms on the front and answers/definitions on the back. In the UI, the user can cycle through these, marking the ones they need more practice on.
 - **Quiz Mode:** AI generates a practice quiz for the user to work through. User can specify number of questions and question type. This practice quiz could be a form that the user can submit for instant feedback from the AI.
 - **Live Adaptive Study Mode:** Agent continually quizzes user, moving on to new topics when it decides sufficient mastery is reached on the current topic. When all topics are sufficiently studied, the AI returns a preparedness score. 
@@ -50,6 +50,299 @@ Working with pictures/pdfs.
 
 
 
+
+---
+## Project Schedule
+
+### 1 - Oct 29: Basic Project Structure & Deployment
+Deploy a basic typescript "Hello World" app to Kubernetes. Tests and linting should automatically run in the pipeline.
+
+#### Estimates:
+
+Rubric items:
+- Technology: CI/CD pipeline
+- Technology: tests run in pipeline, pipeline aborts if they fail
+- Technology: Developer type helping (typescript)
+
+Features:
+- Basic "Hello, World!" application deployed to kubernetes
+
+To-Dos & Subrequirements:
+- [ ] basic project setup (client, server, and test projects)
+- [ ] set up eslint
+- [ ] basic unit test (assert pass/fail) to test pipeline
+- [ ] linter runs in pipeline
+- [ ] unit tests run in pipeline
+- [ ] create Dockerfiles for client and server
+- [ ] set up development docker-compose with basic postgres database
+- [ ] create Kubernetes namespace and yaml files for deployments & services, ingress, and pvc
+- [ ] ssl - retrieve and save cert as kube secret for secure connection
+
+#### Delivered
+
+Rubric Items:
+
+
+Features:
+
+
+---
+
+### 2 - Nov 1: Authentication & Keycloak Configuration
+Implement full auth flow using OIDC and Keycloak.
+
+#### Estimates:
+
+Rubric items:
+- Technology: authentication and user account support
+- Technology: authorized pages and public pages
+
+Features:
+- [ ] User account creation and login
+- [ ] Home page scaffold
+
+To-Dos & Subrequirements:
+- [ ] create a keycloak client and user
+- [ ] set up react-oidc-client
+- [ ] use jwtVerify on the server side and route all api endpoints through auth middleware
+- [ ] create a basic homepage & navbar
+- [ ] implement auth flow (register, login, logout)
+- [ ] create basic routing (public vs. authorized pages)
+- [ ] work on mockups for basic UI and dashboard (?)
+  - [ ] pick fonts and color scheme
+
+#### Delivered
+
+Rubric Items:
+
+
+Features:
+
+---
+### 3 - Nov 5: Storage and State Management
+
+#### Estimates:
+
+Rubric items:
+- Technology: use local storage
+- Technology: Client side state stores (e.g. tanstack query or context)
+- Technology: Toasts / global notifications or alerts
+- Technology: Error handling (both on api requests and render errors)
+
+Features:
+- [ ] Persistent dashboards/courses per user
+- [ ] basic notes upload (plain text)
+- [ ] Smooth UI feedback for saving, errors, and loading
+- [ ] Global notifications for success/error messages
+
+To-Dos & Subrequirements:
+- [ ] create database schema for dashboards, notes, flashcards, quizzes, and user performance, accounting for multiple users
+- [ ] basic REST API endpoints (CRUD for dashboards and notes)
+- [ ] use TanStack Query for client-side state
+- [ ] have a basic apiFetch helper (custom or axios)
+- [ ] add localStorage caching for last-used dashboard (and session mode?)
+- [ ] global error boundary & API error handling
+- [ ] toast notifications for save success/failure (react-hot-toast)
+- [ ] test create/edit/delete dashboard flow
+
+#### Delivered
+
+Rubric Items:
+
+
+Features:
+
+
+---
+### 4 - Nov 8: Basic AI Integration
+#### Estimates:
+
+Rubric items:
+- Technology: Network Calls that read and write data
+
+Features:
+- [ ] AI integration - user can get a list of concepts from uploaded notes
+- [ ] spinners to indicate loading state
+
+To-Dos & Subrequirements:
+- [ ] connect to OpenAI completions endpoint
+- [ ] create /api/parseNotes route: send text, receive JSON concept list
+- [ ] display a generated list of concepts on the dashboard
+- [ ] add loading spinners & error toasts for request states
+- [ ] cache concept lists with TanStack Query
+- [ ] verify server error handling on failed responses
+- [ ] feedback for failed parsing of notes
+
+#### Delivered
+
+Rubric Items:
+- Project scope expansion
+- 3+ generic form input components
+- Network calls & error handling
+
+Features:
+- [ ] AI generates flashcards from parsed notes
+- [ ] Interactive flashcard study mode (UI)
+
+To-Dos & Subrequirements:
+- [ ] Extend generateStudyMaterials() for flashcard creation
+- [ ] Create Flashcard component (front/back flip)
+- [ ] Save flashcards per dashboard to DB
+- [ ] Add progress tracker and “mark for review” option
+- [ ] Create form inputs: TextInput, SelectInput, ToggleInput (optional requirement, may satisfy generic form input rubric req)
+  
+---
+### 5 - Nov 12: Quiz Mode
+#### Estimates:
+
+Rubric items:
+- Network calls & error handling
+- Project scope (LLM evaluation logic)
+
+Features:
+- [ ] AI creates quizzes and grades answers
+- [ ] Results summarized per topic
+- [ ] upload notes as pngs and pdfs
+
+To-Dos & Subrequirements:
+- [ ] basic form for quiz config -- choose question types & number of questions, then click "generate"
+- [ ] implement evaluateResponse() grading API
+- [ ] build Quiz component (multiple-choice + short answer)
+- [ ] Create “Quiz Results” page (scores, feedback, and explanations from AI)
+- [ ] store quiz results in DB
+
+#### Delivered
+
+Rubric Items:
+
+Features:
+
+---
+### 6 - Nov 15: Adaptive Study & Agentic Loop
+#### Estimates:
+
+Rubric items:
+- Project scope expansion
+- Professional, organized experience
+- Technology: 4+ generic layout components
+
+
+Features:
+- [ ] Live adaptive study session (AI-driven switching between quiz/flashcard)
+- [ ] Preparedness score with progress visualization
+
+To-Dos & Subrequirements:
+- [ ] Implement startStudySession() loop (autonomous switching logic)
+- [ ] Implement navigateToMode() to adjust UI dynamically
+
+#### Delivered
+
+Rubric Items:
+
+
+Features:
+
+---
+### 7 - Nov 19: Progress Visualization & AI Action History
+#### Estimates:
+
+Rubric items:
+- Technology: 10+ pages or views
+
+
+Features:
+- Preparedness score with progress visualization
+- User can see a log of AI reasoning & actions
+
+To-Dos & Subrequirements:
+- [ ] Build visual progress tracker (chart, bar, or ring progress indicator)
+- [ ] Log all AI actions to history for transparency (AI Action History page)
+- [ ] Add time-tracking and “take a break” notifications (?)
+- [ ] Test full end-to-end study session loop
+
+#### Delivered
+
+Rubric Items:
+
+
+Features:
+
+---
+### 8 - Nov 22: Mobile Responsiveness & UX Polish
+#### Estimates:
+
+Rubric items:
+- Experience: All experiences mobile friendly
+- Experience: 3 instances where elements reorder on smaller screens
+- Professional, organized, smooth experience
+
+Features:
+- Fully responsive layouts
+- Reordering behavior verified on 3 key pages (Dashboard, Flashcards, Quiz)
+  
+To-Dos & Subrequirements:
+- [ ] Add responsive breakpoints using Tailwind
+- [ ] Reorder card and column layouts for smaller screens
+- [ ] Optimize Flashcard and Quiz components for touch devices
+- [ ] Adjust spacing, typography, and scaling for mobile
+- [ ] Adjust colors/theming as necessary
+
+#### Delivered
+
+Rubric Items:
+
+
+Features:
+
+---
+### 9 - Nov 25: Testing & UI Adjustments
+#### Estimates:
+
+Rubric items:
+- Technology: Tests run in pipeline, pipeline aborts if they fail
+- Technology: Linting in pipeline
+- Technology: Error handling (both on api requests and render errors)
+- Professional, organized and smooth experience
+
+Features:
+- Verified smooth user flow (loading states, error handling for API and UI)
+
+To-Dos & Subrequirements:
+- [ ] run through full user flow on desktop, adjust UI as needed
+- [ ] responsive checks - run through full user flow on mobile, adjusting as needed
+- [ ] hunt for bugs
+
+
+#### Delivered
+
+Rubric Items:
+
+
+Features:
+
+---
+### 10 - Dec 3
+#### Estimates:
+
+Rubric items:
+- Professional, organized, and smooth experience
+- Project scope validated
+
+Features:
+- [ ] demo-ready version
+- [ ] polished UI/UX
+
+To-Dos & Subrequirements:
+- [ ] prep presentation
+- [ ] verify each rubric requirement is met
+- [ ] final submission
+
+#### Delivered
+
+Rubric Items:
+
+
+Features:
 
 
 
