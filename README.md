@@ -178,6 +178,16 @@ To-Dos & Subrequirements:
 #### Delivered
 
 Rubric Items:
+
+
+Features:
+
+  
+---
+### 5 - Nov 12: Flashcard Mode
+#### Estimates:
+
+Rubric items:
 - Project scope expansion
 - 3+ generic form input components
 - Network calls & error handling
@@ -192,9 +202,15 @@ To-Dos & Subrequirements:
 - [ ] Save flashcards per dashboard to DB
 - [ ] Add progress tracker and “mark for review” option
 - [ ] Create form inputs: TextInput, SelectInput, ToggleInput (optional requirement, may satisfy generic form input rubric req)
-  
+
+#### Delivered
+
+Rubric Items:
+
+Features:
+
 ---
-### 5 - Nov 12: Quiz Mode
+### 6 - Nov 15: Quiz Mode
 #### Estimates:
 
 Rubric items:
@@ -220,7 +236,7 @@ Rubric Items:
 Features:
 
 ---
-### 6 - Nov 15: Adaptive Study & Agentic Loop
+### 7 - Nov 19: Adaptive Study & Agentic Loop
 #### Estimates:
 
 Rubric items:
@@ -245,7 +261,7 @@ Rubric Items:
 Features:
 
 ---
-### 7 - Nov 19: Progress Visualization & AI Action History
+### 8 - Nov 22: Progress Visualization & AI Action History
 #### Estimates:
 
 Rubric items:
@@ -270,7 +286,7 @@ Rubric Items:
 Features:
 
 ---
-### 8 - Nov 22: Mobile Responsiveness & UX Polish
+### 9 - Nov 25: Mobile Responsiveness & UX Polish
 #### Estimates:
 
 Rubric items:
@@ -297,7 +313,7 @@ Rubric Items:
 Features:
 
 ---
-### 9 - Nov 25: Testing & UI Adjustments
+### 10 - Dec 3: Testing & UI Adjustments
 #### Estimates:
 
 Rubric items:
@@ -323,7 +339,7 @@ Rubric Items:
 Features:
 
 ---
-### 10 - Dec 3
+### Dec 6 - FINAL DEADLINE
 #### Estimates:
 
 Rubric items:
