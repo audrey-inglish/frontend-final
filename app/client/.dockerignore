@@ -1,0 +1,32 @@
+# Node / Vite client - ignore local deps, build outputs, secrets and editor metadata
+node_modules
+dist
+build
+.vite
+
+# Local env files (don't bake secrets into the image)
+.env
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# OS / editor metadata
+.DS_Store
+.vscode
+.idea
+
+# Coverage / caches
+coverage
+.cache
+
+# Git / misc
+.git
+.gitignore
+.dockerignore
+*.tgz

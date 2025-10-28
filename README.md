@@ -70,13 +70,13 @@ Features:
 - Basic "Hello, World!" application deployed to kubernetes
 
 To-Dos & Subrequirements:
-- [ ] basic project setup (client, server, and test projects with proper config files)
+- [X] basic project setup (client and server projects with proper config files)
 - [ ] set up eslint
 - [ ] basic unit test (assert pass/fail) to test pipeline
 - [ ] linter runs in pipeline
 - [ ] unit tests run in pipeline
-- [ ] create Dockerfiles for client and server
-- [ ] set up development docker-compose with basic postgres database
+- [X] create Dockerfiles for client and server
+- [X] set up development docker-compose with basic postgres database
 - [ ] create Kubernetes namespace and yaml files for deployments & services, ingress, and pvc
 - [ ] ssl - retrieve and save cert as kube secret for secure connection
 

@@ -1,0 +1,27 @@
+# Node server - ignore local deps, build artifacts, env files and editor metadata
+node_modules
+dist
+
+# Local env files (don't include secrets in the image)
+.env
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+pnpm-debug.log*
+*.log
+
+# OS / editor metadata
+.DS_Store
+.vscode
+.idea
+
+# Coverage / misc
+coverage
+.cache
+
+# Git / misc
+.git
+.gitignore
+.dockerignore
