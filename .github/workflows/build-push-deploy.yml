@@ -55,7 +55,7 @@ jobs:
             audreyinglish/frontend-final-server:${{ steps.meta.outputs.TAG }}
 
   deploy:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     needs: build-and-push
 
     steps:
