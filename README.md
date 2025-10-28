@@ -70,7 +70,7 @@ Features:
 - Basic "Hello, World!" application deployed to kubernetes
 
 To-Dos & Subrequirements:
-- [ ] basic project setup (client, server, and test projects)
+- [ ] basic project setup (client, server, and test projects with proper config files)
 - [ ] set up eslint
 - [ ] basic unit test (assert pass/fail) to test pipeline
 - [ ] linter runs in pipeline

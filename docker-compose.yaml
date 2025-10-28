@@ -1,0 +1,28 @@
+services:
+  server:
+    image: node:20-alpine
+    container_name: dev-server
+    working_dir: /app
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./app/server:/app
+      - /app/node_modules
+    command: sh -c "npm install -g pnpm && pnpm install && pnpm dev"
+    environment:
+      - NODE_ENV=development
+
+  client:
+    image: node:20-alpine
+    container_name: dev-client
+    working_dir: /app
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./app/client:/app
+      - /app/node_modules
+    command: sh -c "npm install -g pnpm && pnpm install && pnpm dev"
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - server

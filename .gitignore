@@ -1,6 +1,60 @@
+# Node dependencies
+**/node_modules/
+
+# pnpm store
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+out/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Runtime files
+.env
+.env.local
+.env.*.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE / editor
+.vscode/
+.idea/
+*.iml
+
+# TypeScript
+*.tsbuildinfo
+
+# Coverage
+coverage/
+coverage-final.json
+
+# Docker
+docker-compose.override.yml
+
+# Misc
+.sass-cache/
+.vagrant/
+# personal docs
 todo.md
 brainstorm.md
 projectplan.md
 planning/
 *.code-workspace
 settings.json
+
+
+
+
+node_modules
+dist
+build
+.env
+*.log
