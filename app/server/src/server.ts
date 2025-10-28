@@ -16,13 +16,12 @@ interface User {
   created_at: string;
 }
 
-// put this here to test linting
-const unusedVar = 42;
-
 // Users endpoint uses pg-promise `db` to read from the users table
 app.get("/api/users", async (_req, res) => {
   try {
-    const users = await db.any<User>(`SELECT id, username AS name, created_at FROM app_user ORDER BY id`);
+    const users = await db.any<User>(
+      `SELECT id, username AS name, created_at FROM app_user ORDER BY id`
+    );
     res.json({ users });
   } catch (err) {
     console.error("Failed to fetch users:", err);
