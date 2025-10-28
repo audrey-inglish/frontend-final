@@ -3,7 +3,7 @@ import globals from 'globals'
 import tseslint from 'typescript-eslint'
 import { globalIgnores } from 'eslint/config'
 
-export default tseslint([
+export default tseslint.config([
   globalIgnores(['dist']),
   {
     files: ['**/*.ts'],
