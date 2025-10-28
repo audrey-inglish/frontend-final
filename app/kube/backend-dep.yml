@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-dep
+  namespace: audrey-final
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: final-api
+  template:
+    metadata:
+      labels:
+        app: final-api
+    spec:
+      containers:
+        - name: final-api
+          image: audreyinglish/frontend-final-server:latest
+          ports:
+            - containerPort: 4000
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "4000"
+            - name: DATABASE_URL
+              value: "postgres://appuser:apppassword@database-svc:5432/appdb"
+            - name: KEYCLOAK_ISSUER
+              value: "https://auth-dev.snowse.io/realms/DevRealm"
+            - name: KEYCLOAK_AUDIENCE
+              value: "account"
+            - name: KEYCLOAK_CLIENT_ID
+              value: "audrey-chat"
+            - name: KEYCLOAK_JWKS_URI
+              value: "https://auth-dev.snowse.io/realms/DevRealm/protocol/openid-connect/certs"

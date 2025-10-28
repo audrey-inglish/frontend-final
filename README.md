@@ -71,7 +71,7 @@ Features:
 
 To-Dos & Subrequirements:
 - [X] basic project setup (client and server projects with proper config files)
-- [ ] set up eslint
+- [X] set up eslint
 - [ ] basic unit test (assert pass/fail) to test pipeline
 - [ ] linter runs in pipeline
 - [ ] unit tests run in pipeline

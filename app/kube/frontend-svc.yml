@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-svc
+  namespace: audrey-final
+spec:
+  type: LoadBalancer
+  selector:
+    app: final-web
+  ports:
+    - port: 80
+      targetPort: 80
