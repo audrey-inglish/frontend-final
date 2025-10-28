@@ -11,7 +11,8 @@
     "build:server": "tsc -p tsconfig.json",
   "run:prod": "node dist/server.js",
   "start": "node dist/server.js",
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint . --ext .ts",
+    "test": "vitest"
   },
   "keywords": [],
   "author": "",
@@ -31,7 +32,8 @@
     "nodemon": "^3.1.10",
     "tsx": "^3.12.7",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3",
+  "typescript": "^5.9.3",
+  "vitest": "^1.0.0",
     "@eslint/js": "^9.36.0",
     "eslint": "^9.36.0",
     "globals": "^16.4.0",
