@@ -16,6 +16,9 @@ interface User {
   created_at: string;
 }
 
+// put this here to test linting
+const unusedVar = 42;
+
 // Users endpoint uses pg-promise `db` to read from the users table
 app.get("/api/users", async (_req, res) => {
   try {
