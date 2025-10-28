@@ -39,6 +39,7 @@ jobs:
           context: ./app/client
           file: ./app/client/Dockerfile
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: |
             audreyinglish/frontend-final-web:latest
             audreyinglish/frontend-final-web:${{ steps.meta.outputs.TAG }}
@@ -81,9 +82,9 @@ jobs:
         run: |
           echo "Applying manifests to audrey-final namespace with TAG=$TAG"
           echo "Checking substituted YAML for frontend:"
-          cat kube/frontend-dep.yml | envsubst | grep image:
+          cat app/kube/frontend-dep.yml | envsubst | grep image:
 
-          for FILE in kube/*; do
+          for FILE in app/kube/*; do
             echo "Applying $FILE"
             cat $FILE | envsubst | kubectl apply -n audrey-final -f -
           done
