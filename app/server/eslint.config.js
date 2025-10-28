@@ -1,9 +1,9 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import tseslint from 'typescript-eslint'
-import { globalIgnores } from 'eslint/config'
+const js = require('@eslint/js')
+const globals = require('globals')
+const tseslint = require('typescript-eslint')
+const { globalIgnores } = require('eslint/config')
 
-export default tseslint.config([
+module.exports = tseslint.config([
   globalIgnores(['dist']),
   {
     files: ['**/*.ts'],
