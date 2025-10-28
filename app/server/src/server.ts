@@ -17,7 +17,7 @@ interface User {
 }
 
 // Users endpoint uses pg-promise `db` to read from the users table
-app.get("/api/users", async (_req, res) => {
+app.get("/api/users", async (req, res) => {
   try {
     const users = await db.any<User>(`SELECT id, username AS name, created_at FROM app_user ORDER BY id`);
     res.json({ users });
