@@ -77,7 +77,7 @@ To-Dos & Subrequirements:
 - [ ] unit tests run in pipeline
 - [X] create Dockerfiles for client and server
 - [X] set up development docker-compose with basic postgres database
-- [ ] create Kubernetes namespace and yaml files for deployments & services, ingress, and pvc
+- [X] create Kubernetes namespace and yaml files for deployments & services, ingress, and pvc
 - [ ] ssl - retrieve and save cert as kube secret for secure connection
 
 #### Delivered
