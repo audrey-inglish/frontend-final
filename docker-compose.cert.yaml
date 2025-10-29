@@ -11,8 +11,8 @@ services:
       - URL=audrey-final.duckdns.org
       - VALIDATION=dns
       - DNSPLUGIN=duckdns
-      - DUCKDNSTOKEN=22328cc-0372-417c-9507-559b0d601f93
-      - STAGING=true
+      - DUCKDNSTOKEN=f22328cc-0372-417c-9507-559b0d601f93
+      - STAGING=false
     volumes:
       - /home/aptalca/appdata/swag:/config
       - ./config:/config
