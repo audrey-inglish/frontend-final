@@ -39,6 +39,9 @@ coverage-final.json
 # Docker
 docker-compose.override.yml
 
+# swag container data (local bind mount)
+config/
+
 # Misc
 .sass-cache/
 .vagrant/
