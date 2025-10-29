@@ -15,7 +15,7 @@ services:
       - STAGING=true
     volumes:
       - /home/aptalca/appdata/swag:/config
-      - ./config:config
+      - ./config:/config
     ports:
       - 333:443
       - 90:80
