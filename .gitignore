@@ -61,3 +61,8 @@ dist
 build
 .env
 *.log
+app/kube/swag-tls-secret.yml
+app/kube/cert.crt
+app/kube/cert.key
+app/kube/fullchain.pem
+app/kube/privkey.pem
