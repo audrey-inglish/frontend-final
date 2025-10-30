@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "react-oidc-context";
 import "./App.css";
+import apiFetch, { setTokenProvider } from "./lib/apiFetch";
 
 interface User {
   id: number;
@@ -18,6 +19,7 @@ function App() {
   }
 
   const [message, setMessage] = useState<string>("");
+  const [adminMessage, setAdminMessage] = useState<string>("");
 
   useEffect(() => {
     fetch("/api/hello")
@@ -46,6 +48,28 @@ function App() {
         setUsers([]);
       });
   }, []);
+
+  const onCheckAdmin = () => {
+    apiFetch("/api/admin")
+      .then(async (res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        // server now returns plain text
+        return res.text();
+      })
+      .then((text) => {
+        setAdminMessage(text);
+      })
+      .catch((err) => {
+        console.error("Failed to check admin:", err);
+        setAdminMessage("");
+      });
+  };
+
+  // Provide apiFetch with the access token from react-oidc-context so
+  // Authorization: Bearer <token> is set on API requests.
+  useEffect(() => {
+    setTokenProvider(() => (auth.user?.access_token as string | undefined) ?? null);
+  }, [auth.user]);
 
   return (
     <>
@@ -76,6 +100,10 @@ function App() {
               >
                 Sign out
               </button>
+              <hr />
+              <button onClick={() => onCheckAdmin()} className="btn">Check Admin</button>
+              <div>Admin message: {adminMessage}</div>
+
             </div>
           )}
           {!auth.isAuthenticated && (

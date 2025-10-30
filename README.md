@@ -108,10 +108,10 @@ Features:
 To-Dos & Subrequirements:
 - [X] create a keycloak client and user
 - [X] set up react-oidc-context
-- [ ] use jwtVerify on the server side and route all api endpoints through auth middleware
+- [X] use jwtVerify on the server side and route all api endpoints through auth middleware
 - [ ] create a basic homepage & navbar
-- [ ] implement auth flow (register, login, logout)
-- [ ] create basic routing (public vs. authorized pages)
+- [X] implement auth flow (~~register,~~ login, logout) -- Q: Will we need "register"?
+- [X] create basic routing (public vs. authorized endpoints)
 - [ ] work on mockups for basic UI and dashboard (?)
   - [ ] pick fonts and color scheme
 

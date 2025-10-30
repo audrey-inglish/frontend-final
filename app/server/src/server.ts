@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { db } from "./db";
+import { authMiddleware } from "./auth";
 
 const app = express();
 app.use(cors());
@@ -16,6 +17,13 @@ interface User {
   created_at: string;
 }
 
+app.use("/api", (req, res, next) => {
+  if (req.path === "/" || req.path === "/health" || req.path === "/test") {
+    return next();
+  }
+  return authMiddleware(req, res, next);
+});
+
 // Users endpoint uses pg-promise `db` to read from the users table
 app.get("/api/users", async (_req, res) => {
   try {
@@ -27,6 +35,30 @@ app.get("/api/users", async (_req, res) => {
     console.error("Failed to fetch users:", err);
     res.status(500).json({ error: "Failed to fetch users" });
   }
+});
+
+app.get("/api/admin", async (req, res) => {
+  const user = (req as express.Request & { user?: { email?: string; roles?: unknown } }).user;
+
+  // If there's no authenticated user, respond with 401 and a plain text body
+  if (!user || !user.email) {
+    res.status(401).send("Unauthorized");
+    return;
+  }
+
+  // Normalize role names to lowercase for case-insensitive check
+  const roles: string[] = Array.isArray(user.roles)
+    ? user.roles.map((r: unknown) => String(r).toLowerCase())
+    : [];
+
+  const isAdmin = roles.some((r) => r === "admin");
+
+  // Always return a plain text string indicating admin status
+  if (isAdmin) {
+    return res.send("User is an admin");
+  }
+
+  return res.send("User is not an admin");
 });
 
 const PORT = process.env.PORT || 4000;
