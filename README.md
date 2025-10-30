@@ -102,9 +102,9 @@ Rubric items:
 - Technology: authorized pages and public pages
 
 Features:
-- [ ] User login
-- [ ] Authorized/protected endpoints
-- [ ] Home page scaffold
+- [X] User login
+- [X] Authorized/protected endpoints
+- [X] Home page scaffold
 
 To-Dos & Subrequirements:
 - [X] create a keycloak client and user
@@ -113,6 +113,7 @@ To-Dos & Subrequirements:
 - [X] create a basic homepage (not sure navbar is necessary yet)
 - [X] implement auth flow (~~register,~~ login, logout) -- Q: Will we need "register"?
 - [X] create basic routing (public vs. authorized endpoints)
+- [X] set up Tailwind
 - [X] work on mockups for basic UI and dashboard (?)
   - [X] pick fonts and color scheme
 
