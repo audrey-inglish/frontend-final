@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: final-api
-          image: audreyinglish/frontend-final-server:latest
+          image: audreyinglish/frontend-final-server:${TAG}
           ports:
             - containerPort: 4000
           env:

@@ -102,18 +102,19 @@ Rubric items:
 - Technology: authorized pages and public pages
 
 Features:
-- [ ] User account creation and login
+- [ ] User login
+- [ ] Authorized/protected endpoints
 - [ ] Home page scaffold
 
 To-Dos & Subrequirements:
 - [X] create a keycloak client and user
 - [X] set up react-oidc-context
 - [X] use jwtVerify on the server side and route all api endpoints through auth middleware
-- [ ] create a basic homepage & navbar
+- [X] create a basic homepage (not sure navbar is necessary yet)
 - [X] implement auth flow (~~register,~~ login, logout) -- Q: Will we need "register"?
 - [X] create basic routing (public vs. authorized endpoints)
-- [ ] work on mockups for basic UI and dashboard (?)
-  - [ ] pick fonts and color scheme
+- [X] work on mockups for basic UI and dashboard (?)
+  - [X] pick fonts and color scheme
 
 #### Delivered
 
