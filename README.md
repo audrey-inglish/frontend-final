@@ -106,8 +106,8 @@ Features:
 - [ ] Home page scaffold
 
 To-Dos & Subrequirements:
-- [ ] create a keycloak client and user
-- [ ] set up react-oidc-client
+- [X] create a keycloak client and user
+- [X] set up react-oidc-context
 - [ ] use jwtVerify on the server side and route all api endpoints through auth middleware
 - [ ] create a basic homepage & navbar
 - [ ] implement auth flow (register, login, logout)

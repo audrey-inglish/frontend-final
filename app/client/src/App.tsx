@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
-import './App.css'
+import { useEffect, useState } from "react";
+import { useAuth } from "react-oidc-context";
+import "./App.css";
 
 interface User {
   id: number;
@@ -8,33 +9,40 @@ interface User {
 }
 
 function App() {
+  const auth = useAuth();
+  {
+    console.log(
+      "User email:",
+      (auth.user?.profile as { email?: string })?.email
+    );
+  }
 
   const [message, setMessage] = useState<string>("");
 
   useEffect(() => {
     fetch("/api/hello")
-      .then(res => {
+      .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
       })
-      .then(data => setMessage(data.message))
-      .catch(err => {
-        console.error('Failed to fetch hello:', err);
-        setMessage('');
+      .then((data) => setMessage(data.message))
+      .catch((err) => {
+        console.error("Failed to fetch hello:", err);
+        setMessage("");
       });
   }, []);
 
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
-    fetch('/api/users')
-      .then(res => {
+    fetch("/api/users")
+      .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json() as Promise<{ users?: User[] }>;
       })
-      .then(data => setUsers(data.users ?? []))
-      .catch(err => {
-        console.error('Failed to fetch users:', err);
+      .then((data) => setUsers(data.users ?? []))
+      .catch((err) => {
+        console.error("Failed to fetch users:", err);
         setUsers([]);
       });
   }, []);
@@ -44,10 +52,46 @@ function App() {
       <div>
         <p>And the final project begins...</p>
         <p>Message from backend: {message}</p>
-        <p>I can get this user from the API: {users.length > 0 ? users[0].name : "No user found"}</p>
+        <p>
+          I can get this user from the API:{" "}
+          {users.length > 0 ? users[0].name : "No user found"}
+        </p>
+
+        <hr />
+        <div className="p-2">
+          <p>
+            Auth status: {auth.isAuthenticated ? "Signed in" : "Signed out"}
+          </p>
+          {auth.isAuthenticated && (
+            <div>
+              <p>
+                Username:{" "}
+                {auth.user?.profile?.preferred_username ??
+                  auth.user?.profile?.name ??
+                  "unknown"}
+              </p>
+              <button
+                onClick={() => auth.removeUser() || auth.signoutRedirect()}
+                className="btn"
+              >
+                Sign out
+              </button>
+            </div>
+          )}
+          {!auth.isAuthenticated && (
+            <div>
+              <button onClick={() => auth.signinRedirect()} className="btn">
+                Sign in
+              </button>
+              {auth.error && (
+                <p className="text-red-600">Auth error: {String(auth.error)}</p>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
