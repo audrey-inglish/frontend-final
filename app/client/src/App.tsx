@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "react-oidc-context";
 import "./App.css";
-import { setTokenProvider } from "./lib/apiFetch";
+import apiFetch, { setTokenProvider } from "./lib/apiFetch";
 
 function App() {
-  const [username, setUsername] = useState<string | null>(null);
-
+  const [adminMessage, setAdminMessage] = useState<string>("");
   const auth = useAuth();
   {
     console.log(
@@ -13,6 +12,21 @@ function App() {
       (auth.user?.profile as { email?: string })?.email
     );
   }
+
+  const onCheckAdmin = () => {
+    apiFetch("/api/admin")
+      .then(async (res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.text();
+      })
+      .then((text) => {
+        setAdminMessage(text);
+      })
+      .catch((err) => {
+        console.error("Failed to check admin:", err);
+        setAdminMessage("");
+      });
+  };
 
   useEffect(() => {
     setTokenProvider(
@@ -42,11 +56,18 @@ function App() {
               >
                 Sign out
               </button>
+              <button onClick={onCheckAdmin} className="btn mt-8">
+                Check Admin Status
+              </button>
+              <p>{adminMessage}</p>
             </div>
           )}
           {!auth.isAuthenticated && (
             <div>
-              <button onClick={() => auth.signinRedirect()} className="btn mt-8">
+              <button
+                onClick={() => auth.signinRedirect()}
+                className="btn mt-8"
+              >
                 Sign in
               </button>
               {auth.error && (

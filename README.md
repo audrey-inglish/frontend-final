@@ -104,7 +104,7 @@ Rubric items:
 Features:
 - [X] User login
 - [X] Authorized/protected endpoints
-- [X] Home page scaffold
+- [X] Basic styling
 
 To-Dos & Subrequirements:
 - [X] create a keycloak client and user
@@ -120,9 +120,13 @@ To-Dos & Subrequirements:
 #### Delivered
 
 Rubric Items:
-
+- Technology: authentication and user account support
+- Technology: authorized pages and public pages
 
 Features:
+- [X] User login
+- [X] Authorized/protected endpoints
+- [X] Basic styling
 
 ---
 ### 3 - Nov 5: Storage and State Management
