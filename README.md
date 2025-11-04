@@ -146,7 +146,7 @@ Features:
 - [ ] Global notifications for success/error messages
 
 To-Dos & Subrequirements:
-- [ ] create database schema for dashboards, notes, flashcards, quizzes, and user performance, accounting for multiple users
+- [X] create database schema for dashboards, notes, flashcards, quizzes, and user performance, accounting for multiple users
 - [ ] basic REST API endpoints (CRUD for dashboards and notes)
 - [ ] use TanStack Query for client-side state
 - [ ] have a basic apiFetch helper (custom or axios)
