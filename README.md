@@ -151,7 +151,7 @@ To-Dos & Subrequirements:
 - [X] basic REST API endpoints (CRUD for dashboards and notes)
 - [X] use TanStack Query for client-side state
 - [X] have a basic apiFetch helper (custom or axios)
-- [ ] add localStorage caching for last-used dashboard (and session mode?)
+- [X] add localStorage caching for last-used dashboard (and session mode?)
 - [X] global error boundary & API error handling
 - [X] toast notifications for save success/failure (react-hot-toast)
 - [X] test create/edit/delete dashboard flow
@@ -159,10 +159,16 @@ To-Dos & Subrequirements:
 #### Delivered
 
 Rubric Items:
-
+- Technology: use local storage
+- Technology: Client side state stores (e.g. tanstack query or context)
+- Technology: Toasts / global notifications or alerts
+- Technology: Error handling (both on api requests and render errors)
 
 Features:
-
+- [X] Persistent dashboards/courses per user
+- [X] basic notes upload (plain text)
+- [X] Smooth UI feedback for saving, errors, and loading
+- [X] Global notifications for success/error messages
 
 ---
 ### 4 - Nov 8: Basic AI Integration
