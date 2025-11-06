@@ -1,0 +1,167 @@
+import { useState } from "react";
+import { Link } from "react-router";
+import { useAuth } from "react-oidc-context";
+import {
+  useGetDashboards,
+  useCreateDashboard,
+  useDeleteDashboard,
+} from "../hooks";
+import { showErrorToast, showSuccessToast } from "../lib/toasts";
+import {
+  Navbar,
+  DashboardForm,
+  DashboardCard,
+  LoadingSpinner,
+  EmptyState,
+} from "../components";
+import { useLocalStorage } from "../lib/useLocalStorage";
+import type { DashboardCreate } from "../schemas/dashboard";
+
+export default function Home() {
+  const auth = useAuth();
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+
+  // Only fetch dashboards when fully authenticated with token
+  const shouldFetch = auth.isAuthenticated && !auth.isLoading && !!auth.user?.access_token;
+
+  const { data: dashboards, isLoading, error } = useGetDashboards(shouldFetch);
+  const createDashboard = useCreateDashboard();
+  const deleteDashboard = useDeleteDashboard();
+  const [lastDashboard] = useLocalStorage<number | null>(
+    "mindset.lastDashboard",
+    null
+  );
+
+  const handleCreate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!title.trim()) {
+      showErrorToast("Title is required");
+      return;
+    }
+
+    try {
+      const data: DashboardCreate = {
+        title: title.trim(),
+        description: description.trim() || null,
+      };
+      await createDashboard.mutateAsync(data);
+      showSuccessToast("Dashboard created!");
+      setTitle("");
+      setDescription("");
+      setShowCreateForm(false);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to create dashboard";
+      showErrorToast(message);
+      console.error(error);
+    }
+  };
+
+  const handleDelete = async (id: number, title: string) => {
+    if (!confirm(`Delete "${title}"?`)) return;
+
+    try {
+      await deleteDashboard.mutateAsync(id);
+      showSuccessToast("Dashboard deleted");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to delete dashboard";
+      showErrorToast(message);
+      console.error(error);
+    }
+  };
+
+  if (!auth.isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Mindset</h1>
+          <p className="text-gray-600 mb-8">
+            Turn your notes into productive study sessions
+          </p>
+          <button
+            onClick={() => auth.signinRedirect()}
+            className="font-medium py-2 px-6 rounded-lg transition-colors"
+          >
+            Sign In
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
+
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex justify-between items-center mb-6">
+          <div className="flex items-center gap-4">
+            <h2 className="text-2xl font-bold text-gray-900">My Dashboards</h2>
+            {lastDashboard && dashboards?.some((d) => d.id === lastDashboard) && (
+              <Link
+                to={`/dashboard/${lastDashboard}`}
+                className="text-sm text-blue-600 hover:underline"
+              >
+                Continue where you left off
+              </Link>
+            )}
+          </div>
+          <button
+            onClick={() => setShowCreateForm(!showCreateForm)}
+            className="btn text-white font-medium py-2 px-4 rounded-lg transition-colors"
+          >
+            {showCreateForm ? "Cancel" : "+ New Dashboard"}
+          </button>
+        </div>
+
+        {showCreateForm && (
+          <div className="bg-white rounded-lg shadow p-6 mb-6">
+            <h3 className="text-lg font-semibold mb-4">Create Dashboard</h3>
+            <DashboardForm
+              title={title}
+              description={description}
+              onTitleChange={setTitle}
+              onDescriptionChange={setDescription}
+              onSubmit={handleCreate}
+              onCancel={() => setShowCreateForm(false)}
+              isPending={createDashboard.isPending}
+              submitLabel="Create"
+            />
+          </div>
+        )}
+
+        {isLoading && <LoadingSpinner message="Loading dashboards..." />}
+
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-800">
+            Error loading dashboards: {(error as Error).message}
+          </div>
+        )}
+
+        {!isLoading && !error && dashboards && dashboards.length === 0 && (
+          <EmptyState
+            title="No dashboards yet"
+            description="Create your first dashboard to get started"
+          />
+        )}
+
+        {!isLoading && !error && dashboards && dashboards.length > 0 && (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {dashboards.map((dashboard) => (
+              <DashboardCard
+                key={dashboard.id}
+                id={dashboard.id}
+                title={dashboard.title}
+                description={dashboard.description}
+                updatedAt={dashboard.updated_at}
+                onDelete={handleDelete}
+                isDeleting={deleteDashboard.isPending}
+              />
+            ))}
+          </div>
+        )}
+      </main>
+    </div>
+  );
+}

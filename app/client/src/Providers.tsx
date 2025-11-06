@@ -24,7 +24,25 @@ export default function Providers({ children }: Props) {
     <AuthProvider {...oidcConfig}>
       <QueryClientProvider client={queryClient}>
         <StrictMode>{children}</StrictMode>
-        <Toaster toastOptions={{ duration: Infinity }} />
+        <Toaster 
+          position="top-right"
+          toastOptions={{
+            success: {
+              duration: 2000,
+              style: {
+                background: '#10b981',
+                color: '#fff',
+              },
+            },
+            error: {
+              duration: Infinity,
+              style: {
+                background: '#ef4444',
+                color: '#fff',
+              },
+            },
+          }} 
+        />
       </QueryClientProvider>
     </AuthProvider>
   );

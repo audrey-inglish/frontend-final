@@ -24,7 +24,6 @@ export async function apiFetch(
       const token = getAccessToken();
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
-        console.debug("apiFetch: Authorization header set");
       }
     }
 

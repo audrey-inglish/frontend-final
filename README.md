@@ -140,21 +140,21 @@ Rubric items:
 - Technology: Error handling (both on api requests and render errors)
 
 Features:
-- [ ] Persistent dashboards/courses per user
-- [ ] basic notes upload (plain text)
-- [ ] Smooth UI feedback for saving, errors, and loading
-- [ ] Global notifications for success/error messages
+- [X] Persistent dashboards/courses per user
+- [X] basic notes upload (plain text)
+- [X] Smooth UI feedback for saving, errors, and loading
+- [X] Global notifications for success/error messages
 
 To-Dos & Subrequirements:
 - [X] create database schema for dashboards, notes, flashcards, quizzes, and user performance, accounting for multiple users
 - [X] implement zod validation schemas on client and server
 - [X] basic REST API endpoints (CRUD for dashboards and notes)
-- [ ] use TanStack Query for client-side state
+- [X] use TanStack Query for client-side state
 - [X] have a basic apiFetch helper (custom or axios)
 - [ ] add localStorage caching for last-used dashboard (and session mode?)
-- [ ] global error boundary & API error handling
-- [ ] toast notifications for save success/failure (react-hot-toast)
-- [ ] test create/edit/delete dashboard flow
+- [X] global error boundary & API error handling
+- [X] toast notifications for save success/failure (react-hot-toast)
+- [X] test create/edit/delete dashboard flow
 
 #### Delivered
 

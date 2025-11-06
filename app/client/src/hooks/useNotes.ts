@@ -12,7 +12,7 @@ export const noteKeys = {
   detail: (id: number) => [...noteKeys.details(), id] as const,
 };
 
-export function useGetNotes(dashboardId?: number | null) {
+export function useGetNotes(dashboardId?: number | null, enabled = true) {
   return useQuery({
     queryKey: noteKeys.list(dashboardId),
     queryFn: async (): Promise<Note[]> => {
@@ -24,6 +24,7 @@ export function useGetNotes(dashboardId?: number | null) {
       const parsed = NotesListResponseSchema.parse(json);
       return parsed.notes;
     },
+    enabled,
   });
 }
 

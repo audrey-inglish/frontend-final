@@ -18,7 +18,7 @@ export const dashboardKeys = {
   detail: (id: number) => [...dashboardKeys.details(), id] as const,
 };
 
-export function useGetDashboards() {
+export function useGetDashboards(enabled = true) {
   return useQuery({
     queryKey: dashboardKeys.list(),
     queryFn: async (): Promise<Dashboard[]> => {
@@ -27,10 +27,11 @@ export function useGetDashboards() {
       const parsed = DashboardsListResponseSchema.parse(json);
       return parsed.dashboards;
     },
+    enabled,
   });
 }
 
-export function useGetDashboard(id: number | null | undefined) {
+export function useGetDashboard(id: number | null | undefined, enabled = true) {
   return useQuery({
     queryKey: dashboardKeys.detail(id ?? 0),
     queryFn: async (): Promise<Dashboard> => {
@@ -40,7 +41,7 @@ export function useGetDashboard(id: number | null | undefined) {
       const parsed = DashboardSingleResponseSchema.parse(json);
       return parsed.dashboard;
     },
-    enabled: !!id, // only run query if ID exists
+    enabled: !!id && enabled, // Only run query if ID exists and enabled
   });
 }
 

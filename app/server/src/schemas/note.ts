@@ -7,7 +7,9 @@ export const NoteSchema = z.object({
   title: z.string().min(1),
   content: z.string().min(1),
   source: z.string().nullable().optional(),
-  uploaded_at: z.string(),
+  uploaded_at: z.union([z.string(), z.date()]).transform(val => 
+    val instanceof Date ? val.toISOString() : val
+  ),
 });
 
 export const NoteCreateSchema = z.object({

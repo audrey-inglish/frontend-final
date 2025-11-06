@@ -4,8 +4,12 @@ export const DashboardSchema = z.object({
   id: z.number().int().positive(),
   title: z.string().min(1),
   description: z.string().nullable().optional(),
-  created_at: z.string(),
-  updated_at: z.string(),
+  created_at: z.union([z.string(), z.date()]).transform(val => 
+    val instanceof Date ? val.toISOString() : val
+  ),
+  updated_at: z.union([z.string(), z.date()]).transform(val => 
+    val instanceof Date ? val.toISOString() : val
+  ),
 });
 
 export const DashboardCreateSchema = z.object({
