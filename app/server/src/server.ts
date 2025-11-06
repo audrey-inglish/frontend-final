@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import { db } from "./db";
 import { authMiddleware } from "./auth";
+import dashboardsRouter from "./routes/dashboards";
+import notesRouter from "./routes/notes";
 
 const app = express();
 app.use(cors());
@@ -23,6 +25,10 @@ app.use("/api", (req, res, next) => {
   }
   return authMiddleware(req, res, next);
 });
+
+// Mount routers
+app.use("/api/dashboards", dashboardsRouter);
+app.use("/api/notes", notesRouter);
 
 // Users endpoint uses pg-promise `db` to read from the users table
 app.get("/api/users", async (_req, res) => {

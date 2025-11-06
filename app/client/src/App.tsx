@@ -32,7 +32,10 @@ function App() {
     setTokenProvider(
       () => (auth.user?.access_token as string | undefined) ?? null
     );
-  }, [auth.user]);
+    if (auth.isAuthenticated && auth.user?.access_token) {
+      console.log("JWT access token:", auth.user.access_token);
+    }
+  }, [auth.user, auth.isAuthenticated]);
 
   return (
     <>

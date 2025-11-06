@@ -1,0 +1,78 @@
+### Variables
+@baseUrl = http://localhost:4000
+@token = eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJoWGRxWXRCMWtCczcxM3FoZ214OVZ4allZc29uZDJvYUF2V3I4RmVIZmtFIn0.eyJleHAiOjE3NjIzOTU5MTYsImlhdCI6MTc2MjM5NTYxNiwiYXV0aF90aW1lIjoxNzYyMzk0MTYwLCJqdGkiOiJvbnJ0YWM6MzgyMDY5YWMtMGJjOS03ZDQ0LTMyZjYtOWU4ZjAyNjgwMmNiIiwiaXNzIjoiaHR0cHM6Ly9hdXRoLWRldi5zbm93c2UuaW8vcmVhbG1zL0RldlJlYWxtIiwiYXVkIjpbImF1ZHJleS1jaGF0IiwiYWNjb3VudCJdLCJzdWIiOiIwMTU2ZmE5YS0wYjFhLTQ3MjItOTVkYi01NGEwMWJjZGFiZTkiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJhdWRyZXktZmluYWwiLCJzaWQiOiJkNDRjNTFiNy1iZTZhLWNiYmYtOTliNi00ZTIxNzY5NjRhYmUiLCJhY3IiOiIwIiwiYWxsb3dlZC1vcmlnaW5zIjpbImh0dHBzOi8vYXVkcmV5LWZpbmFsLmR1Y2tkbnMub3JnIiwiLyoiLCJodHRwOi8vbG9jYWxob3N0OjUxNzMiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtZGV2cmVhbG0iLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYXVkcmV5LWNoYXQiOnsicm9sZXMiOlsiYWRtaW4iXX0sImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfSwiYXVkcmV5LWZpbmFsIjp7InJvbGVzIjpbImFkbWluIl19fSwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJuYW1lIjoiQXVkcmV5IEluZ2xpc2giLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhdWRyZXkiLCJnaXZlbl9uYW1lIjoiQXVkcmV5IiwiZmFtaWx5X25hbWUiOiJJbmdsaXNoIiwiZW1haWwiOiJhdWRyZXkuZmFrZUBnbWFpbC5jb20ifQ.qK1Ea_JVfLhnBzMSwq7n3ip2YIjgpwWotKH23Px0kln2IyT0a0NUZgaGWuENRemvh2jbkF18A_eSprcMo7RQ2cjJhHe5SMYjiygSNX1MebbUkbewce0SRDpsPro3y8brkIz-fV0Olux6FnaitTUvaHm48s64aiS_4oBIw4aQQwWSGNJAtty554n_m7xgYInNbiG5wWVXulh98KBsN0nUl4AKyAQKt3VIKDPgZ_Mur92CXEopFa7RawRhauY5IqLYdjSPWO8kabz9mDLEbbt5mUMayk4IhqwJarqGBLmUvO3S-ctFhsfH3vZAVQYCmdXCt5WSWhUcbmPLFTCtYDkxcQ
+@dashboardId = 1
+
+### Get all notes
+GET {{baseUrl}}/api/notes
+Authorization: Bearer {{token}}
+
+### Get notes for a specific dashboard
+GET {{baseUrl}}/api/notes?dashboard_id={{dashboardId}}
+Authorization: Bearer {{token}}
+
+### Get a specific note
+GET {{baseUrl}}/api/notes/1
+Authorization: Bearer {{token}}
+
+### Create a new note
+POST {{baseUrl}}/api/notes
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "dashboard_id": {{dashboardId}},
+  "title": "Chapter 1 Notes",
+  "content": "Introduction to algorithms and data structures. Key concepts include...",
+  "source": "Textbook Chapter 1"
+}
+
+### Create note without dashboard_id
+POST {{baseUrl}}/api/notes
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Quick Note",
+  "content": "Remember to review sorting algorithms"
+}
+
+### Create note without source
+POST {{baseUrl}}/api/notes
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "dashboard_id": {{dashboardId}},
+  "title": "Lecture Notes",
+  "content": "Today we covered binary search trees and their properties"
+}
+
+### Update a note
+PUT {{baseUrl}}/api/notes/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Updated Note Title",
+  "content": "Updated content with more details",
+  "source": "Updated source"
+}
+
+### Delete a note
+DELETE {{baseUrl}}/api/notes/1
+Authorization: Bearer {{token}}
+
+### Test without auth (should fail)
+GET {{baseUrl}}/api/notes
+
+### Test invalid dashboard_id (should fail)
+POST {{baseUrl}}/api/notes
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "dashboard_id": 99999,
+  "title": "Test Note",
+  "content": "This should fail because dashboard doesn't exist"
+}

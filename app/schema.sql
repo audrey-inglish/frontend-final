@@ -1,13 +1,14 @@
 -- Simple schema for demonstration
+-- Simple schema for demonstration (compatible with older Postgres clients)
 CREATE TABLE IF NOT EXISTS app_user (
-  id GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   email TEXT UNIQUE NOT NULL,
   username TEXT NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
 
 CREATE TABLE IF NOT EXISTS dashboard (
-  id GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   user_id INT REFERENCES app_user(id) ON DELETE CASCADE,
   title VARCHAR(60) NOT NULL,
   description VARCHAR(300),
@@ -16,7 +17,7 @@ CREATE TABLE IF NOT EXISTS dashboard (
 );
 
 CREATE TABLE IF NOT EXISTS note_upload (
-  id GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   dashboard_id INT REFERENCES dashboard(id) ON DELETE CASCADE,
   title VARCHAR(60) NOT NULL,
   content TEXT NOT NULL,
@@ -25,7 +26,7 @@ CREATE TABLE IF NOT EXISTS note_upload (
 );
 
 CREATE TABLE IF NOT EXISTS concept (
-  id GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   dashboard_id INT REFERENCES dashboard(id) ON DELETE CASCADE,
   concept_text TEXT NOT NULL,
   ai_summary TEXT,
@@ -34,13 +35,13 @@ CREATE TABLE IF NOT EXISTS concept (
 );
 
 CREATE TABLE IF NOT EXISTS flashcard_set (
-  id GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   dashboard_id INT REFERENCES dashboard(id) ON DELETE CASCADE,
-  title VARCHAR(60) NOT NULL,
+  title VARCHAR(60) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS flashcard (
-  id GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   flashcard_set_id INT REFERENCES flashcard_set(id) ON DELETE CASCADE,
   front TEXT NOT NULL,
   back TEXT NOT NULL,
@@ -49,15 +50,15 @@ CREATE TABLE IF NOT EXISTS flashcard (
 );
 
 CREATE TABLE IF NOT EXISTS quiz (
-  id GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   dashboard_id INT REFERENCES dashboard(id) ON DELETE CASCADE,
   title VARCHAR(60) NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
-  score float, -- most recent user score
+  score float -- most recent user score
 );
 
 CREATE TABLE IF NOT EXISTS quiz_question (
-  id GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   quiz_id INT REFERENCES quiz(id) ON DELETE CASCADE,
   question_text TEXT NOT NULL,
   user_answer TEXT,
@@ -67,14 +68,14 @@ CREATE TABLE IF NOT EXISTS quiz_question (
 );
 
 CREATE TABLE IF NOT EXISTS quiz_answer (
-  id GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   quiz_question_id INT REFERENCES quiz_question(id) ON DELETE CASCADE,
   answer_text TEXT NOT NULL,
   is_correct BOOLEAN
 );
 
 CREATE TABLE IF NOT EXISTS performance_metric (
-  id GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   user_id INT REFERENCES app_user(id) ON DELETE CASCADE,
   concept_id INT REFERENCES concept(id) ON DELETE CASCADE,
   sessions_completed INT DEFAULT 0,
@@ -82,4 +83,4 @@ CREATE TABLE IF NOT EXISTS performance_metric (
   last_reviewed_at TIMESTAMP WITH TIME ZONE,
   time_spent INT DEFAULT 0, -- in seconds
   last_updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
-)
+);
