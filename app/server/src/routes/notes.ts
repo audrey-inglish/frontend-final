@@ -6,7 +6,7 @@ import {
   NoteUpdateSchema,
   NoteSchema,
   NotesListResponseSchema,
-} from "../schemas/dashboard";
+} from "../schemas";
 
 const router = express.Router();
 
