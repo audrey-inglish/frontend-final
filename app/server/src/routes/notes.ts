@@ -1,6 +1,12 @@
 import express from "express";
 import { db } from "../db";
 import { ensureUserId } from "../utils/user";
+import {
+  NoteCreateSchema,
+  NoteUpdateSchema,
+  NoteSchema,
+  NotesListResponseSchema,
+} from "../schemas/dashboard";
 
 const router = express.Router();
 
@@ -20,7 +26,13 @@ router.get("/", async (req, res) => {
 			 ORDER BY n.uploaded_at DESC`,
       dashboardId ? [userId, dashboardId] : [userId]
     );
-    res.json({ notes });
+    // validate response shape
+    const parsed = NotesListResponseSchema.safeParse({ notes });
+    if (!parsed.success) {
+      console.error("Validation error for notes list:", parsed.error.format());
+      return res.status(500).json({ error: "Invalid data from database" });
+    }
+    res.json(parsed.data);
   } catch (err) {
     console.error("GET /api/notes error:", err);
     res.status(500).json({ error: "Failed to list notes" });
@@ -40,7 +52,12 @@ router.get("/:id", async (req, res) => {
       [id, userId]
     );
     if (!note) return res.status(404).json({ error: "Not found" });
-    res.json({ note });
+    const parsed = NoteSchema.safeParse(note);
+    if (!parsed.success) {
+      console.error("Validation error for note:", parsed.error.format());
+      return res.status(500).json({ error: "Invalid data from database" });
+    }
+    res.json({ note: parsed.data });
   } catch (err) {
     console.error("GET /api/notes/:id error:", err);
     res.status(500).json({ error: "Failed to fetch note" });
@@ -51,9 +68,11 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const userId = await ensureUserId(req as express.Request);
-    const { dashboard_id, title, content, source } = req.body;
-    if (!title || !content)
-      return res.status(400).json({ error: "title and content required" });
+    // validate request
+    const parsed = NoteCreateSchema.safeParse(req.body);
+    if (!parsed.success)
+      return res.status(400).json({ error: "Invalid request", details: parsed.error.format() });
+    const { dashboard_id, title, content, source } = parsed.data;
 
     // ensure dashboard belongs to user
     if (dashboard_id) {
@@ -71,7 +90,12 @@ router.post("/", async (req, res) => {
       `INSERT INTO note_upload (dashboard_id, title, content, source) VALUES ($1, $2, $3, $4) RETURNING id, dashboard_id, title, content, source, uploaded_at`,
       [dashboard_id || null, title, content, source || null]
     );
-    res.status(201).json({ note: created });
+    const validated = NoteSchema.safeParse(created);
+    if (!validated.success) {
+      console.error("Validation error for created note:", validated.error.format());
+      return res.status(500).json({ error: "Invalid data created" });
+    }
+    res.status(201).json({ note: validated.data });
   } catch (err) {
     console.error("POST /api/notes error:", err);
     res.status(500).json({ error: "Failed to create note" });
@@ -83,7 +107,10 @@ router.put("/:id", async (req, res) => {
   try {
     const userId = await ensureUserId(req as express.Request);
     const id = Number(req.params.id);
-    const { title, content, source } = req.body;
+    const parsed = NoteUpdateSchema.safeParse(req.body);
+    if (!parsed.success)
+      return res.status(400).json({ error: "Invalid request", details: parsed.error.format() });
+    const { title, content, source } = parsed.data;
 
     const existing = await db.oneOrNone(
       `SELECT n.id FROM note_upload n JOIN dashboard d ON d.id = n.dashboard_id WHERE n.id = $1 AND d.user_id = $2`,
@@ -95,7 +122,12 @@ router.put("/:id", async (req, res) => {
       `UPDATE note_upload SET title = $1, content = $2, source = $3 WHERE id = $4 RETURNING id, dashboard_id, title, content, source, uploaded_at`,
       [title || null, content || null, source || null, id]
     );
-    res.json({ note: updated });
+    const validated = NoteSchema.safeParse(updated);
+    if (!validated.success) {
+      console.error("Validation error for updated note:", validated.error.format());
+      return res.status(500).json({ error: "Invalid data updated" });
+    }
+    res.json({ note: validated.data });
   } catch (err) {
     console.error("PUT /api/notes/:id error:", err);
     res.status(500).json({ error: "Failed to update note" });

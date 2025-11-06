@@ -1,6 +1,13 @@
 import express from "express";
 import { db } from "../db";
 import { ensureUserId } from "../utils/user";
+import {
+  DashboardCreateSchema,
+  DashboardUpdateSchema,
+  DashboardSchema,
+  DashboardsListResponseSchema,
+  DashboardSingleResponseSchema,
+} from "../schemas/dashboard";
 
 const router = express.Router();
 
@@ -12,7 +19,12 @@ router.get("/", async (req, res) => {
       `SELECT id, title, description, created_at, updated_at FROM dashboard WHERE user_id = $1 ORDER BY id DESC`,
       [userId]
     );
-    res.json({ dashboards });
+    const parsed = DashboardsListResponseSchema.safeParse({ dashboards });
+    if (!parsed.success) {
+      console.error("Validation error for dashboards list:", parsed.error.format());
+      return res.status(500).json({ error: "Invalid data from database" });
+    }
+    res.json(parsed.data);
   } catch (err) {
     console.error("GET /api/dashboards error:", err);
     res.status(500).json({ error: "Failed to list dashboards" });
@@ -29,7 +41,12 @@ router.get("/:id", async (req, res) => {
       [id, userId]
     );
     if (!dash) return res.status(404).json({ error: "Not found" });
-    res.json({ dashboard: dash });
+    const parsed = DashboardSingleResponseSchema.safeParse({ dashboard: dash });
+    if (!parsed.success) {
+      console.error("Validation error for dashboard:", parsed.error.format());
+      return res.status(500).json({ error: "Invalid data from database" });
+    }
+    res.json(parsed.data);
   } catch (err) {
     console.error("GET /api/dashboards/:id error:", err);
     res.status(500).json({ error: "Failed to fetch dashboard" });
@@ -40,14 +57,21 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const userId = await ensureUserId(req as express.Request);
-    const { title, description } = req.body;
-    if (!title) return res.status(400).json({ error: "title is required" });
+    const parsed = DashboardCreateSchema.safeParse(req.body);
+    if (!parsed.success)
+      return res.status(400).json({ error: "Invalid request", details: parsed.error.format() });
+    const { title, description } = parsed.data;
 
     const created = await db.one(
       `INSERT INTO dashboard (user_id, title, description) VALUES ($1, $2, $3) RETURNING id, title, description, created_at, updated_at`,
       [userId, title, description || null]
     );
-    res.status(201).json({ dashboard: created });
+    const validated = DashboardSchema.safeParse(created);
+    if (!validated.success) {
+      console.error("Validation error for created dashboard:", validated.error.format());
+      return res.status(500).json({ error: "Invalid data created" });
+    }
+    res.status(201).json({ dashboard: validated.data });
   } catch (err) {
     console.error("POST /api/dashboards error:", err);
     res.status(500).json({ error: "Failed to create dashboard" });
@@ -59,7 +83,10 @@ router.put("/:id", async (req, res) => {
   try {
     const userId = await ensureUserId(req as express.Request);
     const id = Number(req.params.id);
-    const { title, description } = req.body;
+    const parsed = DashboardUpdateSchema.safeParse(req.body);
+    if (!parsed.success)
+      return res.status(400).json({ error: "Invalid request", details: parsed.error.format() });
+    const { title, description } = parsed.data;
 
     const existing = await db.oneOrNone(
       `SELECT id FROM dashboard WHERE id = $1 AND user_id = $2`,
@@ -71,7 +98,12 @@ router.put("/:id", async (req, res) => {
       `UPDATE dashboard SET title = $1, description = $2, updated_at = now() WHERE id = $3 RETURNING id, title, description, created_at, updated_at`,
       [title || null, description || null, id]
     );
-    res.json({ dashboard: updated });
+    const validated = DashboardSchema.safeParse(updated);
+    if (!validated.success) {
+      console.error("Validation error for updated dashboard:", validated.error.format());
+      return res.status(500).json({ error: "Invalid data updated" });
+    }
+    res.json({ dashboard: validated.data });
   } catch (err) {
     console.error("PUT /api/dashboards/:id error:", err);
     res.status(500).json({ error: "Failed to update dashboard" });

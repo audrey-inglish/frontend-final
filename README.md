@@ -147,9 +147,10 @@ Features:
 
 To-Dos & Subrequirements:
 - [X] create database schema for dashboards, notes, flashcards, quizzes, and user performance, accounting for multiple users
-- [ ] basic REST API endpoints (CRUD for dashboards and notes)
+- [X] implement zod validation schemas on client and server
+- [X] basic REST API endpoints (CRUD for dashboards and notes)
 - [ ] use TanStack Query for client-side state
-- [ ] have a basic apiFetch helper (custom or axios)
+- [X] have a basic apiFetch helper (custom or axios)
 - [ ] add localStorage caching for last-used dashboard (and session mode?)
 - [ ] global error boundary & API error handling
 - [ ] toast notifications for save success/failure (react-hot-toast)
