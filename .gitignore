@@ -69,3 +69,5 @@ app/kube/fullchain.pem
 app/kube/privkey.pem
 docker-compose.cert.yaml
 docker-compose.cert.yaml
+app/client/src/hooks/examples.tsx
+app/client/src/hooks/README.md
