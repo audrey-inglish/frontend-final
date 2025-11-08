@@ -176,25 +176,27 @@ Rubric items:
 - Technology: Network Calls that read and write data
 
 Features:
-- [ ] AI integration - user can get a list of concepts from uploaded notes
-- [ ] spinners to indicate loading state
+- [X] AI integration - user can get a list of concepts from uploaded notes
+- [X] spinners to indicate loading state
 
 To-Dos & Subrequirements:
 - [X] connect to OpenAI completions endpoint
 - [X] create /api/parseNotes route: send text, receive JSON concept list
-- [ ] display a generated list of concepts on the dashboard
-- [ ] add loading spinners & error toasts for request states
-- [ ] cache concept lists with TanStack Query
-- [ ] verify server error handling on failed responses
-- [ ] feedback for failed parsing of notes
+- [X] display a generated list of concepts on the dashboard
+- [X] add loading spinners & error toasts for request states
+- [X] cache concept lists with TanStack Query
+- [X] verify server error handling on failed responses
+- [X] feedback for failed parsing of notes
 
 #### Delivered
 
 Rubric Items:
+- Technology: Network Calls that read and write data
 
 
 Features:
-
+- [X] AI integration - user can get a list of concepts from uploaded notes
+- [X] spinners to indicate loading state
   
 ---
 ### 5 - Nov 12: Flashcard Mode
@@ -203,6 +205,7 @@ Features:
 Rubric items:
 - Project scope expansion
 - 3+ generic form input components
+- 2+ generic layout components
 - Network calls & error handling
 
 Features:
@@ -210,11 +213,13 @@ Features:
 - [ ] Interactive flashcard study mode (UI)
 
 To-Dos & Subrequirements:
-- [ ] Extend generateStudyMaterials() for flashcard creation
+- [ ] Generate flashcards
+- [ ] ensure forms use generic form input components
 - [ ] Create Flashcard component (front/back flip)
+- [ ] implement generic layout components for flashcard carousel and CardList
 - [ ] Save flashcards per dashboard to DB
 - [ ] Add progress tracker and “mark for review” option
-- [ ] Create form inputs: TextInput, SelectInput, ToggleInput (optional requirement, may satisfy generic form input rubric req)
+- [ ] Create form inputs: TextInput, SelectInput, ToggleInput
 
 #### Delivered
 

@@ -117,9 +117,10 @@ Return ONLY a JSON array. Each array item must be an object with keys:
           );
           savedConcepts.push({
             ...result,
-            updated_at: result.updated_at instanceof Date
-              ? result.updated_at.toISOString()
-              : result.updated_at,
+            updated_at:
+              result.updated_at instanceof Date
+                ? result.updated_at.toISOString()
+                : result.updated_at,
           });
         }
 
