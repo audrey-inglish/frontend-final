@@ -9,6 +9,7 @@ import {
   useUpdateNote,
   useDeleteNote,
   useGenerateConcepts,
+  useGetConcepts,
 } from "../hooks";
 import { showErrorToast, showSuccessToast } from "../lib/toasts";
 import {
@@ -22,7 +23,6 @@ import {
 } from "../components";
 import type { DashboardUpdate } from "../schemas/dashboard";
 import type { NoteCreate, NoteUpdate } from "../schemas/note";
-import type { Concept } from "../schemas/concept";
 
 export default function DashboardDetail() {
   const { id } = useParams();
@@ -35,6 +35,10 @@ export default function DashboardDetail() {
     isAuthReady
   );
   const { data: notes, isLoading: notesLoading } = useGetNotes(
+    dashboardId,
+    isAuthReady
+  );
+  const { data: conceptsData, isLoading: conceptsLoading } = useGetConcepts(
     dashboardId,
     isAuthReady
   );
@@ -54,9 +58,6 @@ export default function DashboardDetail() {
   const [editingNoteId, setEditingNoteId] = useState<number | null>(null);
   const [noteTitle, setNoteTitle] = useState("");
   const [noteContent, setNoteContent] = useState("");
-
-  // Concept generation state
-  const [generatedConcepts, setGeneratedConcepts] = useState<Concept[]>([]);
 
   // Draft key for localStorage
   const draftKey = editingNoteId
@@ -211,9 +212,9 @@ export default function DashboardDetail() {
 
       const result = await generateConcepts.mutateAsync({
         text: combinedText,
+        dashboard_id: dashboardId, // Pass dashboard_id to save concepts to DB
       });
 
-      setGeneratedConcepts(result.concepts);
       showSuccessToast(`Generated ${result.concepts.length} concepts!`);
     } catch (error) {
       const message =
@@ -379,8 +380,10 @@ export default function DashboardDetail() {
                   </button>
                 </div>
 
-                {generatedConcepts.length > 0 ? (
-                  <ConceptList concepts={generatedConcepts} />
+                {conceptsLoading ? (
+                  <LoadingSpinner />
+                ) : conceptsData?.concepts && conceptsData.concepts.length > 0 ? (
+                  <ConceptList concepts={conceptsData.concepts} />
                 ) : (
                   <EmptyState
                     title="No concepts generated yet"

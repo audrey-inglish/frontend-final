@@ -5,6 +5,7 @@ import { authMiddleware } from "./auth";
 import dashboardsRouter from "./routes/dashboards";
 import notesRouter from "./routes/notes";
 import parseNotesRouter from "./routes/parseNotes";
+import conceptsRouter from "./routes/concepts";
 
 const app = express();
 app.use(cors());
@@ -30,6 +31,7 @@ app.use("/api", (req, res, next) => {
 // Mount routers
 app.use("/api/dashboards", dashboardsRouter);
 app.use("/api/notes", notesRouter);
+app.use("/api/concepts", conceptsRouter);
 // parseNotesRouter defines its own path (`/api/parseNotes`) so mount it directly
 app.use(parseNotesRouter);
 

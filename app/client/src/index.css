@@ -1,27 +1,26 @@
 @import "tailwindcss";
 
 @theme {
-	--color-primary-50: #F1EFEF;
-	--color-primary-100: #D1CAC9;
-	--color-primary-200: #BAB0AE;
-	--color-primary-300: #97908F;
-	--color-primary-400: #7B7676;
-	--color-primary-500: #5F5858;
-	--color-primary-600: #474040;
-	--color-primary-700: #383231;
-	--color-primary-800: #24201F;
-	--color-primary-900: #171515;
+  --color-primary-50: #f1efef;
+  --color-primary-100: #d1cac9;
+  --color-primary-200: #bab0ae;
+  --color-primary-300: #97908f;
+  --color-primary-400: #7b7676;
+  --color-primary-500: #5f5858;
+  --color-primary-600: #474040;
+  --color-primary-700: #383231;
+  --color-primary-800: #24201f;
+  --color-primary-900: #171515;
 
-	--color-accent-50: #E5E6F6;
-	--color-accent-100: #B1B5DA;
-	--color-accent-200: #787EB3;
-	--color-accent-300: #37326A;
-	--color-accent-600: #2A274E;
-	--color-accent-800: #1F1C3C;
+  --color-accent-50: #e5e6f6;
+  --color-accent-100: #b1b5da;
+  --color-accent-200: #787eb3;
+  --color-accent-300: #37326a;
+  --color-accent-600: #2a274e;
+  --color-accent-800: #1f1c3c;
 
-	--radius-input: 10px;
+  --radius-input: 10px;
 }
-
 
 #root {
   width: 100%;
@@ -29,23 +28,29 @@
   min-height: 100vh;
 }
 
-
 .html,
 body {
-	height: 100%;
-	min-height: 100vh;
-	margin: 0;
-	background-color: #f9fafb;
-	color: var(--color-primary-700);
+  height: 100%;
+  min-height: 100vh;
+  margin: 0;
+  background-color: #f9fafb;
+  color: var(--color-primary-700);
   font-family: "Lexend", sans-serif;
 }
 
 @layer components {
-	h1 {
-		@apply text-3xl font-bold mb-4;
-	}
+  h1 {
+    @apply text-3xl font-bold mb-4;
+  }
 
   .btn {
     @apply bg-accent-300 text-accent-50 font-semibold py-2 px-4 m-2 rounded hover:bg-accent-600 transition;
+  }
+
+  .inline-code {
+    @apply bg-gray-100 px-1.5 rounded text-sm font-mono;
+  }
+  .code-block {
+    @apply bg-slate-900 text-slate-100 p-4 rounded font-mono text-sm overflow-auto;
   }
 }

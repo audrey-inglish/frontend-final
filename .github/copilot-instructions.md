@@ -1,7 +1,7 @@
 # GitHub Copilot Instructions
 
 ## Tech Stack
-- Frontend: React, TypeScript, Tailwind CSS
+- Frontend: React, TypeScript, Tailwind CSS, and TanStack for managing client-side state
 - Backend: Node.js, Express, TypeScript, and PgPromise
 - Database: PostgreSQL
 - Testing: Vitest
