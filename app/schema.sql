@@ -1,5 +1,3 @@
--- Simple schema for demonstration
--- Simple schema for demonstration (compatible with older Postgres clients)
 CREATE TABLE IF NOT EXISTS app_user (
   id SERIAL PRIMARY KEY,
   email TEXT UNIQUE NOT NULL,
