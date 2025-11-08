@@ -6,3 +6,4 @@ export { default as NoteForm } from "./NoteForm";
 export { default as NoteCard } from "./NoteCard";
 export { default as LoadingSpinner } from "./LoadingSpinner";
 export { default as EmptyState } from "./EmptyState";
+export { default as ConceptList } from "./ConceptList";

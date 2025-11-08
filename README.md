@@ -180,8 +180,8 @@ Features:
 - [ ] spinners to indicate loading state
 
 To-Dos & Subrequirements:
-- [ ] connect to OpenAI completions endpoint
-- [ ] create /api/parseNotes route: send text, receive JSON concept list
+- [X] connect to OpenAI completions endpoint
+- [X] create /api/parseNotes route: send text, receive JSON concept list
 - [ ] display a generated list of concepts on the dashboard
 - [ ] add loading spinners & error toasts for request states
 - [ ] cache concept lists with TanStack Query

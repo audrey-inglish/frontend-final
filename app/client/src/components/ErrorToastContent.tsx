@@ -28,7 +28,7 @@ export default function ErrorToastContent({ message, toastId }: ErrorToastConten
       </div>
       <button
         onClick={() => toast.dismiss(toastId)}
-        className="text-white hover:text-gray-200 transition-colors px-3 py-1 rounded border border-white/30 hover:border-white/50 text-sm font-medium"
+        className="text-white bg-red-600 hover:bg-red-700 transition-colors px-3 py-1 rounded border border-white/30 hover:border-white/50 text-sm font-medium"
       >
         Dismiss
       </button>

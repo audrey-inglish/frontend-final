@@ -36,7 +36,7 @@ Return ONLY a JSON array. Each array item must be an object with keys:
         { role: "user", content: text },
       ],
       temperature: 0,
-      max_tokens: 800,
+      max_tokens: 2000,
     });
 
     let rawText = "";
@@ -54,6 +54,8 @@ Return ONLY a JSON array. Each array item must be an object with keys:
 
     // Attempt parsing JSON
     let concepts: unknown;
+    console.log("Unparsed concepts:", rawText);
+
     try {
       concepts = JSON.parse(rawText);
     } catch {

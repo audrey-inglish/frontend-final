@@ -8,6 +8,7 @@ import {
   useCreateNote,
   useUpdateNote,
   useDeleteNote,
+  useGenerateConcepts,
 } from "../hooks";
 import { showErrorToast, showSuccessToast } from "../lib/toasts";
 import {
@@ -17,9 +18,11 @@ import {
   NoteCard,
   LoadingSpinner,
   EmptyState,
+  ConceptList,
 } from "../components";
 import type { DashboardUpdate } from "../schemas/dashboard";
 import type { NoteCreate, NoteUpdate } from "../schemas/note";
+import type { Concept } from "../schemas/concept";
 
 export default function DashboardDetail() {
   const { id } = useParams();
@@ -39,6 +42,7 @@ export default function DashboardDetail() {
   const createNote = useCreateNote();
   const updateNote = useUpdateNote();
   const deleteNote = useDeleteNote();
+  const generateConcepts = useGenerateConcepts();
 
   // Dashboard edit state
   const [isEditingDashboard, setIsEditingDashboard] = useState(false);
@@ -50,6 +54,9 @@ export default function DashboardDetail() {
   const [editingNoteId, setEditingNoteId] = useState<number | null>(null);
   const [noteTitle, setNoteTitle] = useState("");
   const [noteContent, setNoteContent] = useState("");
+
+  // Concept generation state
+  const [generatedConcepts, setGeneratedConcepts] = useState<Concept[]>([]);
 
   // Draft key for localStorage
   const draftKey = editingNoteId
@@ -190,6 +197,32 @@ export default function DashboardDetail() {
     setNoteContent("");
   };
 
+  const handleGenerateConcepts = async () => {
+    if (!notes || notes.length === 0) {
+      showErrorToast("Please add notes before generating concepts");
+      return;
+    }
+
+    try {
+      // Combine all note content into one text block
+      const combinedText = notes
+        .map((note) => `${note.title}\n\n${note.content}`)
+        .join("\n\n---\n\n");
+
+      const result = await generateConcepts.mutateAsync({
+        text: combinedText,
+      });
+
+      setGeneratedConcepts(result.concepts);
+      showSuccessToast(`Generated ${result.concepts.length} concepts!`);
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Failed to generate concepts";
+      showErrorToast(message);
+      console.error(error);
+    }
+  };
+
   if (!auth.isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -302,6 +335,59 @@ export default function DashboardDetail() {
                   />
                 ))}
               </div>
+            )}
+
+            {/* Concept Generation Section */}
+            {notes && notes.length > 0 && (
+              <>
+                <div className="flex justify-between items-center mt-8 mb-6">
+                  <h3 className="text-xl font-bold text-gray-900">
+                    Study Concepts
+                  </h3>
+                  <button
+                    onClick={handleGenerateConcepts}
+                    disabled={generateConcepts.isPending}
+                    className="btn text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  >
+                    {generateConcepts.isPending ? (
+                      <>
+                        <svg
+                          className="animate-spin h-4 w-4"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                        Generating...
+                      </>
+                    ) : (
+                      "Generate Concepts"
+                    )}
+                  </button>
+                </div>
+
+                {generatedConcepts.length > 0 ? (
+                  <ConceptList concepts={generatedConcepts} />
+                ) : (
+                  <EmptyState
+                    title="No concepts generated yet"
+                    description="Click 'Generate Concepts' to extract key concepts from your notes using AI"
+                  />
+                )}
+              </>
             )}
           </>
         )}

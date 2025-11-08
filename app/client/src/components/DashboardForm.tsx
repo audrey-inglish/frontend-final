@@ -50,14 +50,14 @@ export default function DashboardForm({
         <button
           type="submit"
           disabled={isPending}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
+          className="btn disabled:opacity-50"
         >
           {isPending ? "Saving..." : submitLabel}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors"
+          className="btn bg-gray-200 hover:bg-gray-300 text-gray-800"
         >
           Cancel
         </button>
