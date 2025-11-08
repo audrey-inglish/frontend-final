@@ -28,8 +28,9 @@ CREATE TABLE IF NOT EXISTS note_upload (
 CREATE TABLE IF NOT EXISTS concept (
   id SERIAL PRIMARY KEY,
   dashboard_id INT REFERENCES dashboard(id) ON DELETE CASCADE,
-  concept_text TEXT NOT NULL,
-  ai_summary TEXT,
+  concept_title VARCHAR(100) NOT NULL,
+  concept_summary TEXT,
+  examples TEXT[],
   mastery_score FLOAT DEFAULT 0,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );

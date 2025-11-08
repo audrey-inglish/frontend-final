@@ -81,7 +81,7 @@ export default function Home() {
           </p>
           <button
             onClick={() => auth.signinRedirect()}
-            className="font-medium py-2 px-6 rounded-lg transition-colors"
+            className="btn"
           >
             Sign In
           </button>

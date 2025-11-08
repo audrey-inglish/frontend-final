@@ -4,6 +4,7 @@ import { db } from "./db";
 import { authMiddleware } from "./auth";
 import dashboardsRouter from "./routes/dashboards";
 import notesRouter from "./routes/notes";
+import parseNotesRouter from "./routes/parseNotes";
 
 const app = express();
 app.use(cors());
@@ -20,7 +21,7 @@ interface User {
 }
 
 app.use("/api", (req, res, next) => {
-  if (req.path === "/" || req.path === "/health" || req.path === "/test") {
+  if (req.path === "/" || req.path === "/health" || req.path === "/test" || req.path === "/parseNotes") {
     return next();
   }
   return authMiddleware(req, res, next);
@@ -29,6 +30,8 @@ app.use("/api", (req, res, next) => {
 // Mount routers
 app.use("/api/dashboards", dashboardsRouter);
 app.use("/api/notes", notesRouter);
+// parseNotesRouter defines its own path (`/api/parseNotes`) so mount it directly
+app.use(parseNotesRouter);
 
 // Users endpoint uses pg-promise `db` to read from the users table
 app.get("/api/users", async (_req, res) => {
@@ -44,7 +47,9 @@ app.get("/api/users", async (_req, res) => {
 });
 
 app.get("/api/admin", async (req, res) => {
-  const user = (req as express.Request & { user?: { email?: string; roles?: unknown } }).user;
+  const user = (
+    req as express.Request & { user?: { email?: string; roles?: unknown } }
+  ).user;
 
   // If there's no authenticated user, respond with 401 and a plain text body
   if (!user || !user.email) {
