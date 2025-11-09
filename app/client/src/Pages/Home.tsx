@@ -13,9 +13,10 @@ import {
   DashboardCard,
   LoadingSpinner,
   EmptyState,
+  CardsLayout,
 } from "../components";
 import { useLocalStorage } from "../lib/useLocalStorage";
-import type { DashboardCreate } from "../schemas/dashboard";
+import type { DashboardCreate, Dashboard } from "../schemas/dashboard";
 
 export default function Home() {
   const auth = useAuth();
@@ -147,10 +148,10 @@ export default function Home() {
         )}
 
         {!isLoading && !error && dashboards && dashboards.length > 0 && (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {dashboards.map((dashboard) => (
+          <CardsLayout
+            items={dashboards}
+            renderItem={(dashboard: Dashboard) => (
               <DashboardCard
-                key={dashboard.id}
                 id={dashboard.id}
                 title={dashboard.title}
                 description={dashboard.description}
@@ -158,8 +159,10 @@ export default function Home() {
                 onDelete={handleDelete}
                 isDeleting={deleteDashboard.isPending}
               />
-            ))}
-          </div>
+            )}
+            overflow="wrap"
+            getKey={(dashboard: Dashboard) => dashboard.id}
+          />
         )}
       </main>
     </div>

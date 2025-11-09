@@ -20,9 +20,10 @@ import {
   LoadingSpinner,
   EmptyState,
   ConceptList,
+  CardsLayout,
 } from "../components";
 import type { DashboardUpdate } from "../schemas/dashboard";
-import type { NoteCreate, NoteUpdate } from "../schemas/note";
+import type { NoteCreate, NoteUpdate, Note } from "../schemas/note";
 
 export default function DashboardDetail() {
   const { id } = useParams();
@@ -327,10 +328,10 @@ export default function DashboardDetail() {
             )}
 
             {notes && notes.length > 0 && (
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {notes.map((note) => (
+              <CardsLayout
+                items={notes}
+                renderItem={(note: Note) => (
                   <NoteCard
-                    key={note.id}
                     id={note.id}
                     title={note.title}
                     content={note.content}
@@ -339,8 +340,10 @@ export default function DashboardDetail() {
                     onDelete={handleDeleteNote}
                     isDeleting={deleteNote.isPending}
                   />
-                ))}
-              </div>
+                )}
+                overflow="wrap"
+                getKey={(note: Note) => note.id}
+              />
             )}
 
             {/* Concept Generation Section */}
