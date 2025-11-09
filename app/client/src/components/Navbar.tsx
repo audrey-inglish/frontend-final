@@ -9,26 +9,26 @@ export default function Navbar({ showBackButton = false }: NavbarProps) {
   const auth = useAuth();
 
   return (
-    <nav className="bg-white shadow-sm border-primary-300">
+    <nav className="bg-custom-white shadow-sm border-primary-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center gap-4">
             {showBackButton && (
-              <Link to="/" className="text-gray-600 hover:text-gray-900">
+              <Link to="/" className="text-primary-600 hover:text-primary-900">
                 {/* ← Back */}
               </Link>
             )}
-            <Link to="/" aria-label="Go to home" className="text-xl font-bold text-gray-900">
+            <Link to="/" aria-label="Go to home" className="text-xl font-bold text-primary-700 hover:text-primary-800">
               Mindset
             </Link>
           </div>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-primary-500">
               {auth.user?.profile?.preferred_username ?? auth.user?.profile?.name}
             </span>
             <button
               onClick={() => auth.removeUser() || auth.signoutRedirect()}
-              className="text-sm text-gray-600 hover:text-gray-900"
+              className="text-sm text-primary-600 hover:text-primary-900"
             >
               Sign Out
             </button>
