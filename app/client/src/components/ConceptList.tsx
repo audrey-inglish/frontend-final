@@ -23,7 +23,6 @@ renderer.codespan = (arg: any) => {
 renderer.code = (code: string, infostring: string | undefined, escaped: boolean) => {
   const lang = (infostring || "").trim().split(/\s+/)[0] || "";
   const langClass = lang ? `language-${lang}` : "";
-  // block code
   return `<pre class="code-block"><code class="${langClass}">${escaped ? code : code}</code></pre>`;
 };
 
@@ -46,25 +45,25 @@ export default function ConceptList({ concepts }: ConceptListProps) {
         return (
           <div
             key={"id" in concept ? concept.id : index}
-            className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+            className="card"
           >
-            <h4 className="font-semibold text-gray-900 mb-2">
+            <h4 className="font-semibold text-primary-700 mb-2">
               {concept.concept_title}
             </h4>
             <div
-              className="text-gray-700 text-sm mb-3 prose prose-sm max-w-none"
+              className="text-primary-500 text-sm mb-3 max-w-none"
               dangerouslySetInnerHTML={renderMarkdown(concept.concept_summary)}
             />
             {examples.length > 0 && (
               <div className="mt-2">
-                <p className="text-xs font-medium text-gray-500 mb-1">
+                <p className="text-xs font-medium text-primary-300 mb-1">
                   Examples:
                 </p>
                 <ul className="space-y-1 ml-4">
                   {examples.map((example, exIndex) => (
-                    <li key={exIndex} className="text-sm text-gray-600 list-disc">
+                    <li key={exIndex} className="text-sm text-primary-400 list-disc">
                       <div
-                        className="prose prose-sm max-w-none inline"
+                        className="max-w-none inline"
                         dangerouslySetInnerHTML={renderMarkdown(example)}
                       />
                     </li>

@@ -20,6 +20,12 @@
   --color-accent-800: #1f1c3c;
 
   --radius-input: 10px;
+
+  /* New colors */
+
+  --color-custom-white: #fffdfc;
+  --color-neutral-50: #fbfaf9;
+  --color-neutral-100: #f5f2f0;
 }
 
 #root {
@@ -33,7 +39,7 @@ body {
   height: 100%;
   min-height: 100vh;
   margin: 0;
-  background-color: #f9fafb;
+  background-color: var(--color-neutral-50);
   color: var(--color-primary-700);
   font-family: "Lexend", sans-serif;
 }
@@ -52,5 +58,11 @@ body {
   }
   .code-block {
     @apply bg-slate-900 text-slate-100 p-4 rounded font-mono text-sm overflow-auto;
+  }
+
+  .card {
+	@apply bg-custom-white border-primary-50;
+	@apply p-4 rounded-lg shadow-sm border;
+	@apply hover:shadow-md transition-shadow;
   }
 }

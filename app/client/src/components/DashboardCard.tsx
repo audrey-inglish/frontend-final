@@ -18,7 +18,7 @@ export default function DashboardCard({
   isDeleting,
 }: DashboardCardProps) {
   return (
-    <div className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6">
+    <div className="bg-neutral-50 rounded-lg shadow hover:shadow-lg transition-shadow p-6">
       <div className="flex justify-between items-start mb-2">
         <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
         <button
