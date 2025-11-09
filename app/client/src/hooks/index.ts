@@ -3,3 +3,5 @@ export * from "./useDashboards";
 export * from "./useNotes";
 export * from "./useConcepts";
 export * from "./useNoteEditor";
+export * from "./useDashboardEditor";
+export * from "./useConceptGenerator";
