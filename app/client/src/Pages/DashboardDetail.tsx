@@ -20,7 +20,6 @@ import {
   LoadingSpinner,
   EmptyState,
   ConceptList,
-  CardsLayout,
 } from "../components";
 import type { DashboardUpdate } from "../schemas/dashboard";
 import type { NoteCreate, NoteUpdate, Note } from "../schemas/note";
@@ -296,111 +295,137 @@ export default function DashboardDetail() {
               )}
             </div>
 
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-bold text-neutral-800">Notes</h3>
-              <button
-                onClick={() => setShowNoteForm(!showNoteForm)}
-                className="btn"
-              >
-                {showNoteForm ? "Cancel" : "+ New Note"}
-              </button>
-            </div>
-
-            {showNoteForm && (
-              <NoteForm
-                title={noteTitle}
-                content={noteContent}
-                onTitleChange={setNoteTitle}
-                onContentChange={setNoteContent}
-                onSubmit={editingNoteId ? handleUpdateNote : handleCreateNote}
-                onCancel={handleCancelNoteForm}
-                isPending={createNote.isPending || updateNote.isPending}
-                isEditing={!!editingNoteId}
-                draftKey={draftKey}
-              />
-            )}
-
-            {notes && notes.length === 0 && (
-              <EmptyState
-                title="No notes yet"
-                description="Create your first note to get started"
-              />
-            )}
-
-            {notes && notes.length > 0 && (
-              <CardsLayout
-                items={notes}
-                renderItem={(note: Note) => (
-                  <NoteCard
-                    id={note.id}
-                    title={note.title}
-                    content={note.content}
-                    uploadedAt={note.uploaded_at}
-                    onEdit={handleEditNote}
-                    onDelete={handleDeleteNote}
-                    isDeleting={deleteNote.isPending}
-                  />
-                )}
-                overflow="wrap"
-                getKey={(note: Note) => note.id}
-              />
-            )}
-
-            {/* Concept Generation Section */}
-            {notes && notes.length > 0 && (
-              <>
-                <div className="flex justify-between items-center mt-8 mb-6">
-                  <h3 className="text-xl font-bold text-neutral-900">
-                    Study Concepts
-                  </h3>
+            {/* Two-column layout: Notes on left, Concepts on right */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Left Column - Notes Section */}
+              <div className="lg:col-span-2 pr-4">
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="text-xl font-bold text-neutral-800">Notes</h3>
                   <button
-                    onClick={handleGenerateConcepts}
-                    disabled={generateConcepts.isPending}
-                    className="btn flex items-center gap-2"
+                    onClick={() => setShowNoteForm(!showNoteForm)}
+                    className="btn"
                   >
-                    {generateConcepts.isPending ? (
-                      <>
-                        <svg
-                          className="animate-spin h-4 w-4"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          ></circle>
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
-                        </svg>
-                        Generating...
-                      </>
-                    ) : (
-                      "Generate Concepts"
-                    )}
+                    {showNoteForm ? "Cancel" : "+ New Note"}
                   </button>
                 </div>
 
-                {conceptsLoading ? (
-                  <LoadingSpinner />
-                ) : conceptsData?.concepts &&
-                  conceptsData.concepts.length > 0 ? (
-                  <ConceptList concepts={conceptsData.concepts} />
-                ) : (
-                  <EmptyState
-                    title="No concepts generated yet"
-                    description="Click 'Generate Concepts' to extract key concepts from your notes using AI"
+                {showNoteForm && (
+                  <NoteForm
+                    title={noteTitle}
+                    content={noteContent}
+                    onTitleChange={setNoteTitle}
+                    onContentChange={setNoteContent}
+                    onSubmit={editingNoteId ? handleUpdateNote : handleCreateNote}
+                    onCancel={handleCancelNoteForm}
+                    isPending={createNote.isPending || updateNote.isPending}
+                    isEditing={!!editingNoteId}
+                    draftKey={draftKey}
                   />
                 )}
-              </>
-            )}
+
+                {notes && notes.length === 0 && (
+                  <EmptyState
+                    title="No notes yet"
+                    description="Create your first note to get started"
+                  />
+                )}
+
+                {notes && notes.length > 0 && (
+                  <div className="grid gap-4 md:grid-cols-2">
+                    {notes.map((note: Note) => (
+                      <NoteCard
+                        key={note.id}
+                        id={note.id}
+                        title={note.title}
+                        content={note.content}
+                        uploadedAt={note.uploaded_at}
+                        onEdit={handleEditNote}
+                        onDelete={handleDeleteNote}
+                        isDeleting={deleteNote.isPending}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Right Column - Concepts Section */}
+              {notes && notes.length > 0 && (
+                <div className="lg:col-span-1">
+                  {/* Sticky wrapper so concepts stay visible while scrolling */}
+                  <div className="lg:sticky lg:top-8">
+                    <div className="flex justify-between items-center mb-2">
+                      <h3 className="text-xl font-bold text-neutral-900">
+                        Study Concepts
+                      </h3>
+                      <button
+                        onClick={handleGenerateConcepts}
+                        disabled={generateConcepts.isPending}
+                        className="btn flex items-center gap-2 text-sm"
+                        title="Generate study concepts from notes"
+                      >
+                        {generateConcepts.isPending ? (
+                          <>
+                            <svg
+                              className="animate-spin h-4 w-4"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                            >
+                              <circle
+                                className="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                strokeWidth="4"
+                              ></circle>
+                              <path
+                                className="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                              ></path>
+                            </svg>
+                            <span className="hidden sm:inline">Generating...</span>
+                          </>
+                        ) : (
+                          <>
+                            <svg
+                              className="w-4 h-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                              />
+                            </svg>
+                            <span className="hidden sm:inline">Generate</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+
+                    {/* Max height with scroll for concepts */}
+                    <div className="max-h-[calc(100vh-12rem)] overflow-y-auto pr-2">
+                      {conceptsLoading ? (
+                        <LoadingSpinner />
+                      ) : conceptsData?.concepts &&
+                        conceptsData.concepts.length > 0 ? (
+                        <ConceptList concepts={conceptsData.concepts} />
+                      ) : (
+                        <EmptyState
+                          title="No concepts yet"
+                          description="Generate AI-powered study concepts from your notes"
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </>
         )}
       </main>
