@@ -8,11 +8,11 @@ interface ErrorFallbackProps {
 
 function ErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-6">
-        <div className="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full mb-4">
+    <div className="min-h-screen flex items-center justify-center bg-neutral-50 px-4">
+      <div className="max-w-md w-full bg-custom-white rounded-lg shadow-lg p-6">
+        <div className="flex items-center justify-center w-12 h-12 mx-auto bg-custom-red-100 rounded-full mb-4">
           <svg
-            className="w-6 h-6 text-red-600"
+            className="w-6 h-6 text-custom-red-500"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -25,23 +25,23 @@ function ErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
             />
           </svg>
         </div>
-        <h2 className="text-xl font-semibold text-gray-900 text-center mb-2">
+        <h2 className="text-xl font-semibold text-neutral-900 text-center mb-2">
           Something went wrong
         </h2>
-        <p className="text-gray-600 text-center mb-4">
+        <p className="text-neutral-600 text-center mb-4">
           An unexpected error occurred. Please try again.
         </p>
         <details className="mb-4">
-          <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-700">
+          <summary className="cursor-pointer text-sm text-neutral-500 hover:text-neutral-700">
             Error details
           </summary>
-          <pre className="mt-2 p-3 bg-gray-50 rounded text-xs overflow-auto text-red-600">
+          <pre className="mt-2 p-3 bg-neutral-50 rounded text-xs overflow-auto text-custom-red-600">
             {error.message}
           </pre>
         </details>
         <button
           onClick={resetErrorBoundary}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition-colors"
+          className="btn w-full block"
         >
           Try again
         </button>
@@ -59,11 +59,9 @@ export default function ErrorBoundary({ children }: ErrorBoundaryProps) {
     <ReactErrorBoundary
       FallbackComponent={ErrorFallback}
       onReset={() => {
-        // Reset the app state here if needed
         window.location.href = "/";
       }}
       onError={(error, errorInfo) => {
-        // Log error to error reporting service
         console.error("Error caught by boundary:", error, errorInfo);
       }}
     >

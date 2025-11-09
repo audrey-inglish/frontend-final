@@ -25,7 +25,7 @@ export default function DashboardCard({
         <button
           onClick={() => onDelete(id, title)}
           disabled={isDeleting}
-          className="text-gray-400 hover:text-red-600 transition-colors"
+          className="text-neutral-400 hover:text-custom-red-500 transition-colors"
           title="Delete dashboard"
         >
           <svg
@@ -44,9 +44,9 @@ export default function DashboardCard({
         </button>
       </div>
       {description && (
-        <p className="text-gray-600 text-sm mb-4">{description}</p>
+        <p className="text-neutral-600 text-sm mb-4">{description}</p>
       )}
-      <div className="text-xs text-gray-500 mb-4">
+      <div className="text-xs text-neutral-500 mb-4">
         Updated: {new Date(updatedAt).toLocaleDateString()}
       </div>
         <div className="mt-auto">
@@ -61,7 +61,7 @@ export default function DashboardCard({
                 );
               }
             }}
-            className="btn w-full block text-center"
+            className="btn w-full block text-center rounded-lg"
           >
             Open
           </Link>

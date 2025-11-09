@@ -112,7 +112,8 @@ export default function DashboardDetail() {
       showSuccessToast("Dashboard updated!");
       setIsEditingDashboard(false);
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to update dashboard";
+      const message =
+        error instanceof Error ? error.message : "Failed to update dashboard";
       showErrorToast(message);
       console.error(error);
     }
@@ -138,7 +139,8 @@ export default function DashboardDetail() {
       setNoteContent("");
       setShowNoteForm(false);
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to create note";
+      const message =
+        error instanceof Error ? error.message : "Failed to create note";
       showErrorToast(message);
       console.error(error);
     }
@@ -171,7 +173,8 @@ export default function DashboardDetail() {
       setEditingNoteId(null);
       setShowNoteForm(false);
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to update note";
+      const message =
+        error instanceof Error ? error.message : "Failed to update note";
       showErrorToast(message);
       console.error(error);
     }
@@ -184,14 +187,15 @@ export default function DashboardDetail() {
       await deleteNote.mutateAsync(noteId);
       showSuccessToast("Note deleted");
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to delete note";
+      const message =
+        error instanceof Error ? error.message : "Failed to delete note";
       showErrorToast(message);
       console.error(error);
     }
   };
 
   const handleCancelNoteForm = () => {
-    clearDraft(); // Clear draft on cancel
+    clearDraft();
     setShowNoteForm(false);
     setEditingNoteId(null);
     setNoteTitle("");
@@ -205,7 +209,6 @@ export default function DashboardDetail() {
     }
 
     try {
-      // Combine all note content into one text block
       const combinedText = notes
         .map((note) => `${note.title}\n\n${note.content}`)
         .join("\n\n---\n\n");
@@ -243,21 +246,23 @@ export default function DashboardDetail() {
 
         {!isLoading && dashboard && (
           <>
-            <div className="bg-white rounded-lg shadow p-6 mb-6">
+            <div className="card p-6 mb-6">
               {!isEditingDashboard ? (
                 <>
                   <div className="flex justify-between items-start">
                     <div>
-                      <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                      <h2 className="text-2xl font-bold text-neutral-800 mb-2">
                         {dashboard.title}
                       </h2>
                       {dashboard.description && (
-                        <p className="text-gray-600">{dashboard.description}</p>
+                        <p className="text-neutral-600">
+                          {dashboard.description}
+                        </p>
                       )}
                     </div>
                     <button
                       onClick={handleEditDashboard}
-                      className="text-gray-600 hover:text-blue-600 transition-colors"
+                      className="text-neutral-600 hover:text-accent-600 transition-colors"
                       title="Edit dashboard"
                     >
                       <svg
@@ -291,10 +296,10 @@ export default function DashboardDetail() {
             </div>
 
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-bold text-gray-900">Notes</h3>
+              <h3 className="text-xl font-bold text-neutral-800">Notes</h3>
               <button
                 onClick={() => setShowNoteForm(!showNoteForm)}
-                className="btn text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                className="btn"
               >
                 {showNoteForm ? "Cancel" : "+ New Note"}
               </button>
@@ -342,13 +347,13 @@ export default function DashboardDetail() {
             {notes && notes.length > 0 && (
               <>
                 <div className="flex justify-between items-center mt-8 mb-6">
-                  <h3 className="text-xl font-bold text-gray-900">
+                  <h3 className="text-xl font-bold text-neutral-900">
                     Study Concepts
                   </h3>
                   <button
                     onClick={handleGenerateConcepts}
                     disabled={generateConcepts.isPending}
-                    className="btn text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    className="btn flex items-center gap-2"
                   >
                     {generateConcepts.isPending ? (
                       <>
@@ -382,7 +387,8 @@ export default function DashboardDetail() {
 
                 {conceptsLoading ? (
                   <LoadingSpinner />
-                ) : conceptsData?.concepts && conceptsData.concepts.length > 0 ? (
+                ) : conceptsData?.concepts &&
+                  conceptsData.concepts.length > 0 ? (
                   <ConceptList concepts={conceptsData.concepts} />
                 ) : (
                   <EmptyState

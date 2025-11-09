@@ -5,13 +5,16 @@ interface ErrorToastContentProps {
   toastId: string;
 }
 
-export default function ErrorToastContent({ message, toastId }: ErrorToastContentProps) {
+export default function ErrorToastContent({
+  message,
+  toastId,
+}: ErrorToastContentProps) {
   return (
     <div className="flex items-center justify-between gap-4 min-w-[300px]">
       <div className="flex items-start gap-3 flex-1">
         <div className="mt-0.5">
           <svg
-            className="w-5 h-5 text-white"
+            className="w-5 h-5 text-custom-white"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -24,11 +27,13 @@ export default function ErrorToastContent({ message, toastId }: ErrorToastConten
             />
           </svg>
         </div>
-        <p className="text-white text-sm font-medium flex-1">{message}</p>
+        <p className="text-custom-white text-sm font-medium flex-1">
+          {message}
+        </p>
       </div>
       <button
         onClick={() => toast.dismiss(toastId)}
-        className="text-white bg-red-600 hover:bg-red-700 transition-colors px-3 py-1 rounded border border-white/30 hover:border-white/50 text-sm font-medium"
+        className="error-toast-button"
       >
         Dismiss
       </button>

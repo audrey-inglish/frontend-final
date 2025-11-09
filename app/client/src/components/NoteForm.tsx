@@ -79,9 +79,7 @@ export default function NoteForm({
         <h4 className="text-lg font-semibold">
           {isEditing ? "Edit Note" : "Create Note"}
         </h4>
-        {draftSaved && (
-          <span className="text-xs text-green-600">Draft saved</span>
-        )}
+   
       </div>
       <form onSubmit={handleSubmit}>
         <TextInput
@@ -100,11 +98,16 @@ export default function NoteForm({
           rows={8}
           required
         />
-        <FormButtons
-          onCancel={handleCancel}
-          isPending={isPending}
-          submitLabel={isEditing ? "Update" : "Create"}
-        />
+        <div className="flex items-center">
+          <FormButtons
+            onCancel={handleCancel}
+            isPending={isPending}
+            submitLabel={isEditing ? "Update" : "Create"}
+          />
+          {draftSaved && (
+            <span className="text-xs text-green-600 ml-auto">Draft saved</span>
+          )}
+        </div>
       </form>
     </div>
   );

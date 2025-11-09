@@ -5,8 +5,8 @@ interface LoadingSpinnerProps {
 export default function LoadingSpinner({ message = "Loading..." }: LoadingSpinnerProps) {
   return (
     <div className="text-center py-12">
-      <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-gray-200 border-t-blue-600"></div>
-      <p className="mt-2 text-gray-600">{message}</p>
+      <div className="spinner"></div>
+      <p className="mt-2 text-neutral-600">{message}</p>
     </div>
   );
 }

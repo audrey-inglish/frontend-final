@@ -18,13 +18,13 @@ export default function NoteCard({
   isDeleting,
 }: NoteCardProps) {
   return (
-    <div className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6">
+    <div className="card p-6">
       <div className="flex justify-between items-start mb-2">
-        <h4 className="text-lg font-semibold text-gray-900">{title}</h4>
+        <h4 className="text-lg font-semibold text-neutral-800">{title}</h4>
         <div className="flex gap-2">
           <button
             onClick={() => onEdit(id, title, content)}
-            className="text-gray-400 hover:text-blue-600 transition-colors"
+            className="text-gray-400 hover:text-accent-600 transition-colors"
             title="Edit note"
           >
             <svg
@@ -44,7 +44,7 @@ export default function NoteCard({
           <button
             onClick={() => onDelete(id, title)}
             disabled={isDeleting}
-            className="text-gray-400 hover:text-red-600 transition-colors"
+            className="text-gray-400 hover:text-custom-red-600 transition-colors"
             title="Delete note"
           >
             <svg

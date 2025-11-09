@@ -95,13 +95,13 @@ export default function Home() {
       <Navbar />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex justify-between items-center mb-6">
-          <div className="flex items-center gap-4">
-            <h2 className="text-2xl font-bold text-gray-900">My Dashboards</h2>
+        <div className="flex justify-between items-start mb-6">
+          <div className="flex flex-col">
+            <h2 className="text-2xl font-bold text-neutral-800">My Dashboards</h2>
             {lastDashboard && dashboards?.some((d) => d.id === lastDashboard) && (
               <Link
                 to={`/dashboard/${lastDashboard}`}
-                className="text-sm text-blue-600 hover:underline"
+                className="text-xs text-neutral-400 mt-1 hover:underline hover:text-neutral-500"
               >
                 Continue where you left off
               </Link>
@@ -109,14 +109,14 @@ export default function Home() {
           </div>
           <button
             onClick={() => setShowCreateForm(!showCreateForm)}
-            className="btn text-white font-medium py-2 px-4 rounded-lg transition-colors"
+            className="btn text-blue-white font-medium py-2 px-4 rounded-lg transition-colors"
           >
             {showCreateForm ? "Cancel" : "+ New Dashboard"}
           </button>
         </div>
 
         {showCreateForm && (
-          <div className="bg-white rounded-lg shadow p-6 mb-6">
+          <div className="bg-custom-white rounded-lg shadow p-6 mb-6">
             <h3 className="text-lg font-semibold mb-4">Create Dashboard</h3>
             <DashboardForm
               title={title}

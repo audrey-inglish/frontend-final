@@ -26,6 +26,12 @@
   --color-custom-white: #fffdfc;
   --color-neutral-50: #fbfaf9;
   --color-neutral-100: #f5f2f0;
+
+  --color-custom-red-100: #f2e9e9;
+  --color-custom-red-100: #8f5454;
+  --color-custom-red-500: #a85b5b;
+  --color-custom-red-600: #6e3b3b;
+  --color-custom-red-700: #522c2c;
 }
 
 #root {
@@ -58,12 +64,13 @@ body {
   }
 
   .btn {
-    @apply bg-accent-300 text-blue-white font-semibold py-2 px-4 m-2 rounded-md hover:bg-accent-600;
+    @apply bg-accent-300 text-blue-white font-semibold py-2 px-4 m-2 rounded-lg hover:bg-accent-600;
+	@apply disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .btn-secondary {
 	@apply  bg-accent-300 text-blue-white font-semibold py-2 px-4 m-2 rounded-md hover:bg-accent-600;
-	@apply bg-primary-50 hover:bg-primary-100 text-primary-500 ml-0;
+	@apply bg-primary-50 hover:bg-primary-100 hover:text-primary-700 text-primary-500 ml-0;
   }
 
   .inline-code {
@@ -82,5 +89,13 @@ body {
   .text-input {
 	@apply w-full px-3 py-2 shadow-inner;
 	@apply  border-2 border-primary-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-100;
+  }
+
+  .error-toast-button {
+	@apply bg-custom-red-600 hover:bg-custom-red-700 transition-colors px-3 py-1 rounded border border-custom-white/30 hover:border-custom-white/50 text-sm font-medium;
+  }
+
+  .spinner {
+	@apply inline-block animate-spin rounded-full h-8 w-8 border-4 border-neutral-200 border-t-accent-600;
   }
 }
