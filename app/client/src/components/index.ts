@@ -8,5 +8,6 @@ export { default as LoadingSpinner } from "./LoadingSpinner";
 export { default as EmptyState } from "./EmptyState";
 export { default as ConceptList } from "./ConceptList";
 export { default as CardsLayout } from "./CardsLayout";
+export { default as ProtectedRoute } from "./ProtectedRoute";
 export { ConceptsSection } from "./ConceptsSection";
 export { NotesSection } from "./NotesSection";

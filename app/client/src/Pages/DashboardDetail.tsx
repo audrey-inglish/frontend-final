@@ -14,6 +14,7 @@ import {
   LoadingSpinner,
   NotesSection,
   ConceptsSection,
+  ProtectedRoute,
 } from "../components";
 import { EditIcon } from "../components/icons";
 
@@ -41,19 +42,12 @@ export default function DashboardDetail() {
   const dashboardEditor = useDashboardEditor({ dashboard });
   const conceptGenerator = useConceptGenerator({ dashboardId, notes });
 
-  if (!auth.isAuthenticated) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>Please sign in to view this dashboard.</p>
-      </div>
-    );
-  }
-
   const isLoading = dashboardLoading || notesLoading;
 
   return (
-    <div className="min-h-screen bg-neutral-100">
-      <Navbar showBackButton />
+    <ProtectedRoute>
+      <div className="min-h-screen bg-neutral-100">
+        <Navbar showBackButton />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {isLoading && <LoadingSpinner />}
@@ -116,5 +110,6 @@ export default function DashboardDetail() {
         )}
       </main>
     </div>
+    </ProtectedRoute>
   );
 }
