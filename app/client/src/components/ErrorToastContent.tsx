@@ -1,4 +1,5 @@
 import toast from "react-hot-toast";
+import { AlertIcon } from "./icons";
 
 interface ErrorToastContentProps {
   message: string;
@@ -13,19 +14,7 @@ export default function ErrorToastContent({
     <div className="flex items-center justify-between gap-4 min-w-[300px]">
       <div className="flex items-start gap-3 flex-1">
         <div className="mt-0.5">
-          <svg
-            className="w-5 h-5 text-custom-white"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
+          <AlertIcon className="w-5 h-5 text-custom-white" />
         </div>
         <p className="text-custom-white text-sm font-medium flex-1">
           {message}

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { ErrorBoundary as ReactErrorBoundary } from "react-error-boundary";
+import { CloseIcon } from "./icons";
 
 interface ErrorFallbackProps {
   error: Error;
@@ -11,19 +12,7 @@ function ErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
     <div className="min-h-screen flex items-center justify-center bg-neutral-50 px-4">
       <div className="max-w-md w-full bg-custom-white rounded-lg shadow-lg p-6">
         <div className="flex items-center justify-center w-12 h-12 mx-auto bg-custom-red-100 rounded-full mb-4">
-          <svg
-            className="w-6 h-6 text-custom-red-500"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
+          <CloseIcon className="w-6 h-6 text-custom-red-500" />
         </div>
         <h2 className="text-xl font-semibold text-neutral-900 text-center mb-2">
           Something went wrong
