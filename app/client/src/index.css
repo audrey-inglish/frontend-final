@@ -49,6 +49,14 @@ body {
     @apply text-3xl font-bold mb-4;
   }
 
+  h3 {
+	@apply text-lg font-semibold text-primary-600;
+  }
+
+  h4 {
+	@apply font-semibold text-primary-600 mb-2;
+  }
+
   .btn {
     @apply bg-accent-300 text-accent-50 font-semibold py-2 px-4 m-2 rounded hover:bg-accent-600 transition;
   }
@@ -62,7 +70,7 @@ body {
 
   .card {
 	@apply bg-custom-white border-primary-50;
-	@apply p-4 rounded-lg shadow-sm border;
+	@apply p-4 rounded-lg shadow-xs border;
 	@apply hover:shadow-md transition-shadow;
   }
 }

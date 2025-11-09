@@ -18,9 +18,9 @@ export default function DashboardCard({
   isDeleting,
 }: DashboardCardProps) {
   return (
-    <div className="bg-neutral-50 rounded-lg shadow hover:shadow-lg transition-shadow p-6">
+    <div className="card">
       <div className="flex justify-between items-start mb-2">
-        <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+        <h3>{title}</h3>
         <button
           onClick={() => onDelete(id, title)}
           disabled={isDeleting}
@@ -54,7 +54,7 @@ export default function DashboardCard({
           try {
             localStorage.setItem("mindset.lastDashboard", String(id));
           } catch {
-            /* ignore */
+            console.log("Could not retrieve last dashboard from localStorage");
           }
         }}
         className="block text-center btn text-white font-medium py-2 px-4 rounded-lg transition-colors"

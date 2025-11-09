@@ -1,5 +1,4 @@
 import { marked } from "marked";
-// marked types differ between versions; we'll use a permissive renderer
 import DOMPurify from "dompurify";
 import type { Concept } from "../schemas/concept";
 
@@ -47,7 +46,7 @@ export default function ConceptList({ concepts }: ConceptListProps) {
             key={"id" in concept ? concept.id : index}
             className="card"
           >
-            <h4 className="font-semibold text-primary-700 mb-2">
+            <h4>
               {concept.concept_title}
             </h4>
             <div
