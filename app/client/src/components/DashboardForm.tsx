@@ -1,3 +1,5 @@
+import { TextInput, TextArea, FormButtons } from "./form";
+
 interface DashboardFormProps {
   title: string;
   description: string;
@@ -21,47 +23,26 @@ export default function DashboardForm({
 }: DashboardFormProps) {
   return (
     <form onSubmit={onSubmit}>
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Title *
-        </label>
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => onTitleChange(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="e.g., CS 101 Final Exam"
-          required
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Description
-        </label>
-        <textarea
-          value={description}
-          onChange={(e) => onDescriptionChange(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Optional description..."
-          rows={3}
-        />
-      </div>
-      <div className="flex gap-2">
-        <button
-          type="submit"
-          disabled={isPending}
-          className="btn disabled:opacity-50"
-        >
-          {isPending ? "Saving..." : submitLabel}
-        </button>
-        <button
-          type="button"
-          onClick={onCancel}
-          className="btn bg-gray-200 hover:bg-gray-300 text-gray-800"
-        >
-          Cancel
-        </button>
-      </div>
+      <TextInput
+        label="Title"
+        value={title}
+        onChange={onTitleChange}
+        placeholder="e.g., CS 101 Final Exam"
+        required
+        autoFocus
+      />
+      <TextArea
+        label="Description"
+        value={description}
+        onChange={onDescriptionChange}
+        placeholder="Optional description..."
+        rows={3}
+      />
+      <FormButtons
+        onCancel={onCancel}
+        isPending={isPending}
+        submitLabel={submitLabel}
+      />
     </form>
   );
 }

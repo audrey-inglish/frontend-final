@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { TextInput, TextArea, FormButtons } from "./form";
 
 interface NoteFormProps {
   title: string;
@@ -71,6 +72,7 @@ export default function NoteForm({
     }
     onCancel();
   };
+  
   return (
     <div className="bg-white rounded-lg shadow p-6 mb-6">
       <div className="flex justify-between items-center mb-4">
@@ -82,48 +84,27 @@ export default function NoteForm({
         )}
       </div>
       <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Title *
-          </label>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => onTitleChange(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="e.g., Chapter 3 Notes"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Content *
-          </label>
-          <textarea
-            value={content}
-            onChange={(e) => onContentChange(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter your notes here..."
-            rows={8}
-            required
-          />
-        </div>
-        <div className="flex">
-          <button
-            type="submit"
-            disabled={isPending}
-            className="btn text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
-          >
-            {isPending ? "Saving..." : isEditing ? "Update" : "Create"}
-          </button>
-          <button
-            type="button"
-            onClick={handleCancel}
-            className="btn bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2  rounded-lg transition-colors"
-          >
-            Cancel
-          </button>
-        </div>
+        <TextInput
+          label="Title"
+          value={title}
+          onChange={onTitleChange}
+          placeholder="e.g., Chapter 3 Notes"
+          required
+          autoFocus
+        />
+        <TextArea
+          label="Content"
+          value={content}
+          onChange={onContentChange}
+          placeholder="Enter your notes here..."
+          rows={8}
+          required
+        />
+        <FormButtons
+          onCancel={handleCancel}
+          isPending={isPending}
+          submitLabel={isEditing ? "Update" : "Create"}
+        />
       </form>
     </div>
   );

@@ -18,7 +18,8 @@ export default function DashboardCard({
   isDeleting,
 }: DashboardCardProps) {
   return (
-    <div className="card">
+    <div className="card h-full">
+      <div className="flex flex-col h-full">
       <div className="flex justify-between items-start mb-2">
         <h3>{title}</h3>
         <button
@@ -48,19 +49,24 @@ export default function DashboardCard({
       <div className="text-xs text-gray-500 mb-4">
         Updated: {new Date(updatedAt).toLocaleDateString()}
       </div>
-      <Link
-        to={`/dashboard/${id}`}
-        onClick={() => {
-          try {
-            localStorage.setItem("mindset.lastDashboard", String(id));
-          } catch {
-            console.log("Could not retrieve last dashboard from localStorage");
-          }
-        }}
-        className="block text-center btn text-white font-medium py-2 px-4 rounded-lg transition-colors"
-      >
-        Open
-      </Link>
-    </div>
+        <div className="mt-auto">
+          <Link
+            to={`/dashboard/${id}`}
+            onClick={() => {
+              try {
+                localStorage.setItem("mindset.lastDashboard", String(id));
+              } catch {
+                console.log(
+                  "Could not retrieve last dashboard from localStorage"
+                );
+              }
+            }}
+            className="btn w-full block text-center"
+          >
+            Open
+          </Link>
+        </div>
+      </div>
+      </div>
   );
 }
