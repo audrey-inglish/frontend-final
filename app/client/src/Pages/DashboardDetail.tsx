@@ -1,15 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams } from "react-router";
 import { useAuth } from "react-oidc-context";
 import {
   useGetDashboard,
   useUpdateDashboard,
   useGetNotes,
-  useCreateNote,
-  useUpdateNote,
-  useDeleteNote,
   useGenerateConcepts,
   useGetConcepts,
+  useNoteEditor,
 } from "../hooks";
 import { showErrorToast, showSuccessToast } from "../lib/toasts";
 import {
@@ -23,7 +21,7 @@ import {
 } from "../components";
 import { EditIcon, SpinnerIcon, LightbulbIcon } from "../components/icons";
 import type { DashboardUpdate } from "../schemas/dashboard";
-import type { NoteCreate, NoteUpdate, Note } from "../schemas/note";
+import type { Note } from "../schemas/note";
 
 export default function DashboardDetail() {
   const { id } = useParams();
@@ -44,50 +42,15 @@ export default function DashboardDetail() {
     isAuthReady
   );
   const updateDashboard = useUpdateDashboard();
-  const createNote = useCreateNote();
-  const updateNote = useUpdateNote();
-  const deleteNote = useDeleteNote();
   const generateConcepts = useGenerateConcepts();
+
+  // Note editing logic extracted to custom hook
+  const noteEditor = useNoteEditor({ dashboardId });
 
   // Dashboard edit state
   const [isEditingDashboard, setIsEditingDashboard] = useState(false);
   const [dashboardTitle, setDashboardTitle] = useState("");
   const [dashboardDescription, setDashboardDescription] = useState("");
-
-  // Note create/edit state
-  const [showNoteForm, setShowNoteForm] = useState(false);
-  const [editingNoteId, setEditingNoteId] = useState<number | null>(null);
-  const [noteTitle, setNoteTitle] = useState("");
-  const [noteContent, setNoteContent] = useState("");
-
-  // Draft key for localStorage
-  const draftKey = editingNoteId
-    ? `mindset.draft.note.${editingNoteId}`
-    : `mindset.draft.dashboard.${dashboardId}`;
-
-  // Initialize note form from draft when opening create form
-  useEffect(() => {
-    if (showNoteForm && !editingNoteId) {
-      try {
-        const draft = localStorage.getItem(draftKey);
-        if (draft) {
-          const { title, content } = JSON.parse(draft);
-          if (title) setNoteTitle(title);
-          if (content) setNoteContent(content);
-        }
-      } catch {
-        // Ignore parse errors
-      }
-    }
-  }, [showNoteForm, editingNoteId, draftKey]);
-
-  const clearDraft = () => {
-    try {
-      localStorage.removeItem(draftKey);
-    } catch {
-      // Ignore
-    }
-  };
 
   const handleEditDashboard = () => {
     if (dashboard) {
@@ -118,89 +81,6 @@ export default function DashboardDetail() {
       showErrorToast(message);
       console.error(error);
     }
-  };
-
-  const handleCreateNote = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!noteTitle.trim() || !noteContent.trim()) {
-      showErrorToast("Title and content are required");
-      return;
-    }
-
-    try {
-      const data: NoteCreate = {
-        dashboard_id: dashboardId,
-        title: noteTitle.trim(),
-        content: noteContent.trim(),
-      };
-      await createNote.mutateAsync(data);
-      showSuccessToast("Note created!");
-      clearDraft(); // Clear draft after successful creation
-      setNoteTitle("");
-      setNoteContent("");
-      setShowNoteForm(false);
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Failed to create note";
-      showErrorToast(message);
-      console.error(error);
-    }
-  };
-
-  const handleEditNote = (noteId: number, title: string, content: string) => {
-    setEditingNoteId(noteId);
-    setNoteTitle(title);
-    setNoteContent(content);
-    setShowNoteForm(true);
-  };
-
-  const handleUpdateNote = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!editingNoteId || !noteTitle.trim() || !noteContent.trim()) {
-      showErrorToast("Title and content are required");
-      return;
-    }
-
-    try {
-      const data: NoteUpdate = {
-        title: noteTitle.trim(),
-        content: noteContent.trim(),
-      };
-      await updateNote.mutateAsync({ id: editingNoteId, data });
-      showSuccessToast("Note updated!");
-      clearDraft(); // Clear draft after successful update
-      setNoteTitle("");
-      setNoteContent("");
-      setEditingNoteId(null);
-      setShowNoteForm(false);
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Failed to update note";
-      showErrorToast(message);
-      console.error(error);
-    }
-  };
-
-  const handleDeleteNote = async (noteId: number, title: string) => {
-    if (!confirm(`Delete note "${title}"?`)) return;
-
-    try {
-      await deleteNote.mutateAsync(noteId);
-      showSuccessToast("Note deleted");
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Failed to delete note";
-      showErrorToast(message);
-      console.error(error);
-    }
-  };
-
-  const handleCancelNoteForm = () => {
-    clearDraft();
-    setShowNoteForm(false);
-    setEditingNoteId(null);
-    setNoteTitle("");
-    setNoteContent("");
   };
 
   const handleGenerateConcepts = async () => {
@@ -291,24 +171,28 @@ export default function DashboardDetail() {
                 <div className="flex justify-between items-center mb-2">
                   <h3 className="text-xl font-bold text-neutral-800">Notes</h3>
                   <button
-                    onClick={() => setShowNoteForm(!showNoteForm)}
+                    onClick={noteEditor.handleToggleNoteForm}
                     className="btn text-sm"
                   >
-                    {showNoteForm ? "Cancel" : "+ New Note"}
+                    {noteEditor.showNoteForm ? "Cancel" : "+ New Note"}
                   </button>
                 </div>
 
-                {showNoteForm && (
+                {noteEditor.showNoteForm && (
                   <NoteForm
-                    title={noteTitle}
-                    content={noteContent}
-                    onTitleChange={setNoteTitle}
-                    onContentChange={setNoteContent}
-                    onSubmit={editingNoteId ? handleUpdateNote : handleCreateNote}
-                    onCancel={handleCancelNoteForm}
-                    isPending={createNote.isPending || updateNote.isPending}
-                    isEditing={!!editingNoteId}
-                    draftKey={draftKey}
+                    title={noteEditor.noteTitle}
+                    content={noteEditor.noteContent}
+                    onTitleChange={noteEditor.setNoteTitle}
+                    onContentChange={noteEditor.setNoteContent}
+                    onSubmit={
+                      noteEditor.editingNoteId
+                        ? noteEditor.handleUpdateNote
+                        : noteEditor.handleCreateNote
+                    }
+                    onCancel={noteEditor.handleCancelNoteForm}
+                    isPending={noteEditor.isPending}
+                    isEditing={!!noteEditor.editingNoteId}
+                    draftKey={noteEditor.draftKey}
                   />
                 )}
 
@@ -328,9 +212,9 @@ export default function DashboardDetail() {
                         title={note.title}
                         content={note.content}
                         uploadedAt={note.uploaded_at}
-                        onEdit={handleEditNote}
-                        onDelete={handleDeleteNote}
-                        isDeleting={deleteNote.isPending}
+                        onEdit={noteEditor.handleEditNote}
+                        onDelete={noteEditor.handleDeleteNote}
+                        isDeleting={noteEditor.isDeleting}
                       />
                     ))}
                   </div>

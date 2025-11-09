@@ -11,8 +11,8 @@ function ErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-neutral-50 px-4">
       <div className="max-w-md w-full bg-custom-white rounded-lg shadow-lg p-6">
-        <div className="flex items-center justify-center w-12 h-12 mx-auto bg-custom-red-100 rounded-full mb-4">
-          <CloseIcon className="w-6 h-6 text-custom-red-500" />
+        <div className="flex items-center justify-center w-12 h-12 mx-auto bg-custom-red-500 rounded-full mb-4">
+          <CloseIcon className="w-6 h-6 text-custom-red-100" />
         </div>
         <h2 className="text-xl font-semibold text-neutral-900 text-center mb-2">
           Something went wrong
