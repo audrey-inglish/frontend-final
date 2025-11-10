@@ -214,12 +214,12 @@ Features:
 
 To-Dos & Subrequirements:
 - [ ] Generate flashcards
-- [ ] ensure forms use generic form input components
+- [X] ensure forms use generic form input components
 - [ ] Create Flashcard component (front/back flip)
 - [ ] implement generic layout components for flashcard carousel and CardList
 - [ ] Save flashcards per dashboard to DB
 - [ ] Add progress tracker and “mark for review” option
-- [ ] Create form inputs: TextInput, SelectInput, ToggleInput
+- [ ] Create form inputs: TextInput, SelectInput, TextArea, ToggleInput
 
 #### Delivered
 

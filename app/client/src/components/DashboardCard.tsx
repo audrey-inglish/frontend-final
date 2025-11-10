@@ -50,7 +50,7 @@ export default function DashboardCard({
                 );
               }
             }}
-            className="btn w-full block text-center rounded-lg"
+            className="btn bg-accent-200 w-full block text-center rounded-lg"
           >
             Open
           </Link>
