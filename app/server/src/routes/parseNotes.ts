@@ -101,6 +101,10 @@ Return ONLY a JSON array. Each array item must be an object with keys:
           });
         }
 
+        await db.none(`DELETE FROM concept WHERE dashboard_id = $1`, [
+          dashboard_id,
+        ]);
+
         // Save each concept to the database
         const savedConcepts = [];
         for (const concept of validated.data) {
