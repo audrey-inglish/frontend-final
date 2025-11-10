@@ -4,6 +4,7 @@ import { setTokenProvider } from "./lib/apiFetch";
 import ErrorBoundary from "./components/validation/ErrorBoundary";
 import Home from "./Pages/Home";
 import DashboardDetail from "./Pages/DashboardDetail";
+import FlashcardsPage from "./Pages/FlashcardsPage";
 import AuthCallback from "./Pages/AuthCallback";
 import "./App.css";
 
@@ -20,6 +21,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/dashboard/:id" element={<DashboardDetail />} />
+          <Route path="/dashboard/:id/flashcards" element={<FlashcardsPage />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
         </Routes>
       </BrowserRouter>

@@ -41,7 +41,7 @@ app.use("/api/notes", notesRouter);
 app.use("/api/concepts", conceptsRouter);
 // generateConceptsRouter defines its own path (`/api/generateConcepts`) so mount it directly
 app.use(generateConceptsRouter);
-app.use(generateFlashcardsRouter);
+app.use("/api/generateFlashcards", generateFlashcardsRouter);
 
 // Users endpoint uses pg-promise `db` to read from the users table
 app.get("/api/users", async (_req, res) => {

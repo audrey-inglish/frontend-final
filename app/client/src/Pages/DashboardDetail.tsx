@@ -1,4 +1,4 @@
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import { useAuth } from "react-oidc-context";
 import {
   useGetDashboard,
@@ -20,6 +20,7 @@ import { EditIcon } from "../components/icons";
 
 export default function DashboardDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const dashboardId = Number(id);
   const auth = useAuth();
 
@@ -90,6 +91,23 @@ export default function DashboardDetail() {
                 />
               )}
             </div>
+
+            {/* Study tools section */}
+            {notes && notes.length > 0 && (
+              <div className="card p-6 mb-6">
+                <h3 className="text-lg font-semibold text-primary-700 mb-4">
+                  Study Tools
+                </h3>
+                <div className="flex gap-4">
+                  <button
+                    onClick={() => navigate(`/dashboard/${dashboardId}/flashcards`)}
+                    className="btn"
+                  >
+                    Study with Flashcards
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* Two-column layout: Notes on left, Concepts on right */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

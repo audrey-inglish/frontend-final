@@ -15,7 +15,7 @@ const BodySchema = z.object({
   dashboard_id: z.number().optional(),
 });
 
-router.post("/api/generateFlashcards", async (req, res) => {
+router.post("/", async (req, res) => {
   const parsed = BodySchema.safeParse(req.body);
   if (!parsed.success) {
     return res.status(400).json({
