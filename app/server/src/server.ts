@@ -5,6 +5,7 @@ import { authMiddleware } from "./auth";
 import dashboardsRouter from "./routes/dashboards";
 import notesRouter from "./routes/notes";
 import generateConceptsRouter from "./routes/generateConcepts";
+import generateFlashcardsRouter from "./routes/generateFlashcards";
 import conceptsRouter from "./routes/concepts";
 
 const app = express();
@@ -22,7 +23,13 @@ interface User {
 }
 
 app.use("/api", (req, res, next) => {
-  if (req.path === "/" || req.path === "/health" || req.path === "/test" || req.path === "/generateConcepts") {
+  if (
+    req.path === "/" ||
+    req.path === "/health" ||
+    req.path === "/test" ||
+    req.path === "/generateConcepts" ||
+    req.path === "/generateFlashcards"
+  ) {
     return next();
   }
   return authMiddleware(req, res, next);
@@ -34,6 +41,7 @@ app.use("/api/notes", notesRouter);
 app.use("/api/concepts", conceptsRouter);
 // generateConceptsRouter defines its own path (`/api/generateConcepts`) so mount it directly
 app.use(generateConceptsRouter);
+app.use(generateFlashcardsRouter);
 
 // Users endpoint uses pg-promise `db` to read from the users table
 app.get("/api/users", async (_req, res) => {
