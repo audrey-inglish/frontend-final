@@ -1,5 +1,5 @@
 import toast from "react-hot-toast";
-import { AlertIcon } from "./icons";
+import { AlertIcon } from "../icons";
 
 interface ErrorToastContentProps {
   message: string;

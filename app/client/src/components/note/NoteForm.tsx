@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { TextInput, TextArea, FormButtons } from "./form";
+import { TextInput, TextArea, FormButtons } from "../form";
 
 interface NoteFormProps {
   title: string;

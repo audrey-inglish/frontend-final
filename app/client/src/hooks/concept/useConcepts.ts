@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import apiFetch from "../lib/apiFetch";
-import { ConceptsArraySchema, type Concept } from "../schemas/concept";
+import apiFetch from "../../lib/apiFetch";
+import { ConceptsArraySchema, type Concept } from "../../schemas/concept";
 
 interface GenerateConceptsRequest {
   text: string;

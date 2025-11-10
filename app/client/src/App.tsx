@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router";
 import { useAuth } from "react-oidc-context";
 import { setTokenProvider } from "./lib/apiFetch";
-import ErrorBoundary from "./components/ErrorBoundary";
+import ErrorBoundary from "./components/validation/ErrorBoundary";
 import Home from "./Pages/Home";
 import DashboardDetail from "./Pages/DashboardDetail";
 import AuthCallback from "./Pages/AuthCallback";

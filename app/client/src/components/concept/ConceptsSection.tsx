@@ -1,6 +1,6 @@
-import { LoadingSpinner, EmptyState, ConceptList } from "./index";
-import { SpinnerIcon, LightbulbIcon } from "./icons";
-import type { Concept } from "../schemas/concept";
+import { LoadingSpinner, EmptyState, ConceptList } from "../index";
+import { SpinnerIcon, LightbulbIcon } from "../icons";
+import type { Concept } from "../../schemas/concept";
 
 interface ConceptsSectionProps {
   concepts: Concept[] | undefined;

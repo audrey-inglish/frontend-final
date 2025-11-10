@@ -1,4 +1,4 @@
-import { EditIcon, DeleteIcon } from "./icons";
+import { EditIcon, DeleteIcon } from "../icons";
 
 interface NoteCardProps {
   id: number;

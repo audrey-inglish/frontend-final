@@ -1,4 +1,4 @@
-import type { Concept } from "../schemas/concept";
+import type { Concept } from "../../schemas/concept";
 import ConceptCard from "./ConceptCard";
 
 interface ConceptListProps {

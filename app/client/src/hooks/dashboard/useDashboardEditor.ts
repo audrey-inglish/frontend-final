@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { showErrorToast, showSuccessToast } from "../lib/toasts";
+import { showErrorToast, showSuccessToast } from "../../lib/toasts";
 import { useUpdateDashboard } from "./useDashboards";
-import type { Dashboard, DashboardUpdate } from "../schemas/dashboard";
+import type { Dashboard, DashboardUpdate } from "../../schemas/dashboard";
 
 interface UseDashboardEditorOptions {
   dashboard: Dashboard | undefined;

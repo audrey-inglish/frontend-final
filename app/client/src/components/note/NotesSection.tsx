@@ -1,6 +1,6 @@
-import { NoteForm, NoteCard, EmptyState } from "./index";
-import type { Note } from "../schemas/note";
-import type { useNoteEditor } from "../hooks/useNoteEditor";
+import { NoteForm, NoteCard, EmptyState } from "../index";
+import type { Note } from "../../schemas/note";
+import type { useNoteEditor } from "../../hooks/note/useNoteEditor";
 
 interface NotesSectionProps {
   notes: Note[] | undefined;

@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { DeleteIcon } from "./icons";
+import { DeleteIcon } from "../icons";
 
 interface DashboardCardProps {
   id: number;

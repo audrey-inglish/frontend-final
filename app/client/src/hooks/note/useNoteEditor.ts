@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { showErrorToast, showSuccessToast } from "../lib/toasts";
+import { showErrorToast, showSuccessToast } from "../../lib/toasts";
 import { useCreateNote, useUpdateNote, useDeleteNote } from "./useNotes";
-import type { NoteCreate, NoteUpdate } from "../schemas/note";
+import type { NoteCreate, NoteUpdate } from "../../schemas/note";
 
 interface UseNoteEditorOptions {
   dashboardId: number;

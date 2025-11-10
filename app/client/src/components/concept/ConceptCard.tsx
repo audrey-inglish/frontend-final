@@ -1,6 +1,6 @@
 import { marked } from "marked";
 import DOMPurify from "dompurify";
-import type { Concept } from "../schemas/concept";
+import type { Concept } from "../../schemas/concept";
 
 marked.setOptions({
   gfm: true,

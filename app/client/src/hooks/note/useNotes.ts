@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import apiFetch from "../lib/apiFetch";
-import { NotesListResponseSchema } from "../schemas/note";
-import type { Note, NoteCreate, NoteUpdate } from "../schemas/note";
+import apiFetch from "../../lib/apiFetch";
+import { NotesListResponseSchema } from "../../schemas/note";
+import type { Note, NoteCreate, NoteUpdate } from "../../schemas/note";
 
 export const noteKeys = {
   all: ["notes"] as const,

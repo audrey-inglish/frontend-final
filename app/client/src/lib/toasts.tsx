@@ -1,5 +1,5 @@
 import toast from "react-hot-toast";
-import ErrorToastContent from "../components/ErrorToastContent";
+import ErrorToastContent from "../components/validation/ErrorToastContent";
 
 export function showErrorToast(message: string) {
   toast.error((t) => <ErrorToastContent message={message} toastId={t.id} />, {

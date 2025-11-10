@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { useAuth } from "react-oidc-context";
-import LoadingSpinner from "./LoadingSpinner";
+import LoadingSpinner from "../LoadingSpinner";
 
 interface ProtectedRouteProps {
   children: ReactNode;

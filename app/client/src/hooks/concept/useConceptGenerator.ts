@@ -1,6 +1,6 @@
-import { showErrorToast, showSuccessToast } from "../lib/toasts";
+import { showErrorToast, showSuccessToast } from "../../lib/toasts";
 import { useGenerateConcepts } from "./useConcepts";
-import type { Note } from "../schemas/note";
+import type { Note } from "../../schemas/note";
 
 interface UseConceptGeneratorOptions {
   dashboardId: number;

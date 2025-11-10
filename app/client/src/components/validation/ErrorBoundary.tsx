@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { ErrorBoundary as ReactErrorBoundary } from "react-error-boundary";
-import { CloseIcon } from "./icons";
+import { CloseIcon } from "../icons";
 
 interface ErrorFallbackProps {
   error: Error;

@@ -1,7 +1,7 @@
 // Export all hooks from a central location
-export * from "./useDashboards";
-export * from "./useNotes";
-export * from "./useConcepts";
-export * from "./useNoteEditor";
-export * from "./useDashboardEditor";
-export * from "./useConceptGenerator";
+export * from "./dashboard/useDashboards";
+export * from "./note/useNotes";
+export * from "./concept/useConcepts";
+export * from "./note/useNoteEditor";
+export * from "./dashboard/useDashboardEditor";
+export * from "./concept/useConceptGenerator";

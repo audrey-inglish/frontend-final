@@ -1,4 +1,4 @@
-import { TextInput, TextArea, FormButtons } from "./form";
+import { TextInput, TextArea, FormButtons } from "../form";
 
 interface DashboardFormProps {
   title: string;

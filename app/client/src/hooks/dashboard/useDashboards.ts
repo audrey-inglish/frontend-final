@@ -1,14 +1,14 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import apiFetch from "../lib/apiFetch";
+import apiFetch from "../../lib/apiFetch";
 import {
   DashboardsListResponseSchema,
   DashboardSingleResponseSchema,
-} from "../schemas/dashboard";
+} from "../../schemas/dashboard";
 import type {
   Dashboard,
   DashboardCreate,
   DashboardUpdate,
-} from "../schemas/dashboard";
+} from "../../schemas/dashboard";
 
 export const dashboardKeys = {
   all: ["dashboards"] as const,
