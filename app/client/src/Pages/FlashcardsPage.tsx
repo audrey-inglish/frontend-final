@@ -9,6 +9,7 @@ import {
 import { Navbar, LoadingSpinner, ProtectedRoute } from "../components";
 import { Carousel } from "../components/layout/Carousel";
 import { FlipCard } from "../components/flashcard/FlipCard";
+import { FlashcardActionButtons } from "../components/flashcard/FlashcardActionButtons";
 
 export default function FlashcardsPage() {
   const { id } = useParams();
@@ -118,23 +119,13 @@ export default function FlashcardsPage() {
                   </Carousel>
 
                   {/* Action buttons */}
-                  <div className="flex justify-center gap-4">
-                    <button
-                      onClick={() => navigate(`/dashboard/${dashboardId}`)}
-                      className="btn-secondary"
-                    >
-                      Back to Dashboard
-                    </button>
-                    <button
-                      onClick={handleGenerateFlashcards}
-                      disabled={flashcardGenerator.isGenerating}
-                      className="btn-secondary"
-                    >
-                      {flashcardGenerator.isGenerating
-                        ? "Regenerating..."
-                        : "Regenerate Flashcards"}
-                    </button>
-                  </div>
+                  <FlashcardActionButtons
+                    onBack={() => navigate(`/dashboard/${dashboardId}`)}
+                    onRegenerate={handleGenerateFlashcards}
+                    isGenerating={flashcardGenerator.isGenerating}
+                    disableRegenerate={false}
+                    className="mt-6"
+                  />
                 </div>
               )}
             </>
