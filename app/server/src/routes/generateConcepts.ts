@@ -1,4 +1,4 @@
-// app/server/src/routes/parseNotes.ts
+// app/server/src/routes/generateConcepts.ts
 import express from "express";
 import { z } from "zod";
 import { getOpenAIClient } from "../openAiClient";
@@ -12,7 +12,7 @@ const BodySchema = z.object({
   dashboard_id: z.number().optional(), // Optional: if provided, concepts will be saved
 });
 
-router.post("/api/parseNotes", async (req, res) => {
+router.post("/api/generateConcepts", async (req, res) => {
   const parsed = BodySchema.safeParse(req.body);
   if (!parsed.success) {
     return res.status(400).json({

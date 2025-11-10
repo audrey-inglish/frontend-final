@@ -46,7 +46,7 @@ export function useGenerateConcepts() {
     mutationFn: async (
       data: GenerateConceptsRequest
     ): Promise<ConceptsResponse> => {
-      const res = await apiFetch("/api/parseNotes", {
+      const res = await apiFetch("/api/generateConcepts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
