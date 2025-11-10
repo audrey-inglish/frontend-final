@@ -47,7 +47,7 @@ export function Carousel({
         <button
           onClick={onPrevious}
           disabled={!hasPrevious}
-          className="btn-secondary"
+          className="btn-secondary bg-primary-100 hover:bg-primary-200"
           aria-label="Previous item"
         >
           ← Previous
@@ -56,7 +56,7 @@ export function Carousel({
         <button
           onClick={onNext}
           disabled={!hasNext}
-          className="btn-secondary"
+          className="btn-secondary bg-primary-100 hover:bg-primary-200"
           aria-label="Next item"
         >
           Next →

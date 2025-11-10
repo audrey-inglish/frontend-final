@@ -17,13 +17,13 @@ export function FlashcardActionButtons({
 
   return (
     <div className={`flex justify-center gap-4 ${className}`}>
-      <button onClick={() => onBack()} className="btn-secondary">
+      <button onClick={() => onBack()} className="btn-secondary bg-accent-200 text-blue-white hover:bg-accent-300">
         Back to Dashboard
       </button>
       <button
         onClick={() => onRegenerate()}
         disabled={regenDisabled}
-        className="btn-secondary"
+        className="btn-secondary bg-accent-200 text-blue-white hover:bg-accent-300"
       >
         {isGenerating ? "Regenerating..." : "Regenerate Flashcards"}
       </button>
