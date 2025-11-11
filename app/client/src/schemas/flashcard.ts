@@ -9,6 +9,8 @@ export const FlashcardSchema = z.object({
   flashcard_set_id: z.number().optional(),
   created_at: z.string().optional(),
   mastery_score: z.number().optional().nullable(),
+  needs_review: z.boolean().optional(),
+  last_reviewed: z.string().nullable().optional(),
 });
 
 export const FlashcardsArraySchema = z.array(FlashcardSchema);

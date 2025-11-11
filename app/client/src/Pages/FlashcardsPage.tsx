@@ -6,11 +6,14 @@ import {
   useGetNotes,
   useFlashcardGenerator,
   useGetFlashcards,
+  useMarkFlashcard,
 } from "../hooks";
 import { Navbar, LoadingSpinner, ProtectedRoute } from "../components";
 import { Carousel } from "../components/layout/Carousel";
 import { FlipCard } from "../components/flashcard/FlipCard";
 import { FlashcardActionButtons } from "../components/flashcard/FlashcardActionButtons";
+
+type FlashcardFilter = "all" | "marked";
 
 export default function FlashcardsPage() {
   const { id } = useParams();
@@ -19,6 +22,7 @@ export default function FlashcardsPage() {
   const auth = useAuth();
 
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [filter, setFilter] = useState<FlashcardFilter>("all");
 
   const isAuthReady = auth.isAuthenticated && !auth.isLoading;
   const { data: dashboard, isLoading: dashboardLoading } = useGetDashboard(
@@ -30,16 +34,18 @@ export default function FlashcardsPage() {
     isAuthReady
   );
 
-  // Fetch saved flashcards for this dashboard
   const { data: savedFlashcards, isLoading: flashcardsLoading } = useGetFlashcards(
     dashboardId,
+    filter === "marked" ? true : undefined,
     isAuthReady
   );
 
   const flashcardGenerator = useFlashcardGenerator({ dashboardId, notes });
+  const markFlashcard = useMarkFlashcard();
 
   const handleGenerateFlashcards = async () => {
-    setCurrentIndex(0); // Reset to first card when generating
+    setCurrentIndex(0);
+    setFilter("all");
     await flashcardGenerator.handleGenerate();
   };
 
@@ -52,9 +58,24 @@ export default function FlashcardsPage() {
     setCurrentIndex((prev) => Math.min(cards.length - 1, prev + 1));
   };
 
+  const handleToggleReview = (flashcardId: number, currentState: boolean) => {
+    markFlashcard.mutate({
+      flashcardId,
+      needsReview: !currentState,
+      dashboardId,
+    });
+  };
+
+  const handleFilterChange = (newFilter: FlashcardFilter) => {
+    setFilter(newFilter);
+    setCurrentIndex(0);
+  };
+
   const isLoading = dashboardLoading || notesLoading || flashcardsLoading;
-  const flashcards = flashcardGenerator.flashcards ?? savedFlashcards ?? [];
+  // Prefer saved flashcards (with IDs) over freshly generated ones
+  const flashcards = savedFlashcards ?? flashcardGenerator.flashcards ?? [];
   const hasFlashcards = flashcards && flashcards.length > 0;
+  const markedCount = savedFlashcards?.filter((card) => card.needs_review).length ?? 0;
 
   return (
     <ProtectedRoute>
@@ -106,6 +127,34 @@ export default function FlashcardsPage() {
                 </div>
               ) : (
                 <div className="space-y-6">
+                  {/* Filter segmented control - only show for saved cards */}
+                  {savedFlashcards && savedFlashcards.length > 0 && (
+                    <div className="flex justify-between items-center">
+                      <div className="inline-flex rounded-lg border border-neutral-300 bg-custom-white p-1">
+                        <button
+                          onClick={() => handleFilterChange("all")}
+                          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                            filter === "all"
+                              ? "bg-primary-500 text-custom-white"
+                              : "text-neutral-500 hover:text-primary-500"
+                          }`}
+                        >
+                          All Cards
+                        </button>
+                        <button
+                          onClick={() => handleFilterChange("marked")}
+                          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                            filter === "marked"
+                              ? "bg-primary-500 text-custom-white"
+                              : "text-neutral-500 hover:text-primary-500"
+                          }`}
+                        >
+                          Marked ({markedCount})
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Flashcard carousel */}
                   <Carousel
                     currentIndex={currentIndex}
@@ -113,7 +162,14 @@ export default function FlashcardsPage() {
                     onNext={handleNext}
                   >
                     {flashcards.map((card, index) => (
-                      <FlipCard key={index} front={card.front} back={card.back} />
+                      <FlipCard 
+                        key={card.id || index} 
+                        front={card.front} 
+                        back={card.back}
+                        id={card.id}
+                        needsReview={card.needs_review}
+                        onToggleReview={handleToggleReview}
+                      />
                     ))}
                   </Carousel>
 

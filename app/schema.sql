@@ -45,8 +45,12 @@ CREATE TABLE IF NOT EXISTS flashcard (
   front TEXT NOT NULL,
   back TEXT NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
-  mastery_score FLOAT DEFAULT 0
+  mastery_score FLOAT DEFAULT 0,
+  needs_review BOOLEAN DEFAULT false,
+  last_reviewed TIMESTAMP WITH TIME ZONE
 );
+
+CREATE INDEX IF NOT EXISTS idx_flashcard_needs_review ON flashcard(needs_review);
 
 CREATE TABLE IF NOT EXISTS quiz (
   id SERIAL PRIMARY KEY,

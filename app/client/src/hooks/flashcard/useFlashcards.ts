@@ -20,21 +20,31 @@ interface FlashcardsResponse {
 export const flashcardKeys = {
   all: ["flashcards"] as const,
   lists: () => [...flashcardKeys.all, "list"] as const,
-  list: (dashboardId?: number) =>
-    [...flashcardKeys.lists(), { dashboardId }] as const,
+  list: (dashboardId?: number, needsReview?: boolean) =>
+    [...flashcardKeys.lists(), { dashboardId, needsReview }] as const,
 };
 
-export function useGetFlashcards(dashboardId?: number, enabled = true) {
+export function useGetFlashcards(
+  dashboardId?: number,
+  needsReview?: boolean,
+  enabled = true
+) {
   return useQuery({
-    queryKey: flashcardKeys.list(dashboardId),
+    queryKey: flashcardKeys.list(dashboardId, needsReview),
     queryFn: async (): Promise<Flashcard[]> => {
       if (!dashboardId) throw new Error("Dashboard ID is required");
-      const res = await apiFetch(
-        `/api/flashcards?dashboard_id=${dashboardId}`,
-        {
-          method: "GET",
-        }
-      );
+      
+      const params = new URLSearchParams({ 
+        dashboard_id: dashboardId.toString() 
+      });
+      
+      if (needsReview !== undefined) {
+        params.append("needs_review", needsReview.toString());
+      }
+      
+      const res = await apiFetch(`/api/flashcards?${params.toString()}`, {
+        method: "GET",
+      });
       const json = await res.json();
       const validated = FlashcardsArraySchema.parse(json.flashcards);
       return validated;
@@ -76,6 +86,42 @@ export function useGenerateFlashcards() {
           queryKey: flashcardKeys.list(variables.dashboard_id),
         });
       }
+    },
+  });
+}
+
+interface MarkFlashcardRequest {
+  flashcardId: number;
+  needsReview: boolean;
+  dashboardId: number;
+}
+
+export function useMarkFlashcard() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      flashcardId,
+      needsReview,
+    }: MarkFlashcardRequest): Promise<Flashcard> => {
+      const res = await apiFetch(`/api/flashcards/${flashcardId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ needs_review: needsReview }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to update flashcard");
+      }
+
+      const json = await res.json();
+      return json.flashcard;
+    },
+    onSuccess: () => {
+      // Invalidate all flashcard queries for this dashboard
+      queryClient.invalidateQueries({
+        queryKey: flashcardKeys.lists(),
+      });
     },
   });
 }
