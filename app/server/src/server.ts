@@ -6,6 +6,7 @@ import dashboardsRouter from "./routes/dashboards";
 import notesRouter from "./routes/notes";
 import generateConceptsRouter from "./routes/generateConcepts";
 import generateFlashcardsRouter from "./routes/generateFlashcards";
+import flashcardsRouter from "./routes/flashcards";
 import conceptsRouter from "./routes/concepts";
 
 const app = express();
@@ -39,7 +40,8 @@ app.use("/api", (req, res, next) => {
 app.use("/api/dashboards", dashboardsRouter);
 app.use("/api/notes", notesRouter);
 app.use("/api/concepts", conceptsRouter);
-// generateConceptsRouter defines its own path (`/api/generateConcepts`) so mount it directly
+app.use("/api/flashcards", flashcardsRouter);
+
 app.use(generateConceptsRouter);
 app.use("/api/generateFlashcards", generateFlashcardsRouter);
 

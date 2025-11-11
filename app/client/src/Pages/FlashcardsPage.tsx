@@ -5,6 +5,7 @@ import {
   useGetDashboard,
   useGetNotes,
   useFlashcardGenerator,
+  useGetFlashcards,
 } from "../hooks";
 import { Navbar, LoadingSpinner, ProtectedRoute } from "../components";
 import { Carousel } from "../components/layout/Carousel";
@@ -29,6 +30,12 @@ export default function FlashcardsPage() {
     isAuthReady
   );
 
+  // Fetch saved flashcards for this dashboard
+  const { data: savedFlashcards, isLoading: flashcardsLoading } = useGetFlashcards(
+    dashboardId,
+    isAuthReady
+  );
+
   const flashcardGenerator = useFlashcardGenerator({ dashboardId, notes });
 
   const handleGenerateFlashcards = async () => {
@@ -41,17 +48,13 @@ export default function FlashcardsPage() {
   };
 
   const handleNext = () => {
-    if (flashcardGenerator.flashcards) {
-      setCurrentIndex((prev) =>
-        Math.min(flashcardGenerator.flashcards!.length - 1, prev + 1)
-      );
-    }
+    const cards = flashcardGenerator.flashcards ?? savedFlashcards ?? [];
+    setCurrentIndex((prev) => Math.min(cards.length - 1, prev + 1));
   };
 
-  const isLoading = dashboardLoading || notesLoading;
-  const hasFlashcards =
-    flashcardGenerator.flashcards &&
-    flashcardGenerator.flashcards.length > 0;
+  const isLoading = dashboardLoading || notesLoading || flashcardsLoading;
+  const flashcards = flashcardGenerator.flashcards ?? savedFlashcards ?? [];
+  const hasFlashcards = flashcards && flashcards.length > 0;
 
   return (
     <ProtectedRoute>
@@ -109,12 +112,8 @@ export default function FlashcardsPage() {
                     onPrevious={handlePrevious}
                     onNext={handleNext}
                   >
-                    {flashcardGenerator.flashcards!.map((card, index) => (
-                      <FlipCard
-                        key={index}
-                        front={card.front}
-                        back={card.back}
-                      />
+                    {flashcards.map((card, index) => (
+                      <FlipCard key={index} front={card.front} back={card.back} />
                     ))}
                   </Carousel>
 

@@ -209,14 +209,14 @@ Rubric items:
 - Network calls & error handling
 
 Features:
-- [ ] AI generates flashcards from parsed notes
-- [ ] Interactive flashcard study mode (UI)
+- [X] AI generates flashcards from parsed notes
+- [X] Interactive flashcard study mode (UI)
 
 To-Dos & Subrequirements:
-- [ ] Generate flashcards
+- [X] Generate flashcards
 - [X] ensure forms use generic form input components
-- [ ] Create Flashcard component (front/back flip)
-- [ ] implement generic layout components for flashcard carousel and CardList
+- [X] Create Flashcard component (front/back flip)
+- [X] implement generic layout components for flashcard carousel and CardList
 - [ ] Save flashcards per dashboard to DB
 - [ ] Add progress tracker and “mark for review” option
 - [ ] Create form inputs: TextInput, SelectInput, TextArea, ToggleInput

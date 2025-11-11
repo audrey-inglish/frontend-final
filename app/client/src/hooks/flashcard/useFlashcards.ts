@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import apiFetch from "../../lib/apiFetch";
 import {
   FlashcardsArraySchema,
@@ -24,6 +24,25 @@ export const flashcardKeys = {
     [...flashcardKeys.lists(), { dashboardId }] as const,
 };
 
+export function useGetFlashcards(dashboardId?: number, enabled = true) {
+  return useQuery({
+    queryKey: flashcardKeys.list(dashboardId),
+    queryFn: async (): Promise<Flashcard[]> => {
+      if (!dashboardId) throw new Error("Dashboard ID is required");
+      const res = await apiFetch(
+        `/api/flashcards?dashboard_id=${dashboardId}`,
+        {
+          method: "GET",
+        }
+      );
+      const json = await res.json();
+      const validated = FlashcardsArraySchema.parse(json.flashcards);
+      return validated;
+    },
+    enabled: !!dashboardId && enabled,
+  });
+}
+
 export function useGenerateFlashcards() {
   const queryClient = useQueryClient();
 
@@ -39,14 +58,14 @@ export function useGenerateFlashcards() {
 
       const json = await res.json();
       const validated = FlashcardsArraySchema.parse(json.flashcards);
-      
+
       // Parse flashcard_set if present
       let flashcardSet: FlashcardSet | undefined;
       if (json.flashcard_set) {
         flashcardSet = FlashcardSetSchema.parse(json.flashcard_set);
       }
 
-      return { 
+      return {
         flashcards: validated,
         flashcard_set: flashcardSet,
       };
