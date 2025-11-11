@@ -218,15 +218,20 @@ To-Dos & Subrequirements:
 - [X] Create Flashcard component (front/back flip)
 - [X] implement generic layout components for flashcard carousel and CardList
 - [X] Save flashcards per dashboard to DB
-- [ ] Add progress tracker and “mark for review” option
-- [ ] Create form inputs: TextInput, SelectInput, TextArea, ToggleInput
+- [X] Add progress tracker and “mark for review” option
+- [X] Create form inputs: TextInput, SelectInput, TextArea, ToggleInput
 
 #### Delivered
 
 Rubric Items:
+- Project scope expansion
+- 3+ generic form input components
+- 2+ generic layout components
+- Network calls & error handling
 
 Features:
-
+- [X] AI generates flashcards from parsed notes
+- [X] Interactive flashcard study mode (UI)
 ---
 ### 6 - Nov 15: Quiz Mode
 #### Estimates:
