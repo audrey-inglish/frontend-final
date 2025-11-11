@@ -79,3 +79,4 @@ scripts/update-k8s-tls.sh
 tmp/cert.crt
 .gitignore
 tmp/cert.key
+app/kube/swag-tls-secret.yml
