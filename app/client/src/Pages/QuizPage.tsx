@@ -115,7 +115,7 @@ export default function QuizPage() {
                   {/* Back button */}
                   <button
                     onClick={() => navigate(`/dashboard/${dashboardId}`)}
-                    className="btn-secondary w-full mt-4"
+                    className="btn-secondary bg-neutral-200 hover:bg-primary-100 w-full mt-4"
                   >
                     Back to Dashboard
                   </button>

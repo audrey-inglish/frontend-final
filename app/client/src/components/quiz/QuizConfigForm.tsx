@@ -98,7 +98,7 @@ export function QuizConfigForm({
       <button
         type="submit"
         disabled={isGenerating || disabled}
-        className="btn w-full"
+        className="btn m-auto block w-full"
       >
         {isGenerating ? "Generating Quiz..." : "Generate Quiz"}
       </button>
