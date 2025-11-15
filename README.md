@@ -241,23 +241,26 @@ Rubric items:
 - Project scope (LLM evaluation logic)
 
 Features:
-- [ ] AI creates quizzes and grades answers
-- [ ] Results summarized per topic
+- [X] AI creates quizzes and grades answers
+- [X] Results summarized per topic
 - [ ] upload notes as pngs and pdfs
 
 To-Dos & Subrequirements:
-- [ ] basic form for quiz config -- choose question types & number of questions, then click "generate"
-- [ ] implement evaluateResponse() grading API
-- [ ] build Quiz component (multiple-choice + short answer)
-- [ ] Create “Quiz Results” page (scores, feedback, and explanations from AI)
-- [ ] store quiz results in DB
+- [X] basic form for quiz config -- choose question types & number of questions, then click "generate"
+- [X] implement evaluateResponse() grading API
+- [X] build Quiz component (multiple-choice + short answer)
+- [X] Create “Quiz Results” page (scores, feedback, and explanations from AI)
+- [X] store quiz results in DB
 
 #### Delivered
 
 Rubric Items:
-
+- Network calls & error handling
+- Project scope (LLM evaluation logic)
+  
 Features:
-
+- [X] AI creates quizzes and grades answers
+- [X] Results summarized per topic
 ---
 ### 7 - Nov 19: Adaptive Study & Agentic Loop
 #### Estimates:
