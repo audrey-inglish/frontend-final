@@ -8,6 +8,10 @@ import generateConceptsRouter from "./routes/generateConcepts";
 import generateFlashcardsRouter from "./routes/generateFlashcards";
 import flashcardsRouter from "./routes/flashcards";
 import conceptsRouter from "./routes/concepts";
+import quizzesRouter from "./routes/quizzes";
+import generateQuizRouter from "./routes/generateQuiz";
+import evaluateResponseRouter from "./routes/evaluateResponse";
+
 
 const app = express();
 app.use(cors());
@@ -44,6 +48,10 @@ app.use("/api/flashcards", flashcardsRouter);
 
 app.use(generateConceptsRouter);
 app.use("/api/generateFlashcards", generateFlashcardsRouter);
+
+app.use("/api/quizzes", quizzesRouter);
+app.use("/api/generateQuiz", generateQuizRouter);
+app.use("/api/evaluateResponse", evaluateResponseRouter);
 
 // Users endpoint uses pg-promise `db` to read from the users table
 app.get("/api/users", async (_req, res) => {
