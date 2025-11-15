@@ -80,3 +80,4 @@ tmp/cert.crt
 .gitignore
 tmp/cert.key
 app/kube/swag-tls-secret.yml
+app/client/src/hooks/examples.tsx

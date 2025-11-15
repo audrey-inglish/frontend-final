@@ -7,3 +7,5 @@ export * from "./dashboard/useDashboardEditor";
 export * from "./concept/useConceptGenerator";
 export * from "./flashcard/useFlashcards";
 export * from "./flashcard/useFlashcardGenerator";
+export * from "./quiz/useQuizzes";
+export * from "./quiz/useQuizGenerator";
