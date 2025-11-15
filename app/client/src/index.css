@@ -31,6 +31,11 @@
   --color-custom-red-500: #a85b5b;
   --color-custom-red-600: #6e3b3b;
   --color-custom-red-700: #522c2c;
+
+  --color-custom-green-100: #cadbd0;
+  --color-custom-green-500: #5c876b;
+  --color-custom-green-600: #5b7062;
+  --color-custom-green-700: #48594e;
 }
 
 #root {

@@ -105,6 +105,12 @@ export default function DashboardDetail() {
                   >
                     Study with Flashcards
                   </button>
+                  <button
+                    onClick={() => navigate(`/dashboard/${dashboardId}/quiz`)}
+                    className="btn"
+                  >
+                    Take a Quiz
+                  </button>
                 </div>
               </div>
             )}

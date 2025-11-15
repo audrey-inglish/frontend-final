@@ -6,3 +6,4 @@ export { default as AlertIcon } from './AlertIcon';
 export { default as CloseIcon } from './CloseIcon';
 export { default as BookmarkIcon } from './BookmarkIcon';
 export { default as BookmarkFilledIcon } from './BookmarkFilledIcon';
+export { ClipboardIcon } from './ClipboardIcon';

@@ -19,8 +19,8 @@ interface GenerateQuizRequest {
   text: string;
   dashboard_id: number;
   num_questions: number;
-  question_types: Array<'multiple-choice' | 'short-answer'>;
-  difficulty: 'easy' | 'medium' | 'hard';
+  question_types: Array<"multiple-choice" | "short-answer">;
+  difficulty: "easy" | "medium" | "hard";
 }
 
 interface GenerateQuizResponse {
@@ -42,10 +42,11 @@ export function useGenerateQuiz() {
       });
 
       const json = await res.json();
-      
+      const questions = json.quiz?.questions || [];
+
       return {
         quiz: json.quiz,
-        questions: QuizQuestionsArraySchema.parse(json.questions),
+        questions: QuizQuestionsArraySchema.parse(questions),
       };
     },
     onSuccess: (_, variables) => {
@@ -62,10 +63,9 @@ export function useGetQuizzes(dashboardId: number, enabled = true) {
   return useQuery({
     queryKey: quizKeys.list(dashboardId),
     queryFn: async (): Promise<Quiz[]> => {
-      const res = await apiFetch(
-        `/api/quizzes?dashboard_id=${dashboardId}`,
-        { method: "GET" }
-      );
+      const res = await apiFetch(`/api/quizzes?dashboard_id=${dashboardId}`, {
+        method: "GET",
+      });
       const json = await res.json();
       return QuizzesArraySchema.parse(json.quizzes);
     },
@@ -85,5 +85,36 @@ export function useGetQuiz(quizId: number, enabled = true) {
       return json.quiz;
     },
     enabled: !!quizId && enabled,
+  });
+}
+
+interface EvaluateResponseRequest {
+  question_id: number;
+  user_answer: string;
+  correct_answer: string;
+  question_text: string;
+  question_type: "multiple-choice" | "short-answer";
+}
+
+interface EvaluateResponseResult {
+  question_id: number;
+  is_correct: boolean;
+  explanation: string;
+}
+
+export function useEvaluateResponse() {
+  return useMutation({
+    mutationFn: async (
+      data: EvaluateResponseRequest
+    ): Promise<EvaluateResponseResult> => {
+      const res = await apiFetch("/api/evaluateResponse", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      const json = await res.json();
+      return json;
+    },
   });
 }

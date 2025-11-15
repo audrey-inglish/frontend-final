@@ -25,5 +25,5 @@ When generating code, please follow these guidelines:
 - Use functional components and React hooks.
 - Typescript should use semicolons.
 - Ask before making architectural changes or choosing between multiple valid approaches.
-
+- ALL SVG icons must go in the /components/icons/ directory as their own components.
 

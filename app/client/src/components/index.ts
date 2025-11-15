@@ -13,3 +13,6 @@ export { ConceptsSection } from "./concept/ConceptsSection";
 export { NotesSection } from "./note/NotesSection";
 export { Carousel } from "./layout/Carousel";
 export { FlipCard } from "./flashcard/FlipCard";
+export { QuizConfigForm } from "./quiz/QuizConfigForm";
+export { QuizDisplay } from "./quiz/QuizDisplay";
+export { QuizEmptyState } from "./quiz/QuizEmptyState";
