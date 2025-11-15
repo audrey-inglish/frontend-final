@@ -32,7 +32,7 @@ export function QuizDisplay({
   onGenerateNew,
 }: QuizDisplayProps) {
   return (
-    <div className="card p-6">
+    <div className="card p-6 bg-neutral-10">
       <h2 className="text-2xl font-bold text-primary-800 mb-6">
         {showResults ? "Quiz Results" : "Generated Quiz"}
       </h2>

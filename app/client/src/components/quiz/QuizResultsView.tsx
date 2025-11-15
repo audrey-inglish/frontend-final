@@ -41,21 +41,25 @@ export function QuizResultsView({
           return (
             <div 
               key={question.id || index} 
-              className={`border-l-4 pl-4 pb-6 rounded-md  ${
+              className={`border-l-4 bg-custom-white shadow-sm pt-2 pr-2 pl-4 pb-6 rounded-md ${
                 result?.isCorrect ? 'border-custom-green-500' : 'border-custom-red-500'
               }`}
             >
+                <div className="flex justify-end pt-1 pb-2 mb-2">
+                    <div
+                        className={`px-3 py-1 rounded-full text-xs font-medium ${
+                            result?.isCorrect
+                                ? 'bg-custom-green-100 text-custom-green-600'
+                                : 'bg-custom-red-100 text-custom-red-500'
+                        }`}
+                    >
+                        {result?.isCorrect ? 'Correct' : 'Incorrect'}
+                    </div>
+                </div>
               <div className="flex items-start justify-between mb-2">
                 <h3 className="font-semibold text-lg text-neutral-800">
                   {index + 1}. {question.question_text}
                 </h3>
-                <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                  result?.isCorrect 
-                    ? 'bg-custom-green-100 text-custom-green-600' 
-                    : 'bg-custom-red-100 text-custom-red-500'
-                }`}>
-                  {result?.isCorrect ? 'Correct' : 'Incorrect'}
-                </span>
               </div>
 
               <div className="mt-3 space-y-2 text-sm">
@@ -68,7 +72,7 @@ export function QuizResultsView({
                   </p>
                 )}
                 {result?.explanation && (
-                  <p className="text-neutral-700 bg-neutral-50 p-3 rounded mt-2">
+                  <p className="text-neutral-700 bg-neutral-100 p-3 rounded mt-2">
                     <span className="font-medium">Explanation:</span> {result.explanation}
                   </p>
                 )}
