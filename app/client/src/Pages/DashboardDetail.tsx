@@ -98,7 +98,13 @@ export default function DashboardDetail() {
                 <h3 className="text-lg font-semibold text-primary-700 mb-4">
                   Study Tools
                 </h3>
-                <div className="flex gap-4">
+                <div className="flex flex-wrap gap-4">
+                  <button
+                    onClick={() => navigate(`/dashboard/${dashboardId}/study`)}
+                    className="btn"
+                  >
+                    AI Study Session
+                  </button>
                   <button
                     onClick={() => navigate(`/dashboard/${dashboardId}/flashcards`)}
                     className="btn"

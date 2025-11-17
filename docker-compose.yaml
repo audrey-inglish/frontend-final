@@ -36,6 +36,9 @@ services:
     command: sh -c "npm install -g pnpm && pnpm install && pnpm dev"
     environment:
       - NODE_ENV=development
+      - VITE_AGENT_ENDPOINT=${VITE_AGENT_ENDPOINT:-http://ai-snow.reindeer-pinecone.ts.net:9292/v1/chat/completions}
+      - VITE_AGENT_MODEL=${VITE_AGENT_MODEL:-gpt-oss-120b}
+      - VITE_AGENT_API_KEY=${VITE_AGENT_API_KEY}
     depends_on:
       - server
 
