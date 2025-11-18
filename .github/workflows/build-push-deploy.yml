@@ -7,11 +7,26 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-push:
+  # Single place to compute TAG so both build jobs can reference it
+  set-metadata:
     runs-on: ubuntu-latest
     outputs:
       TAG: ${{ steps.meta.outputs.TAG }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
+      - name: Extract metadata for tagging
+        id: meta
+        run: |
+          TAG=$(date +'%Y%m%d')-${GITHUB_SHA::7}
+          echo "TAG=$TAG" >> $GITHUB_ENV
+          echo "TAG=$TAG" >> $GITHUB_OUTPUT
+
+  # Build client in parallel
+  build-client:
+    runs-on: ubuntu-latest
+    needs: set-metadata
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -37,6 +52,44 @@ jobs:
         working-directory: ./app/client
         run: pnpm lint
 
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push client image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./app/client
+          file: ./app/client/Dockerfile
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            audreyinglish/frontend-final-web:latest
+            audreyinglish/frontend-final-web:${{ needs.set-metadata.outputs.TAG }}
+
+  # Build server in parallel
+  build-server:
+    runs-on: ubuntu-latest
+    needs: set-metadata
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
       - name: Install server dependencies
         working-directory: ./app/server
         run: pnpm install --frozen-lockfile
@@ -55,25 +108,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Extract metadata for tagging
-        id: meta
-        run: |
-          TAG=$(date +'%Y%m%d')-${GITHUB_SHA::7}
-          echo "TAG=$TAG" >> $GITHUB_ENV
-          echo "TAG=$TAG" >> $GITHUB_OUTPUT
-
-
-      - name: Build and push client image
-        uses: docker/build-push-action@v6
-        with:
-          context: ./app/client
-          file: ./app/client/Dockerfile
-          push: true
-          platforms: linux/amd64,linux/arm64
-          tags: |
-            audreyinglish/frontend-final-web:latest
-            audreyinglish/frontend-final-web:${{ steps.meta.outputs.TAG }}
-
       - name: Build and push server image
         uses: docker/build-push-action@v6
         with:
@@ -83,11 +117,11 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: |
             audreyinglish/frontend-final-server:latest
-            audreyinglish/frontend-final-server:${{ steps.meta.outputs.TAG }}
+            audreyinglish/frontend-final-server:${{ needs.set-metadata.outputs.TAG }}
 
   deploy:
     runs-on: self-hosted
-    needs: build-and-push
+    needs: [set-metadata, build-client, build-server]
 
     steps:
       - name: Checkout repository
@@ -96,9 +130,8 @@ jobs:
       - name: Set environment variables
         run: |
           echo "KUBECONFIG=$HOME/.kube/config" >> $GITHUB_ENV
-          echo "TAG=${{ needs.build-and-push.outputs.TAG }}" >> $GITHUB_ENV
+          echo "TAG=${{ needs.set-metadata.outputs.TAG }}" >> $GITHUB_ENV
           echo "Deploying with tag: $TAG"
-
 
       - name: Ensure kubectl works
         run: |
@@ -108,7 +141,7 @@ jobs:
 
       - name: Deploy to Kubernetes
         env:
-          TAG: ${{ needs.build-and-push.outputs.TAG }}
+          TAG: ${{ needs.set-metadata.outputs.TAG }}
         run: |
           echo "Applying manifests to audrey-final namespace with TAG=$TAG"
           echo "Checking substituted YAML for frontend:"
@@ -118,7 +151,6 @@ jobs:
             echo "Applying $FILE"
             cat $FILE | envsubst | kubectl apply -n audrey-final -f -
           done
-
 
       - name: Verify deployment
         run: |
