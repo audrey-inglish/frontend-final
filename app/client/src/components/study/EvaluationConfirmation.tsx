@@ -61,7 +61,7 @@ export function EvaluationConfirmation({
         <div className="text-sm text-primary-600 mb-4">
           Review the AI's evaluation. Click <strong>Confirm</strong> to accept and continue, or <strong>Reject</strong> to re-answer the question.
         </div>
-        <div className="flex gap-3">
+        <div className="flex">
           <button
             onClick={onReject}
             disabled={isLoading}
