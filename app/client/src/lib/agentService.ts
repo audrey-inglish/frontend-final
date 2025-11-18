@@ -104,9 +104,24 @@ export const EVALUATE_RESPONSE_TOOL: AgentTool = {
         },
         masteryUpdates: {
           type: "array",
-          description: "Updates to topic mastery levels",
+          description: "Updates to topic mastery levels. Must include an entry for the current topic being tested.",
           items: {
             type: "object",
+            properties: {
+              topic: {
+                type: "string",
+                description: "The topic name (must match one of the session topics)",
+              },
+              newLevel: {
+                type: "number",
+                description: "The updated mastery level (0-100). Correct answer: increase by 10-15. Incorrect: decrease by 5-10.",
+              },
+              reasoning: {
+                type: "string",
+                description: "Why this mastery level was chosen",
+              },
+            },
+            required: ["topic", "newLevel", "reasoning"],
           },
         },
         recommendation: {
@@ -151,7 +166,7 @@ Your responsibilities:
 2. When calling evaluate_study_response:
    - Be encouraging but honest in your assessment
    - Provide educational explanations that teach the concept
-   - Update mastery levels based on performance (correct answer: +10-15%, incorrect: -5-10%)
+   - You can include masteryUpdates but they will be recalculated automatically based on performance
    - Recommend ending when all topics reach 80%+ mastery
 
 Be supportive and adaptive. Focus on helping the student truly understand the material.`;

@@ -272,7 +272,7 @@ Rubric items:
 
 
 Features:
-- [ ] Live adaptive study session (AI-driven switching between quiz/flashcard)
+- [ ] Live adaptive study session (AI selects questions and evaluates progress)
 - [ ] Preparedness score with progress visualization
 
 To-Dos & Subrequirements:

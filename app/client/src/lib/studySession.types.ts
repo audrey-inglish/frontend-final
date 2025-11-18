@@ -60,12 +60,7 @@ export interface AgentToolFunction {
   description: string;
   parameters: {
     type: 'object';
-    properties: Record<string, {
-      type: string;
-      description: string;
-      items?: { type: string };
-      enum?: string[];
-    }>;
+    properties: Record<string, unknown>; // Allow any JSON Schema property definition
     required: string[];
   };
 }

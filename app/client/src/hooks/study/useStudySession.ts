@@ -53,6 +53,26 @@ function argsToQuestion(
   };
 }
 
+function calculateMasteryLevel(
+  questionsCorrect: number,
+  questionsAnswered: number
+): number {
+  if (questionsAnswered === 0) return 0;
+  const accuracy = questionsCorrect / questionsAnswered;
+
+  // Scale mastery based on how many questions they've answered
+  // Fewer questions = lower max mastery (need to prove it)
+  let maxPossibleMastery = 100;
+  if (questionsAnswered < 5) {
+    // Cap mastery until they've answered at least 5 questions
+    maxPossibleMastery = 40 + questionsAnswered * 12; // 52%, 64%, 76%, 88%, 100%
+  }
+
+  const calculatedLevel = accuracy * maxPossibleMastery;
+
+  return Math.round(Math.min(100, calculatedLevel));
+}
+
 function applyMasteryUpdates(
   currentMastery: TopicMastery[],
   updates: EvaluateResponseArgs["masteryUpdates"]
@@ -62,7 +82,11 @@ function applyMasteryUpdates(
   for (const update of updates) {
     const existing = masteryMap.get(update.topic);
     if (existing) {
-      existing.level = Math.max(0, Math.min(100, update.newLevel));
+      const newLevel =
+        typeof update.newLevel === "number" && !isNaN(update.newLevel)
+          ? update.newLevel
+          : existing.level;
+      existing.level = Math.max(0, Math.min(100, newLevel));
     }
   }
 
@@ -133,33 +157,66 @@ export function useStudySession({
           apiKey
         );
 
+        console.log("Evaluation from agent:", evaluationArgs);
+        console.log(
+          "Current mastery before update:",
+          sessionState.masteryLevels
+        );
+
+        const updatedMastery = applyMasteryUpdates(
+          sessionState.masteryLevels,
+          evaluationArgs.masteryUpdates
+        );
+
+        console.log(
+          "Updated mastery after applying agent updates:",
+          updatedMastery
+        );
+        console.log(
+          "Current question topic:",
+          sessionState.currentQuestion.topic
+        );
+
         const evaluation: EvaluationResult = {
           questionId: sessionState.currentQuestion.id,
           isCorrect: evaluationArgs.isCorrect,
           explanation: evaluationArgs.explanation,
           correctAnswer: evaluationArgs.correctAnswer,
-          masteryUpdates: applyMasteryUpdates(
-            sessionState.masteryLevels,
-            evaluationArgs.masteryUpdates
-          ),
+          masteryUpdates: updatedMastery,
         };
 
-        const updatedMastery = [...sessionState.masteryLevels];
-        const topicMastery = updatedMastery.find(
-          (m) => m.topic === sessionState.currentQuestion!.topic
-        );
-        if (topicMastery) {
-          topicMastery.questionsAnswered += 1;
-          if (evaluation.isCorrect) {
-            topicMastery.questionsCorrect += 1;
+        // Update the counters for the topic
+        const masteryWithCounters = updatedMastery.map((m) => {
+          if (m.topic === sessionState.currentQuestion!.topic) {
+            const newQuestionsAnswered = m.questionsAnswered + 1;
+            const newQuestionsCorrect =
+              m.questionsCorrect + (evaluation.isCorrect ? 1 : 0);
+            const calculatedLevel = calculateMasteryLevel(
+              newQuestionsCorrect,
+              newQuestionsAnswered
+            );
+
+            return {
+              ...m,
+              questionsAnswered: newQuestionsAnswered,
+              questionsCorrect: newQuestionsCorrect,
+              level: calculatedLevel,
+              lastAsked: userAnswer.timestamp,
+            };
           }
-          topicMastery.lastAsked = userAnswer.timestamp;
-        }
+          return m;
+        });
+
+        console.log(
+          "Final mastery with updated counters:",
+          masteryWithCounters
+        );
 
         setSessionState((prev: StudySessionState) => ({
           ...prev,
           answerHistory: [...prev.answerHistory, userAnswer],
-          masteryLevels: updatedMastery,
+          evaluationHistory: [...prev.evaluationHistory, evaluation],
+          masteryLevels: masteryWithCounters,
           pendingEvaluation: {
             question: sessionState.currentQuestion!,
             answer: userAnswer,
@@ -188,30 +245,13 @@ export function useStudySession({
     setError(null);
 
     try {
-      const { evaluation } = sessionState.pendingEvaluation;
-      
-      // Use the masteryLevels from sessionState which already has updated counters
-      // Just apply the level changes from evaluation.masteryUpdates
-      const finalMastery = sessionState.masteryLevels.map(current => {
-        const update = evaluation.masteryUpdates.find(u => u.topic === current.topic);
-        if (update) {
-          return {
-            ...current,
-            level: update.level, // Apply the new level from agent
-          };
-        }
-        return current;
-      });
-
       const newState: StudySessionState = {
         ...sessionState,
-        masteryLevels: finalMastery,
-        evaluationHistory: [...sessionState.evaluationHistory, evaluation],
         pendingEvaluation: undefined,
         currentQuestion: undefined,
       };
 
-      const allMastered = finalMastery.every(
+      const allMastered = sessionState.masteryLevels.every(
         (m: TopicMastery) => m.level >= 80
       );
       if (allMastered) {
@@ -240,14 +280,42 @@ export function useStudySession({
     }
   }, [sessionState, apiKey, onSessionEnd]);
 
-
   const rejectEvaluation = useCallback(() => {
+    if (!sessionState.pendingEvaluation) return;
+
+    // Remove the last answer and evaluation from history
+    const newAnswerHistory = sessionState.answerHistory.slice(0, -1);
+    const newEvaluationHistory = sessionState.evaluationHistory.slice(0, -1);
+
+    // Revert the mastery counters for the rejected evaluation
+    const revertedMastery = sessionState.masteryLevels.map((m) => {
+      if (m.topic === sessionState.currentQuestion?.topic) {
+        return {
+          ...m,
+          questionsAnswered: Math.max(0, m.questionsAnswered - 1),
+          questionsCorrect: Math.max(
+            0,
+            m.questionsCorrect -
+              (sessionState.pendingEvaluation!.evaluation.isCorrect ? 1 : 0)
+          ),
+          lastAsked:
+            newAnswerHistory.length > 0
+              ? newAnswerHistory[newAnswerHistory.length - 1].timestamp
+              : undefined,
+        };
+      }
+      return m;
+    });
+
     setSessionState((prev: StudySessionState) => ({
       ...prev,
+      answerHistory: newAnswerHistory,
+      evaluationHistory: newEvaluationHistory,
+      masteryLevels: revertedMastery,
       pendingEvaluation: undefined,
       // Keep current question so user can re-answer
     }));
-  }, []);
+  }, [sessionState]);
 
   const endSession = useCallback(() => {
     setSessionState((prev: StudySessionState) => ({
