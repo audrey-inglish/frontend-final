@@ -1,0 +1,122 @@
+import { useStudySession } from "../../hooks/study/useStudySession";
+import { StudyQuestionDisplay } from "./StudyQuestionDisplay";
+import { EvaluationConfirmation } from "./EvaluationConfirmation";
+import { SessionStart } from "./SessionStart";
+import { SessionComplete } from "./SessionComplete";
+import { SessionProgress } from "./SessionProgress";
+
+interface StudySessionProps {
+  topics: string[];
+  apiKey: string;
+  onComplete?: () => void;
+}
+
+export function StudySession({
+  topics,
+  apiKey,
+  onComplete,
+}: StudySessionProps) {
+  const {
+    sessionState,
+    isLoading,
+    error,
+    startSession,
+    submitAnswer,
+    confirmEvaluation,
+    rejectEvaluation,
+    endSession,
+  } = useStudySession({
+    topics,
+    apiKey,
+    onSessionEnd: onComplete,
+  });
+
+  // Check for session completion first (before checking active state)
+  if (
+    sessionState.questionHistory.length > 0 &&
+    !sessionState.currentQuestion &&
+    !sessionState.pendingEvaluation
+  ) {
+    return (
+      <SessionComplete
+        masteryLevels={sessionState.masteryLevels}
+        questionCount={sessionState.questionHistory.length}
+        correctCount={
+          sessionState.evaluationHistory.filter((e) => e.isCorrect).length
+        }
+        onComplete={onComplete}
+      />
+    );
+  }
+
+  if (!sessionState.active) {
+    return (
+      <SessionStart
+        topics={topics}
+        isLoading={isLoading}
+        error={error}
+        onStart={startSession}
+      />
+    );
+  }
+
+  return (
+    <div className="max-w-4xl mx-auto p-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold text-primary-700">
+              Study Session
+            </h2>
+            <button onClick={endSession} className="btn-tertiary">
+              End Session
+            </button>
+          </div>
+
+          {error && (
+            <div className="p-4 bg-custom-red-100 border border-custom-red-500 rounded-lg text-custom-red-500">
+              {error}
+            </div>
+          )}
+
+          {/* Main Card */}
+          <div className="card">
+            {sessionState.pendingEvaluation ? (
+              <EvaluationConfirmation
+                question={sessionState.pendingEvaluation.question}
+                userAnswer={sessionState.pendingEvaluation.answer}
+                evaluation={sessionState.pendingEvaluation.evaluation}
+                onConfirm={confirmEvaluation}
+                onReject={rejectEvaluation}
+                isLoading={isLoading}
+              />
+            ) : sessionState.currentQuestion ? (
+              <StudyQuestionDisplay
+                question={sessionState.currentQuestion}
+                onSubmit={submitAnswer}
+                isLoading={isLoading}
+              />
+            ) : (
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent-600 mx-auto"></div>
+                <p className="text-primary-600 mt-4">
+                  Generating next question...
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="lg:col-span-1">
+          <SessionProgress
+            masteryLevels={sessionState.masteryLevels}
+            answersCount={sessionState.answerHistory.length}
+            correctCount={
+              sessionState.evaluationHistory.filter((e) => e.isCorrect).length
+            }
+          />
+        </div>
+      </div>
+    </div>
+  );
+}

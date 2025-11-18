@@ -61,22 +61,31 @@ body {
     @apply text-3xl font-bold mb-4;
   }
 
+  h2 {
+    @apply text-2xl font-bold text-gray-800;
+  }
+
   h3 {
-	@apply text-lg font-semibold text-primary-700;
+    @apply text-lg font-semibold text-primary-700;
   }
 
   h4 {
-	@apply font-semibold text-primary-700 mb-2;
+    @apply font-semibold text-primary-700 mb-2;
   }
 
   .btn {
     @apply bg-accent-300 text-blue-white font-semibold py-2 px-4 m-2 rounded-lg hover:bg-accent-600;
-	@apply disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .btn-secondary {
-	@apply  bg-accent-300 text-blue-white font-semibold py-2 px-4 m-2 rounded-md hover:bg-accent-600;
-	@apply bg-primary-50 hover:bg-primary-100 hover:text-primary-700 text-primary-500 ml-0;
+    @apply bg-accent-300 text-blue-white font-semibold py-2 px-4 m-2 rounded-md hover:bg-accent-600;
+    @apply bg-primary-50 hover:bg-primary-100 hover:text-primary-700 text-primary-500 ml-0;
+  }
+  
+  .btn-tertiary {
+        @apply bg-primary-100 hover:bg-primary-200 hover:text-primary-700 text-primary-500;
+        @apply ml-0 px-4 m-2 rounded-md;
   }
 
   .inline-code {
@@ -87,21 +96,21 @@ body {
   }
 
   .card {
-	@apply bg-custom-white border-primary-50;
-	@apply p-4 rounded-lg shadow-xs border;
-	@apply hover:shadow-md transition-shadow;
+    @apply bg-custom-white border-primary-50;
+    @apply p-4 rounded-lg shadow-xs border;
+    @apply hover:shadow-md transition-shadow;
   }
 
   .text-input {
-	@apply w-full px-3 py-2 shadow-inner;
-	@apply  border-2 border-primary-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-100;
+    @apply w-full px-3 py-2 shadow-inner;
+    @apply border-2 border-primary-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-100;
   }
 
   .error-toast-button {
-	@apply bg-custom-red-600 hover:bg-custom-red-700 transition-colors px-3 py-1 rounded border border-custom-white/30 hover:border-custom-white/50 text-sm font-medium;
+    @apply bg-custom-red-600 hover:bg-custom-red-700 transition-colors px-3 py-1 rounded border border-custom-white/30 hover:border-custom-white/50 text-sm font-medium;
   }
 
   .spinner {
-	@apply inline-block animate-spin rounded-full h-8 w-8 border-4 border-neutral-200 border-t-accent-600;
+    @apply inline-block animate-spin rounded-full h-8 w-8 border-4 border-neutral-200 border-t-accent-600;
   }
 }
