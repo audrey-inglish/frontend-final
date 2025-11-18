@@ -1,9 +1,10 @@
 export const STUDY_SESSION_CONFIG = {
 
   agent: {
-    endpoint:
-      import.meta.env.VITE_AGENT_ENDPOINT ||
-      "http://ai-snow.reindeer-pinecone.ts.net:9292/v1/chat/completions",
+    // Prefer an explicit environment variable set at build time. If missing,
+    // default to the same-origin server proxy we added at `/api/agent` so the
+    // browser doesn't attempt to call an insecure HTTP host directly.
+    endpoint: import.meta.env.VITE_AGENT_ENDPOINT || "/api/agent",
     model: import.meta.env.VITE_AGENT_MODEL || "gpt-oss-120b",
     timeout: 60000,
   },
