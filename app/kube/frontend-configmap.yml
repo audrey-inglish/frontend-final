@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+  namespace: audrey-final
+data:
+  VITE_AGENT_ENDPOINT: "http://ai-snow.reindeer-pinecone.ts.net:9292/v1/chat/completions"
+  VITE_AGENT_MODEL: "gpt-oss-120b"

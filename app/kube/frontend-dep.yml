@@ -17,5 +17,10 @@ spec:
         - name: final-web
           image: audreyinglish/frontend-final-web:${TAG}
           imagePullPolicy: Always
+              envFrom:
+                - configMapRef:
+                    name: frontend-config
+                - secretRef:
+                    name: frontend-secret
           ports:
             - containerPort: 80
