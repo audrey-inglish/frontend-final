@@ -11,7 +11,7 @@ import type {
   EvaluateResponseArgs,
   StudySessionState,
 } from "./studySession.types";
-import { getAgentEndpoint, getAgentModel } from "./studySession.config";
+import { getAgentEndpoint, getAgentModel, STUDY_SESSION_CONFIG } from "./studySession.config";
 
 export const GET_NEXT_STEP_TOOL: AgentTool = {
   type: "function",
@@ -135,6 +135,8 @@ export const EVALUATE_RESPONSE_TOOL: AgentTool = {
 };
 
 function buildSystemPrompt(sessionState: StudySessionState): string {
+  const masteryThreshold = STUDY_SESSION_CONFIG.mastery.masteryThreshold;
+  
   return `You are an adaptive AI tutor conducting a study session. Your goal is to help the student master these topics: ${sessionState.topics.join(", ")}.
 
 Current Mastery Levels:
@@ -151,7 +153,7 @@ Your responsibilities:
    - Be encouraging but honest in your assessment
    - Provide educational explanations that teach the concept
    - You can include masteryUpdates but they will be recalculated automatically based on performance
-   - Recommend ending when all topics reach 80%+ mastery
+   - Recommend ending when all topics reach ${masteryThreshold}%+ mastery
 
 Be supportive and adaptive. Focus on helping the student truly understand the material.`;
 }

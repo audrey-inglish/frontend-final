@@ -268,7 +268,7 @@ Features:
 Rubric items:
 - Project scope expansion
 - Professional, organized experience
-- Technology: 4+ generic layout components
+- Technology: 2+ generic layout components
 
 
 Features:
@@ -277,7 +277,8 @@ Features:
 
 To-Dos & Subrequirements:
 - [ ] Implement startStudySession() loop (autonomous switching logic)
-- [ ] Implement navigateToMode() to adjust UI dynamically
+- [ ] ~~Implement navigateToMode() to adjust UI dynamically~~ (ended up not being applicable)
+- [ ] implement toolcalls and UI for an adaptive, one-question-at-a-time study session mode
 
 #### Delivered
 

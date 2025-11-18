@@ -1,4 +1,5 @@
 import type { TopicMastery } from '../../lib/studySession.types';
+import { isTopicMastered } from '../../lib/studySession.config';
 
 interface MasteryOverviewProps {
   masteryLevels: TopicMastery[];
@@ -11,7 +12,7 @@ export function MasteryOverview({ masteryLevels, className = '' }: MasteryOvervi
     : 0;
 
   const getMasteryColor = (level: number) => {
-    if (level >= 80) return 'bg-custom-green-500';
+    if (isTopicMastered(level)) return 'bg-custom-green-500';
     if (level >= 50) return 'bg-accent-300';
     return 'bg-accent-200';
   };

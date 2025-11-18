@@ -12,6 +12,7 @@ import {
   calculateMasteryLevel,
   applyMasteryUpdates,
 } from "../../lib/studySession.utils";
+import { isTopicMastered } from "../../lib/studySession.config";
 
 interface UseStudySessionOptions {
   topics: string[];
@@ -161,8 +162,8 @@ export function useStudySession({
         currentQuestion: undefined,
       };
 
-      const allMastered = sessionState.masteryLevels.every(
-        (m: TopicMastery) => m.level >= 80
+      const allMastered = sessionState.masteryLevels.every((m: TopicMastery) =>
+        isTopicMastered(m.level)
       );
       if (allMastered) {
         setSessionState({

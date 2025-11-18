@@ -1,5 +1,6 @@
 import type { TopicMastery } from "../../lib/studySession.types";
 import { MasteryOverview } from "./MasteryOverview";
+import { isTopicMastered } from "../../lib/studySession.config";
 
 interface SessionCompleteProps {
   masteryLevels: TopicMastery[];
@@ -14,7 +15,7 @@ export function SessionComplete({
   correctCount,
   onComplete,
 }: SessionCompleteProps) {
-  const allMastered = masteryLevels.every((m) => m.level >= 80);
+  const allMastered = masteryLevels.every((m) => isTopicMastered(m.level));
   const avgMastery = Math.round(
     masteryLevels.reduce((sum, m) => sum + m.level, 0) / masteryLevels.length
   );

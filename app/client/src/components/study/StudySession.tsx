@@ -31,17 +31,7 @@ export function StudySession({
     onSessionEnd: onComplete,
   });
 
-  if (!sessionState.active) {
-    return (
-      <SessionStart
-        topics={topics}
-        isLoading={isLoading}
-        error={error}
-        onStart={startSession}
-      />
-    );
-  }
-
+  // Check for session completion first (before checking active state)
   if (
     sessionState.questionHistory.length > 0 &&
     !sessionState.currentQuestion &&
@@ -55,6 +45,17 @@ export function StudySession({
           sessionState.evaluationHistory.filter((e) => e.isCorrect).length
         }
         onComplete={onComplete}
+      />
+    );
+  }
+
+  if (!sessionState.active) {
+    return (
+      <SessionStart
+        topics={topics}
+        isLoading={isLoading}
+        error={error}
+        onStart={startSession}
       />
     );
   }
