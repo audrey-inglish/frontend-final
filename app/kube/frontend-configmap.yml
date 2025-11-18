@@ -4,5 +4,8 @@ metadata:
   name: frontend-config
   namespace: audrey-final
 data:
-  VITE_AGENT_ENDPOINT: "http://ai-snow.reindeer-pinecone.ts.net:9292/v1/chat/completions"
+  # Point the frontend to the server-side agent proxy (same-origin). This avoids
+  # mixed-content errors because the browser will call the app's HTTPS origin
+  # and the server will proxy to the internal HTTP AI backend.
+  VITE_AGENT_ENDPOINT: "/api/agent"
   VITE_AGENT_MODEL: "gpt-oss-120b"

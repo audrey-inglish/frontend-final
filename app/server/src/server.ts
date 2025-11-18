@@ -11,6 +11,7 @@ import conceptsRouter from "./routes/concepts";
 import quizzesRouter from "./routes/quizzes";
 import generateQuizRouter from "./routes/generateQuiz";
 import evaluateResponseRouter from "./routes/evaluateResponse";
+import agentProxyRouter from "./routes/agentProxy";
 
 
 const app = express();
@@ -20,6 +21,10 @@ app.use(express.json());
 app.get("/api/hello", (_req, res) => {
   res.json({ message: "Hello from backend!" });
 });
+
+// Agent proxy: expose a same-origin endpoint for the frontend to call over HTTPS.
+// The server will forward requests to the internal AI backend (possibly HTTP).
+app.use("/api/agent", agentProxyRouter);
 
 interface User {
   id: number;
