@@ -9,6 +9,7 @@ import QuizPage from "./Pages/QuizPage";
 import StudySessionPage from "./Pages/StudySessionPage";
 import AuthCallback from "./Pages/AuthCallback";
 import "./App.css";
+import { AgentApiKeySettings } from "./components/settings/AgentApiKeySettings";
 
 function App() {
   const auth = useAuth();
@@ -27,6 +28,7 @@ function App() {
           <Route path="/dashboard/:id/quiz" element={<QuizPage />} />
           <Route path="/dashboard/:id/study" element={<StudySessionPage />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
+          <Route path="/settings" element={<AgentApiKeySettings />} />
         </Routes>
       </BrowserRouter>
     </ErrorBoundary>
