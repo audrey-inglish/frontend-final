@@ -23,7 +23,7 @@ export function SessionComplete({
   return (
     <div className="max-w-3xl mx-auto p-6">
       <div className="text-center space-y-6">
-        <div className="text-6xl">🎉</div>
+        {/* <div className="text-6xl">🎉</div> */}
         <div>
           <h2>{allMastered ? "Session Complete!" : "Session Ended"}</h2>
           <p className="text-primary-600 mt-2">

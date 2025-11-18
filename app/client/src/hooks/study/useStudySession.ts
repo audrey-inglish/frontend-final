@@ -170,7 +170,6 @@ export function useStudySession({
           ...newState,
           active: false,
         });
-        onSessionEnd?.();
         return;
       }
 
@@ -189,7 +188,7 @@ export function useStudySession({
     } finally {
       setIsLoading(false);
     }
-  }, [sessionState, apiKey, onSessionEnd]);
+  }, [sessionState, apiKey]);
 
   const rejectEvaluation = useCallback(() => {
     if (!sessionState.pendingEvaluation) return;

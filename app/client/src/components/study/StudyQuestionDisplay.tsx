@@ -33,7 +33,7 @@ export function StudyQuestionDisplay({
       case 'easy':
         return 'bg-custom-green-100 text-custom-green-700';
       case 'medium':
-        return 'bg-accent-100 text-accent-600';
+        return 'bg-accent-50 text-accent-600';
       case 'hard':
         return 'bg-custom-red-100 text-custom-red-600';
       default:
