@@ -84,3 +84,7 @@ app/kube/swag-tls-secret.yml
 app/client/src/hooks/examples.tsx
 app/client/src/examples/StudySessionExample.tsx
 app/kube/frontend-secret.yml
+app/kube/cert_prod.crt
+app/kube/cert_prod.key
+app/kube/cert_staging.crt
+app/kube/cert_staging.key
