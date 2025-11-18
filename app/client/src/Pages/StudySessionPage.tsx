@@ -31,8 +31,6 @@ export default function StudySessionPage() {
   );
 
   const isLoading = dashboardLoading || notesLoading || conceptsLoading;
-
-  // Extract topics from notes and concepts
   const topics = extractStudyTopics(notes || [], conceptsData?.concepts);
 
   const handleComplete = () => {
@@ -54,8 +52,8 @@ export default function StudySessionPage() {
           {!isLoading && !apiKey && (
             <div className="max-w-2xl mx-auto">
               <div className="card p-8 text-center">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">API Key Required</h2>
-                <p className="text-gray-600 mb-6">
+                <h2 className="text-2xl font-bold text-neutral-900 mb-4">API Key Required</h2>
+                <p className="text-primary-600 mb-6">
                   You need to configure an API key to use the AI study session feature.
                 </p>
                 <button
@@ -77,8 +75,8 @@ export default function StudySessionPage() {
           {!isLoading && apiKey && topics.length === 0 && (
             <div className="max-w-2xl mx-auto">
               <div className="card p-8 text-center">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">No Topics Found</h2>
-                <p className="text-gray-600 mb-6">
+                <h2 className="text-2xl font-bold text-neutral-900 mb-4">No Topics Found</h2>
+                <p className="text-primary-600 mb-6">
                   Please add some notes or generate concepts before starting a study session.
                 </p>
                 <button
@@ -93,17 +91,15 @@ export default function StudySessionPage() {
 
           {!isLoading && apiKey && topics.length > 0 && dashboard && (
             <>
-              {/* Session header */}
               <div className="mb-6">
-                <h1 className="text-3xl font-bold text-gray-900">
+                <h1 className="text-3xl font-bold text-neutral-900">
                   {getStudySessionTitle(dashboard.title)}
                 </h1>
-                <p className="text-gray-600 mt-2">
+                <p className="text-primary-600 mt-2">
                   AI-guided study session covering {topics.length} topic{topics.length !== 1 ? 's' : ''}
                 </p>
               </div>
 
-              {/* Study Session Component */}
               <StudySession
                 topics={topics}
                 apiKey={apiKey}

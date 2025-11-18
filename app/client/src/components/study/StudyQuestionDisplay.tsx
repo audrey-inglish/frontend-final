@@ -28,42 +28,44 @@ export function StudyQuestionDisplay({
     }
   };
 
+  const getDifficultyStyles = () => {
+    switch (question.difficulty) {
+      case 'easy':
+        return 'bg-custom-green-100 text-custom-green-700';
+      case 'medium':
+        return 'bg-accent-100 text-accent-600';
+      case 'hard':
+        return 'bg-custom-red-100 text-custom-red-600';
+      default:
+        return 'bg-neutral-100 text-neutral-700';
+    }
+  };
+
   return (
     <div className="space-y-6">
-      {/* Question Header */}
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-gray-500">
+        <span className="text-sm font-medium text-primary-500">
           {question.topic}
         </span>
-        <span className={`text-xs px-2 py-1 rounded ${
-          question.difficulty === 'easy' 
-            ? 'bg-green-100 text-green-800'
-            : question.difficulty === 'medium'
-            ? 'bg-yellow-100 text-yellow-800'
-            : 'bg-red-100 text-red-800'
-        }`}>
+        <span className={`text-xs px-2 py-1 rounded ${getDifficultyStyles()}`}>
           {question.difficulty}
         </span>
       </div>
 
-      {/* Question Text */}
-      <div className="text-lg font-medium text-gray-900">
+      <div className="text-lg font-medium text-neutral-900">
         {question.question}
       </div>
 
-      {/* Answer Input */}
       <form onSubmit={handleSubmit} className="space-y-4">
         {renderInput()}
 
-        {/* Hint */}
         {question.hint && (
           <div className="p-3 bg-accent-50 border border-accent-100 rounded-lg">
-            <div className="text-sm font-medium text-accent-200">Hint:</div>
-            <div className="text-sm text-accent-200 mt-1">{question.hint}</div>
+            <div className="text-sm font-medium text-accent-600">Hint:</div>
+            <div className="text-sm text-accent-300 mt-1">{question.hint}</div>
           </div>
         )}
 
-        {/* Submit Button */}
         <button
           type="submit"
           disabled={!answer.trim() || isLoading}

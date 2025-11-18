@@ -19,7 +19,6 @@ export function EvaluationConfirmation({
 }: EvaluationConfirmationProps) {
   return (
     <div className="space-y-6">
-      {/* Result Banner */}
       <div className={`p-4 rounded-lg ${
         evaluation.isCorrect
           ? 'bg-custom-green-100'
@@ -27,14 +26,13 @@ export function EvaluationConfirmation({
       }`}>
         <div className="flex items-center space-x-2">
           <span className={`font-semibold text-lg ${
-            evaluation.isCorrect ? 'text-custom-green-500' : 'text-custom-red-500'
+            evaluation.isCorrect ? 'text-custom-green-700' : 'text-custom-red-700'
           }`}>
             {evaluation.isCorrect ? 'Correct!' : 'Not quite right'}
           </span>
         </div>
       </div>
 
-      {/* Question Review */}
       <div className="space-y-3">
         <div>
           <div className="text-sm font-medium text-primary-500">Question</div>
@@ -54,13 +52,11 @@ export function EvaluationConfirmation({
         )}
       </div>
 
-      {/* Explanation */}
       <div className="p-4 bg-primary-50 rounded-lg">
         <div className="text-sm font-medium text-primary-700 mb-2">Explanation</div>
         <div className="text-primary-900 whitespace-pre-line">{evaluation.explanation}</div>
       </div>
 
-      {/* Confirmation Actions */}
       <div className="border-t pt-4">
         <div className="text-sm text-primary-600 mb-4">
           Review the AI's evaluation. Click <strong>Confirm</strong> to accept and continue, or <strong>Reject</strong> to re-answer the question.

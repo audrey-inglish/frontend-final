@@ -1,5 +1,6 @@
 /**
  * Agent Service for Study Session Tool Calling
+ * Manages AI agent interactions for adaptive study sessions
  */
 
 import type {
@@ -12,10 +13,6 @@ import type {
 } from "./studySession.types";
 import { getAgentEndpoint, getAgentModel } from "./studySession.config";
 
-/**
- * Tool definition: get_next_study_step
- * Agent autonomously chooses the next question based on mastery and context
- */
 export const GET_NEXT_STEP_TOOL: AgentTool = {
   type: "function",
   function: {
@@ -76,9 +73,6 @@ export const GET_NEXT_STEP_TOOL: AgentTool = {
   },
 };
 
-/**
- * Agent grades the answer and updates mastery (requires user confirmation)
- */
 export const EVALUATE_RESPONSE_TOOL: AgentTool = {
   type: "function",
   function: {
@@ -140,21 +134,11 @@ export const EVALUATE_RESPONSE_TOOL: AgentTool = {
   },
 };
 
-/**
- * Build the system prompt for the study session
- */
 function buildSystemPrompt(sessionState: StudySessionState): string {
-  return `You are an adaptive AI tutor conducting a study session. Your goal is to help the student master these topics: ${sessionState.topics.join(
-    ", "
-  )}.
+  return `You are an adaptive AI tutor conducting a study session. Your goal is to help the student master these topics: ${sessionState.topics.join(", ")}.
 
 Current Mastery Levels:
-${sessionState.masteryLevels
-  .map(
-    (m) =>
-      `- ${m.topic}: ${m.level}% (${m.questionsCorrect}/${m.questionsAnswered} correct)`
-  )
-  .join("\n")}
+${sessionState.masteryLevels.map((m) => `- ${m.topic}: ${m.level}% (${m.questionsCorrect}/${m.questionsAnswered} correct)`).join("\n")}
 
 Your responsibilities:
 1. When calling get_next_study_step:
@@ -172,9 +156,6 @@ Your responsibilities:
 Be supportive and adaptive. Focus on helping the student truly understand the material.`;
 }
 
-/**
- * Build context messages for the Agent
- */
 function buildContextMessages(
   sessionState: StudySessionState,
   currentAnswer?: string
@@ -186,7 +167,6 @@ function buildContextMessages(
     },
   ];
 
-  // If we're asking for the next question
   if (!currentAnswer) {
     messages.push({
       role: "user",
@@ -196,7 +176,6 @@ function buildContextMessages(
           : "Generate the next question based on the current mastery levels and progress.",
     });
   } else {
-    // If we're evaluating an answer
     const currentQ = sessionState.currentQuestion!;
     messages.push({
       role: "user",
@@ -213,10 +192,7 @@ Evaluate this answer and update the mastery levels accordingly.`,
   return messages;
 }
 
-/**
- * Call the Agent with tool definitions
- */
-export async function callAgentWithTools(
+async function callAgentWithTools(
   messages: AgentMessage[],
   tools: AgentTool[],
   apiKey: string
@@ -243,9 +219,6 @@ export async function callAgentWithTools(
   return response.json();
 }
 
-/**
- * Request the next study step from the Agent
- */
 export async function requestNextStep(
   sessionState: StudySessionState,
   apiKey: string
@@ -266,9 +239,6 @@ export async function requestNextStep(
   return args;
 }
 
-/**
- * Request evaluation of a user's answer
- */
 export async function requestEvaluation(
   sessionState: StudySessionState,
   userAnswer: string,
@@ -288,7 +258,6 @@ export async function requestEvaluation(
 
   const args = JSON.parse(toolCall.function.arguments);
 
-  // Parse the isCorrect field (it comes as a string "true" or "false")
   return {
     ...args,
     isCorrect: args.isCorrect === "true" || args.isCorrect === true,

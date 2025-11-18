@@ -1,14 +1,17 @@
 import { useState, useCallback } from "react";
 import type {
   StudySessionState,
-  StudyQuestion,
   UserAnswer,
   EvaluationResult,
   TopicMastery,
-  GetNextStepArgs,
-  EvaluateResponseArgs,
 } from "../../lib/studySession.types";
 import { requestNextStep, requestEvaluation } from "../../lib/agentService";
+import {
+  initializeMastery,
+  argsToQuestion,
+  calculateMasteryLevel,
+  applyMasteryUpdates,
+} from "../../lib/studySession.utils";
 
 interface UseStudySessionOptions {
   topics: string[];
@@ -25,72 +28,6 @@ interface UseStudySessionReturn {
   confirmEvaluation: () => void;
   rejectEvaluation: () => void;
   endSession: () => void;
-}
-
-function initializeMastery(topics: string[]): TopicMastery[] {
-  return topics.map((topic) => ({
-    topic,
-    level: 0,
-    questionsAnswered: 0,
-    questionsCorrect: 0,
-  }));
-}
-
-// Convert LLM's GetNextStepArgs into a StudyQuestion
-function argsToQuestion(
-  args: GetNextStepArgs,
-  questionId: string
-): StudyQuestion {
-  return {
-    id: questionId,
-    type: args.questionType,
-    topic: args.topic,
-    difficulty: args.difficulty,
-    question: args.question,
-    options: args.options,
-    correctAnswer: args.correctAnswer,
-    hint: args.hint,
-  };
-}
-
-function calculateMasteryLevel(
-  questionsCorrect: number,
-  questionsAnswered: number
-): number {
-  if (questionsAnswered === 0) return 0;
-  const accuracy = questionsCorrect / questionsAnswered;
-
-  // Scale mastery based on how many questions they've answered
-  // Fewer questions = lower max mastery (need to prove it)
-  let maxPossibleMastery = 100;
-  if (questionsAnswered < 5) {
-    // Cap mastery until they've answered at least 5 questions
-    maxPossibleMastery = 40 + questionsAnswered * 12; // 52%, 64%, 76%, 88%, 100%
-  }
-
-  const calculatedLevel = accuracy * maxPossibleMastery;
-
-  return Math.round(Math.min(100, calculatedLevel));
-}
-
-function applyMasteryUpdates(
-  currentMastery: TopicMastery[],
-  updates: EvaluateResponseArgs["masteryUpdates"]
-): TopicMastery[] {
-  const masteryMap = new Map(currentMastery.map((m) => [m.topic, { ...m }]));
-
-  for (const update of updates) {
-    const existing = masteryMap.get(update.topic);
-    if (existing) {
-      const newLevel =
-        typeof update.newLevel === "number" && !isNaN(update.newLevel)
-          ? update.newLevel
-          : existing.level;
-      existing.level = Math.max(0, Math.min(100, newLevel));
-    }
-  }
-
-  return Array.from(masteryMap.values());
 }
 
 export function useStudySession({
@@ -111,7 +48,6 @@ export function useStudySession({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Start the session and get the first question
   const startSession = useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -133,7 +69,6 @@ export function useStudySession({
     }
   }, [sessionState, apiKey]);
 
-  // Submit an answer and request evaluation from LLM
   const submitAnswer = useCallback(
     async (answer: string) => {
       if (!sessionState.currentQuestion) {
@@ -157,24 +92,9 @@ export function useStudySession({
           apiKey
         );
 
-        console.log("Evaluation from agent:", evaluationArgs);
-        console.log(
-          "Current mastery before update:",
-          sessionState.masteryLevels
-        );
-
         const updatedMastery = applyMasteryUpdates(
           sessionState.masteryLevels,
           evaluationArgs.masteryUpdates
-        );
-
-        console.log(
-          "Updated mastery after applying agent updates:",
-          updatedMastery
-        );
-        console.log(
-          "Current question topic:",
-          sessionState.currentQuestion.topic
         );
 
         const evaluation: EvaluationResult = {
@@ -185,7 +105,6 @@ export function useStudySession({
           masteryUpdates: updatedMastery,
         };
 
-        // Update the counters for the topic
         const masteryWithCounters = updatedMastery.map((m) => {
           if (m.topic === sessionState.currentQuestion!.topic) {
             const newQuestionsAnswered = m.questionsAnswered + 1;
@@ -207,11 +126,6 @@ export function useStudySession({
           return m;
         });
 
-        console.log(
-          "Final mastery with updated counters:",
-          masteryWithCounters
-        );
-
         setSessionState((prev: StudySessionState) => ({
           ...prev,
           answerHistory: [...prev.answerHistory, userAnswer],
@@ -223,10 +137,6 @@ export function useStudySession({
             evaluation,
           },
         }));
-
-        if (evaluationArgs.recommendation === "end-session") {
-          // Will be handled when user confirms
-        }
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "Failed to evaluate answer"
@@ -283,11 +193,9 @@ export function useStudySession({
   const rejectEvaluation = useCallback(() => {
     if (!sessionState.pendingEvaluation) return;
 
-    // Remove the last answer and evaluation from history
     const newAnswerHistory = sessionState.answerHistory.slice(0, -1);
     const newEvaluationHistory = sessionState.evaluationHistory.slice(0, -1);
 
-    // Revert the mastery counters for the rejected evaluation
     const revertedMastery = sessionState.masteryLevels.map((m) => {
       if (m.topic === sessionState.currentQuestion?.topic) {
         return {
@@ -313,7 +221,6 @@ export function useStudySession({
       evaluationHistory: newEvaluationHistory,
       masteryLevels: revertedMastery,
       pendingEvaluation: undefined,
-      // Keep current question so user can re-answer
     }));
   }, [sessionState]);
 

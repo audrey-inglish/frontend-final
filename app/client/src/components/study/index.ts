@@ -10,16 +10,16 @@ export type {
   EvaluateResponseArgs,
 } from "../../lib/studySession.types";
 
-// Hook
 export { useStudySession } from "../../hooks/study/useStudySession";
 
-// Components
 export { StudySession } from "./StudySession";
 export { StudyQuestionDisplay } from "./StudyQuestionDisplay";
 export { EvaluationConfirmation } from "./EvaluationConfirmation";
 export { MasteryOverview } from "./MasteryOverview";
+export { SessionStart } from "./SessionStart";
+export { SessionComplete } from "./SessionComplete";
+export { SessionProgress } from "./SessionProgress";
 
-// Service functions (for advanced usage)
 export {
   requestNextStep,
   requestEvaluation,

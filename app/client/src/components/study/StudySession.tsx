@@ -1,7 +1,9 @@
 import { useStudySession } from "../../hooks/study/useStudySession";
 import { StudyQuestionDisplay } from "./StudyQuestionDisplay";
 import { EvaluationConfirmation } from "./EvaluationConfirmation";
-import { MasteryOverview } from "./MasteryOverview";
+import { SessionStart } from "./SessionStart";
+import { SessionComplete } from "./SessionComplete";
+import { SessionProgress } from "./SessionProgress";
 
 interface StudySessionProps {
   topics: string[];
@@ -29,130 +31,47 @@ export function StudySession({
     onSessionEnd: onComplete,
   });
 
-  // Session not started
   if (!sessionState.active) {
     return (
-      <div className="max-w-2xl mx-auto p-6">
-        <div className="text-center space-y-6">
-          <div>
-            <h2 className="">Ready to Study?</h2>
-            <p className="text-primary-600 mt-2">
-              Your AI tutor will guide you through {topics.length} topic
-              {topics.length !== 1 ? "s" : ""}
-            </p>
-          </div>
-
-          <div className="card">
-            <h3 className="font-semibold text-gray-900 mb-3">Topics:</h3>
-            <ul className="space-y-2">
-              {topics.map((topic, index) => (
-                <li key={index} className="flex items-center space-x-2">
-                  <span className="w-6 h-6 rounded-full bg-accent-50 text-accent-200 flex items-center justify-center text-sm font-medium">
-                    {index + 1}
-                  </span>
-                  <span className="text-primary-500">{topic}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <button onClick={startSession} disabled={isLoading} className="btn">
-            {isLoading ? "Starting Session..." : "Start Study Session"}
-          </button>
-
-          {error && (
-            <div className="p-4 bg-custom-red-100 border border-custom-red-500 rounded-lg text-custom-red-500">
-              {error}
-            </div>
-          )}
-        </div>
-      </div>
+      <SessionStart
+        topics={topics}
+        isLoading={isLoading}
+        error={error}
+        onStart={startSession}
+      />
     );
   }
 
-  // Session completed
   if (
     sessionState.questionHistory.length > 0 &&
     !sessionState.currentQuestion &&
     !sessionState.pendingEvaluation
   ) {
-    const allMastered = sessionState.masteryLevels.every((m) => m.level >= 80);
-
     return (
-      <div className="max-w-3xl mx-auto p-6">
-        <div className="text-center space-y-6">
-          <div className="text-6xl">🎉</div>
-          <div>
-            <h2>{allMastered ? "Session Complete!" : "Session Ended"}</h2>
-            <p className="text-primary-600 mt-2">
-              {allMastered
-                ? "Congratulations! You've mastered all topics."
-                : "You can review your progress below."}
-            </p>
-          </div>
-
-          <div className="card">
-            <MasteryOverview masteryLevels={sessionState.masteryLevels} />
-          </div>
-
-          <div className="grid grid-cols-3 gap-4 text-center">
-            <div className="p-4 bg-primary-50 rounded-lg">
-              <div className="text-2xl font-bold text-gray-900">
-                {sessionState.questionHistory.length}
-              </div>
-              <div className="text-sm text-primary-600">Questions</div>
-            </div>
-            <div className="p-4 bg-primary-50 rounded-lg">
-              <div className="text-2xl font-bold text-green-600">
-                {
-                  sessionState.evaluationHistory.filter((e) => e.isCorrect)
-                    .length
-                }
-              </div>
-              <div className="text-sm text-primary-600">Correct</div>
-            </div>
-            <div className="p-4 bg-primary-50 rounded-lg">
-              <div className="text-2xl font-bold text-blue-600">
-                {Math.round(
-                  sessionState.masteryLevels.reduce(
-                    (sum, m) => sum + m.level,
-                    0
-                  ) / sessionState.masteryLevels.length
-                )}
-                %
-              </div>
-              <div className="text-sm text-primary-600">Avg Mastery</div>
-            </div>
-          </div>
-
-          {onComplete && (
-            <button onClick={onComplete} className="btn">
-              Done
-            </button>
-          )}
-        </div>
-      </div>
+      <SessionComplete
+        masteryLevels={sessionState.masteryLevels}
+        questionCount={sessionState.questionHistory.length}
+        correctCount={
+          sessionState.evaluationHistory.filter((e) => e.isCorrect).length
+        }
+        onComplete={onComplete}
+      />
     );
   }
 
-  // Active session
   return (
     <div className="max-w-4xl mx-auto p-6">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Main Content */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Header */}
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-primary-700">Study Session</h2>
-            <button
-              onClick={endSession}
-              className="btn-tertiary"
-            >
+            <h2 className="text-2xl font-bold text-primary-700">
+              Study Session
+            </h2>
+            <button onClick={endSession} className="btn-tertiary">
               End Session
             </button>
           </div>
 
-          {/* Error Display */}
           {error && (
             <div className="p-4 bg-custom-red-100 border border-custom-red-500 rounded-lg text-custom-red-500">
               {error}
@@ -162,7 +81,6 @@ export function StudySession({
           {/* Main Card */}
           <div className="card">
             {sessionState.pendingEvaluation ? (
-              // Show evaluation confirmation
               <EvaluationConfirmation
                 question={sessionState.pendingEvaluation.question}
                 userAnswer={sessionState.pendingEvaluation.answer}
@@ -172,17 +90,15 @@ export function StudySession({
                 isLoading={isLoading}
               />
             ) : sessionState.currentQuestion ? (
-              // Show current question
               <StudyQuestionDisplay
                 question={sessionState.currentQuestion}
                 onSubmit={submitAnswer}
                 isLoading={isLoading}
               />
             ) : (
-              // Loading state
               <div className="text-center py-12">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent-600 mx-auto"></div>
-                <p className="text-gray-600 mt-4">
+                <p className="text-primary-600 mt-4">
                   Generating next question...
                 </p>
               </div>
@@ -190,45 +106,14 @@ export function StudySession({
           </div>
         </div>
 
-        {/* Sidebar */}
         <div className="lg:col-span-1">
-          <div className="card sticky top-6">
-            <MasteryOverview masteryLevels={sessionState.masteryLevels} />
-
-            {/* Progress Stats */}
-            <div className="mt-6 pt-6 border-t space-y-3">
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Questions Answered</span>
-                <span className="font-medium text-gray-900">
-                  {sessionState.answerHistory.length}
-                </span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Correct Answers</span>
-                <span className="font-medium text-green-600">
-                  {
-                    sessionState.evaluationHistory.filter((e) => e.isCorrect)
-                      .length
-                  }
-                </span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Accuracy</span>
-                <span className="font-medium text-gray-900">
-                  {sessionState.answerHistory.length > 0
-                    ? Math.round(
-                        (sessionState.evaluationHistory.filter(
-                          (e) => e.isCorrect
-                        ).length /
-                          sessionState.answerHistory.length) *
-                          100
-                      )
-                    : 0}
-                  %
-                </span>
-              </div>
-            </div>
-          </div>
+          <SessionProgress
+            masteryLevels={sessionState.masteryLevels}
+            answersCount={sessionState.answerHistory.length}
+            correctCount={
+              sessionState.evaluationHistory.filter((e) => e.isCorrect).length
+            }
+          />
         </div>
       </div>
     </div>

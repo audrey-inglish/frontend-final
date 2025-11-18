@@ -10,11 +10,17 @@ export function MasteryOverview({ masteryLevels, className = '' }: MasteryOvervi
     ? Math.round(masteryLevels.reduce((sum, m) => sum + m.level, 0) / masteryLevels.length)
     : 0;
 
+  const getMasteryColor = (level: number) => {
+    if (level >= 80) return 'bg-custom-green-500';
+    if (level >= 50) return 'bg-accent-300';
+    return 'bg-accent-200';
+  };
+
   return (
     <div className={`space-y-4 ${className}`}>
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-primary-800">Mastery Progress</h3>
-        <div className="text-sm text-primary-400">
+        <div className="text-sm text-primary-600">
           Average: <span className="font-semibold text-primary-800">{averageMastery}%</span>
         </div>
       </div>
@@ -24,20 +30,14 @@ export function MasteryOverview({ masteryLevels, className = '' }: MasteryOvervi
           <div key={mastery.topic} className="space-y-2">
             <div className="flex items-center justify-between mb-6">
               <span className="text-sm font-medium text-primary-600">{mastery.topic}</span>
-              <span className="text-xs text-primary-300">
+              <span className="text-xs text-primary-500">
                 {mastery.questionsCorrect}/{mastery.questionsAnswered} correct
               </span>
             </div>
             <div className="relative">
               <div className="w-full bg-primary-50 rounded-full h-3">
                 <div
-                  className={`h-3 rounded-full transition-all duration-500 ${
-                    mastery.level >= 80
-                      ? 'bg-custom-green-500'
-                      : mastery.level >= 50
-                      ? 'bg-yellow-500'
-                      : 'bg-accent-300'
-                  }`}
+                  className={`h-3 rounded-full transition-all duration-500 ${getMasteryColor(mastery.level)}`}
                   style={{ width: `${mastery.level}%` }}
                 />
               </div>
