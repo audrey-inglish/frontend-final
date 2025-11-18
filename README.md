@@ -272,20 +272,23 @@ Rubric items:
 
 
 Features:
-- [ ] Live adaptive study session (AI selects questions and evaluates progress)
-- [ ] Preparedness score with progress visualization
+- [X] Live adaptive study session (AI selects questions and evaluates progress)
+- [X] Preparedness score with progress visualization
 
 To-Dos & Subrequirements:
-- [ ] Implement startStudySession() loop (autonomous switching logic)
+- [X] Implement startStudySession() loop (autonomous switching logic)
 - [ ] ~~Implement navigateToMode() to adjust UI dynamically~~ (ended up not being applicable)
-- [ ] implement toolcalls and UI for an adaptive, one-question-at-a-time study session mode
+- [X] implement toolcalls and UI for an adaptive, one-question-at-a-time study session mode
 
 #### Delivered
-
 Rubric Items:
-
+- Project scope expansion
+- Professional, organized experience
+- Technology: 2+ generic layout components
 
 Features:
+- [X] Live adaptive study session (AI selects questions and evaluates progress)
+- [X] Preparedness score with progress visualization
 
 ---
 ### 8 - Nov 22: Progress Visualization & AI Action History
