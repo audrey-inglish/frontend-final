@@ -81,3 +81,4 @@ tmp/cert.crt
 tmp/cert.key
 app/kube/swag-tls-secret.yml
 app/client/src/hooks/examples.tsx
+app/client/src/examples/StudySessionExample.tsx
