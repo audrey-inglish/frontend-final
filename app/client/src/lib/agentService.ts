@@ -44,7 +44,7 @@ export const GET_NEXT_STEP_TOOL: AgentTool = {
         options: {
           type: "array",
           description:
-            "Answer options (required for multiple-choice, should include 3-4 options)",
+            "Answer options (required for multiple-choice, should include 3-4 options). There should only be one correct answer.",
           items: { type: "string" },
         },
         correctAnswer: {
