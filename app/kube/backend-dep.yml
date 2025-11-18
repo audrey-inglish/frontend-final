@@ -33,3 +33,13 @@ spec:
               value: "audrey-chat"
             - name: KEYCLOAK_JWKS_URI
               value: "https://auth-dev.snowse.io/realms/DevRealm/protocol/openid-connect/certs"
+            # AI agent proxy configuration
+            - name: AGENT_BACKEND_URL
+              value: "http://ai-snow.reindeer-pinecone.ts.net:9292/v1/chat/completions"
+            - name: AGENT_BACKEND_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: agent-backend-secret
+                  key: AGENT_BACKEND_API_KEY
+            - name: OPENAI_MODEL
+              value: "gpt-oss-120b"

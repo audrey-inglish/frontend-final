@@ -15,15 +15,20 @@ router.post("/", async (req, res) => {
       "Content-Type": "application/json",
     };
 
-    // Forward authorization header if provided by the client (user-supplied API key)
-    if (req.headers.authorization) {
-      forwardedHeaders["Authorization"] = String(req.headers.authorization);
+    const SERVER_KEY = process.env.AGENT_BACKEND_API_KEY;
+    if (SERVER_KEY) {
+      forwardedHeaders["Authorization"] = `Bearer ${SERVER_KEY}`;
     }
+
+    const requestBody = {
+      ...req.body,
+      model: process.env.OPENAI_MODEL || req.body.model || "gpt-oss-120b",
+    };
 
     const response = await fetch(TARGET, {
       method: "POST",
       headers: forwardedHeaders,
-      body: JSON.stringify(req.body),
+      body: JSON.stringify(requestBody),
     });
 
     const bodyText = await response.text();

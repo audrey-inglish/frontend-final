@@ -88,3 +88,4 @@ app/kube/cert_prod.crt
 app/kube/cert_prod.key
 app/kube/cert_staging.crt
 app/kube/cert_staging.key
+app/kube/backend-secret.yml

@@ -8,4 +8,3 @@ data:
   # mixed-content errors because the browser will call the app's HTTPS origin
   # and the server will proxy to the internal HTTP AI backend.
   VITE_AGENT_ENDPOINT: "/api/agent"
-  VITE_AGENT_MODEL: "gpt-oss-120b"
