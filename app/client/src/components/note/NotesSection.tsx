@@ -7,7 +7,6 @@ interface NotesSectionProps {
   noteEditor: ReturnType<typeof useNoteEditor>;
 }
 
-
 export function NotesSection({ notes, noteEditor }: NotesSectionProps) {
   return (
     <div className="lg:col-span-2 pr-4">
@@ -36,6 +35,8 @@ export function NotesSection({ notes, noteEditor }: NotesSectionProps) {
           isPending={noteEditor.isPending}
           isEditing={!!noteEditor.editingNoteId}
           draftKey={noteEditor.draftKey}
+          onImageUpload={noteEditor.handleImageUpload}
+          isProcessingImage={noteEditor.isProcessingImage}
         />
       )}
 

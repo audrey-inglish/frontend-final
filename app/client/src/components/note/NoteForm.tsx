@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { TextInput, TextArea, FormButtons } from "../form";
+import { ImageUploadIcon, SpinnerIcon } from "../icons";
 
 interface NoteFormProps {
   title: string;
@@ -11,6 +12,8 @@ interface NoteFormProps {
   isPending: boolean;
   isEditing?: boolean;
   draftKey?: string; // localStorage key for auto-saving drafts
+  onImageUpload?: (file: File) => Promise<void>;
+  isProcessingImage?: boolean;
 }
 
 export default function NoteForm({
@@ -23,9 +26,25 @@ export default function NoteForm({
   isPending,
   isEditing = false,
   draftKey,
+  onImageUpload,
+  isProcessingImage = false,
 }: NoteFormProps) {
   const [draftSaved, setDraftSaved] = useState(false);
   const saveTimeoutRef = useRef<number | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageButtonClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && onImageUpload) {
+      await onImageUpload(file);
+      // Reset input so the same file can be uploaded again if needed
+      event.target.value = "";
+    }
+  };
 
   // Auto-save draft to localStorage with debounce
   useEffect(() => {
@@ -98,6 +117,41 @@ export default function NoteForm({
           rows={8}
           required
         />
+        {onImageUpload && (
+          <div className="mb-4">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="hidden"
+              aria-label="Upload image of notes"
+              disabled={isProcessingImage}
+            />
+            <button
+              type="button"
+              onClick={handleImageButtonClick}
+              disabled={isProcessingImage}
+              className="btn-secondary flex items-center gap-2 text-sm"
+              title="Upload an image to extract text"
+            >
+              {isProcessingImage ? (
+                <>
+                  <SpinnerIcon className="animate-spin h-4 w-4" />
+                  <span>Processing image...</span>
+                </>
+              ) : (
+                <>
+                  <ImageUploadIcon className="w-4 h-4" />
+                  <span>Upload Image</span>
+                </>
+              )}
+            </button>
+            <p className="text-xs text-neutral-500 mt-1">
+              Upload an image of your notes to automatically extract text
+            </p>
+          </div>
+        )}
         <div className="flex items-center">
           <FormButtons
             onCancel={handleCancel}

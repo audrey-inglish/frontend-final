@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { showErrorToast, showSuccessToast } from "../../lib/toasts";
 import { useCreateNote, useUpdateNote, useDeleteNote } from "./useNotes";
+import { useImageToText } from "../concept/useImageToText";
 import type { NoteCreate, NoteUpdate } from "../../schemas/note";
 
 interface UseNoteEditorOptions {
@@ -12,6 +13,7 @@ export function useNoteEditor({ dashboardId }: UseNoteEditorOptions) {
   const createNote = useCreateNote();
   const updateNote = useUpdateNote();
   const deleteNote = useDeleteNote();
+  const { extractTextFromImage, isProcessing: isProcessingImage } = useImageToText();
 
   // Form visibility and edit state
   const [showNoteForm, setShowNoteForm] = useState(false);
@@ -29,26 +31,18 @@ export function useNoteEditor({ dashboardId }: UseNoteEditorOptions) {
   // Load draft from localStorage when opening create form (not edit)
   useEffect(() => {
     if (showNoteForm && !editingNoteId) {
-      try {
         const draft = localStorage.getItem(draftKey);
         if (draft) {
           const { title, content } = JSON.parse(draft);
           if (title) setNoteTitle(title);
           if (content) setNoteContent(content);
         }
-      } catch {
-        // Ignore parse errors - corrupted draft data
-      }
     }
   }, [showNoteForm, editingNoteId, draftKey]);
 
   // Clear draft from localStorage
   const clearDraft = () => {
-    try {
       localStorage.removeItem(draftKey);
-    } catch {
-      // Ignore errors
-    }
   };
 
   // Handler: Create a new note
@@ -146,6 +140,31 @@ export function useNoteEditor({ dashboardId }: UseNoteEditorOptions) {
     setShowNoteForm(!showNoteForm);
   };
 
+  // Handler: Upload image and extract text
+  const handleImageUpload = async (file: File) => {
+    try {
+      const extractedText = await extractTextFromImage(file);
+      
+      if (!extractedText || extractedText.trim().length === 0) {
+        showErrorToast("No text could be extracted from the image");
+        return;
+      }
+
+      setNoteContent(extractedText);
+      
+      // Optionally suggest a title if one isn't set
+      if (!noteTitle.trim()) {
+        setNoteTitle("Notes from Image");
+      }
+      
+      showSuccessToast("Text extracted from image! You can now edit and save.");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to process image";
+      showErrorToast(message);
+      console.error(error);
+    }
+  };
+
   return {
     showNoteForm,
     editingNoteId,
@@ -160,6 +179,8 @@ export function useNoteEditor({ dashboardId }: UseNoteEditorOptions) {
     handleDeleteNote,
     handleCancelNoteForm,
     handleToggleNoteForm,
+    handleImageUpload,
+    isProcessingImage,
     isCreating: createNote.isPending,
     isUpdating: updateNote.isPending,
     isDeleting: deleteNote.isPending,

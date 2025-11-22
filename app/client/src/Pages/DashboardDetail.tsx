@@ -127,13 +127,14 @@ export default function DashboardDetail() {
               <NotesSection notes={notes} noteEditor={noteEditor} />
 
               {/* Right Column - Concepts Section */}
-              <ConceptsSection
-                concepts={conceptsData?.concepts}
-                isLoading={conceptsLoading}
-                isGenerating={conceptGenerator.isGenerating}
-                onGenerate={conceptGenerator.handleGenerate}
-                onImageUpload={conceptGenerator.handleGenerateFromImage}
-              />
+              {notes && notes.length > 0 && (
+                <ConceptsSection
+                  concepts={conceptsData?.concepts}
+                  isLoading={conceptsLoading}
+                  isGenerating={conceptGenerator.isGenerating}
+                  onGenerate={conceptGenerator.handleGenerate}
+                />
+              )}
             </div>
           </>
         )}
