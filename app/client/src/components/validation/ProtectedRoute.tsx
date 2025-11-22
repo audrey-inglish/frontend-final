@@ -36,10 +36,7 @@ export default function ProtectedRoute({
             <p className="text-lg text-neutral-700 mb-4">
               Please sign in to view this page.
             </p>
-            <button
-              onClick={() => auth.signinRedirect()}
-              className="btn"
-            >
+            <button onClick={() => auth.signinRedirect()} className="btn">
               Sign In
             </button>
           </div>

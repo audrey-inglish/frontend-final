@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useGetAdminAiActionLogs } from "../hooks/aiActionLogs/useAiActionLogs";
-import { Navbar, ProtectedRoute } from "../components";
+import { Navbar, AdminRoute } from "../components";
 
 interface AdminAiLog {
   id: number;
@@ -25,7 +25,7 @@ export default function AdminAiMonitorPage() {
     offset: 0,
   });
 
-  const { data, isLoading } = useGetAdminAiActionLogs(filters);
+  const { data, isLoading } = useGetAdminAiActionLogs(filters, true);
 
   const handlePreviousPage = () => {
     setFilters((prev) => ({
@@ -44,7 +44,7 @@ export default function AdminAiMonitorPage() {
   };
 
   return (
-    <ProtectedRoute>
+    <AdminRoute>
       <div className="min-h-screen bg-neutral-100">
         <Navbar />
 
@@ -78,34 +78,22 @@ export default function AdminAiMonitorPage() {
 
                 {data.logs.length === 0 ? (
                   <div className="text-center py-12">
-                    <p className="text-neutral-600">No AI actions recorded yet.</p>
+                    <p className="text-neutral-600">
+                      No AI actions recorded yet.
+                    </p>
                   </div>
                 ) : (
                   <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-neutral-200">
                       <thead className="bg-neutral-50">
                         <tr>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
-                            Time
-                          </th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
-                            User
-                          </th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
-                            Dashboard
-                          </th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
-                            Action
-                          </th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
-                            Topic
-                          </th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
-                            Mastery
-                          </th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
-                            Duration
-                          </th>
+                          <th className="table-header">Time</th>
+                          <th className="table-header">User</th>
+                          <th className="table-header">Dashboard</th>
+                          <th className="table-header">Action</th>
+                          <th className="table-header">Topic</th>
+                          <th className="table-header">Mastery</th>
+                          <th className="table-header">Duration</th>
                         </tr>
                       </thead>
                       <tbody className="bg-custom-white divide-y divide-neutral-200">
@@ -183,6 +171,6 @@ export default function AdminAiMonitorPage() {
           )}
         </main>
       </div>
-    </ProtectedRoute>
+    </AdminRoute>
   );
 }

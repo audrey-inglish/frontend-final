@@ -9,6 +9,7 @@ export { default as EmptyState } from "./validation/EmptyState";
 export { default as ConceptList } from "./concept/ConceptList";
 export { default as CardsLayout } from "./layout/CardsLayout";
 export { default as ProtectedRoute } from "./validation/ProtectedRoute";
+export { default as AdminRoute } from "./validation/AdminRoute";
 export { ConceptsSection } from "./concept/ConceptsSection";
 export { NotesSection } from "./note/NotesSection";
 export { Carousel } from "./layout/Carousel";
