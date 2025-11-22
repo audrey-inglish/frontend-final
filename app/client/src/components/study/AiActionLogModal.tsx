@@ -82,8 +82,8 @@ function AiActionLogEntry({ log }: AiActionLogEntryProps) {
             <span
               className={`inline-block px-2 py-1 rounded text-xs font-medium ${
                 isNextStep
-                  ? "bg-accent-100 text-accent-700"
-                  : "bg-secondary-100 text-secondary-700"
+                  ? "bg-accent-50 text-accent-600"
+                  : "bg-custom-green-100 text-custom-green-500"
               }`}
             >
               {isNextStep ? "Generated Question" : "Evaluated Answer"}

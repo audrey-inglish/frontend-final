@@ -54,7 +54,7 @@ export const GET_NEXT_STEP_TOOL: AgentTool = {
         },
         hint: {
           type: "string",
-          description: "Optional hint to help the user",
+          description: "Optional hint to help the user. This should not give away the answer. If it will reveal the answer too easily, leave it blank.",
         },
         reasoning: {
           type: "string",

@@ -38,19 +38,19 @@ export function SessionComplete({
         </div>
 
         <div className="grid grid-cols-3 gap-4 text-center">
-          <div className="p-4 bg-primary-50 rounded-lg">
+          <div className="card">
             <div className="text-2xl font-bold text-neutral-900">
               {questionCount}
             </div>
             <div className="text-sm text-primary-600">Questions</div>
           </div>
-          <div className="p-4 bg-primary-50 rounded-lg">
+          <div className="card">
             <div className="text-2xl font-bold text-custom-green-600">
               {correctCount}
             </div>
             <div className="text-sm text-primary-600">Correct</div>
           </div>
-          <div className="p-4 bg-primary-50 rounded-lg">
+          <div className="card">
             <div className="text-2xl font-bold text-accent-600">{avgMastery}%</div>
             <div className="text-sm text-primary-600">Avg Mastery</div>
           </div>

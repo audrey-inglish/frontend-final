@@ -304,9 +304,9 @@ To-Dos & Subrequirements:
 - [X] Upload pictures for notes and have the AI parse them
 - [X] save quiz results to the db for stats
 - [X] Log all AI actions to history for transparency (AI Action History page)
-- [ ] Test full end-to-end study session loop
-- [ ] Add unit tests for study session scoring, stats, etc. (client side)
-- [ ] Run client tests in pipeline
+- [X] Test full end-to-end study session loop
+- [X] Add unit tests for study session scoring, stats, etc. (client side)
+- [X] Run client tests in pipeline
 
 #### Delivered
 
