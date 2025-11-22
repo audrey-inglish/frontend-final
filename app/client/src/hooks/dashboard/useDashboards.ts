@@ -9,6 +9,7 @@ import type {
   DashboardCreate,
   DashboardUpdate,
 } from "../../schemas/dashboard";
+import { DashboardStatsSchema, type DashboardStats } from "../../schemas/dashboardStats";
 
 export const dashboardKeys = {
   all: ["dashboards"] as const,
@@ -16,6 +17,7 @@ export const dashboardKeys = {
   list: () => [...dashboardKeys.lists()] as const,
   details: () => [...dashboardKeys.all, "detail"] as const,
   detail: (id: number) => [...dashboardKeys.details(), id] as const,
+  stats: (id: number) => [...dashboardKeys.all, "stats", id] as const,
 };
 
 export function useGetDashboards(enabled = true) {
@@ -108,5 +110,19 @@ export function useDeleteDashboard() {
       queryClient.invalidateQueries({ queryKey: dashboardKeys.lists() });
       queryClient.removeQueries({ queryKey: dashboardKeys.detail(deletedId) });
     },
+  });
+}
+
+export function useGetDashboardStats(id: number | null | undefined, enabled = true) {
+  return useQuery({
+    queryKey: dashboardKeys.stats(id ?? 0),
+    queryFn: async (): Promise<DashboardStats> => {
+      if (!id) throw new Error("Dashboard ID is required");
+      const res = await apiFetch(`/api/dashboards/${id}/stats`);
+      const json = await res.json();
+      const validated = DashboardStatsSchema.parse(json.stats);
+      return validated;
+    },
+    enabled: !!id && enabled,
   });
 }

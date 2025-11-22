@@ -302,7 +302,7 @@ Features:
 
 To-Dos & Subrequirements:
 - [X] Upload pictures for notes and have the AI parse them
-- [ ] save quiz results to the db for stats
+- [X] save quiz results to the db for stats
 - [X] Log all AI actions to history for transparency (AI Action History page)
 - [ ] Test full end-to-end study session loop
 - [ ] Add unit tests for study session scoring, stats, etc. (client side)
@@ -331,7 +331,7 @@ Features:
 - Reordering behavior verified on 3 key pages (Dashboard, Flashcards, Quiz)
   
 To-Dos & Subrequirements:
-- [ ] Build visual progress tracker (chart, bar, or ring progress indicator?)
+- [X] Build visual progress tracker (chart, bar, or ring progress indicator?)
 - [ ] Add responsive breakpoints using Tailwind
 - [ ] Reorder card and column layouts for smaller screens
 - [ ] Optimize Flashcard and Quiz components for touch devices

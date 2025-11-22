@@ -17,3 +17,4 @@ export { FlipCard } from "./flashcard/FlipCard";
 export { QuizConfigForm } from "./quiz/QuizConfigForm";
 export { QuizDisplay } from "./quiz/QuizDisplay";
 export { QuizEmptyState } from "./quiz/QuizEmptyState";
+export { StatsCard, ScoreHistoryChart, RecentQuizzesList } from "./stats";

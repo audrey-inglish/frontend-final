@@ -117,6 +117,12 @@ export default function DashboardDetail() {
                   >
                     Take a Quiz
                   </button>
+                  <button
+                    onClick={() => navigate(`/dashboard/${dashboardId}/stats`)}
+                    className="btn-secondary"
+                  >
+                    View Statistics
+                  </button>
                 </div>
               </div>
             )}

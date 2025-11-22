@@ -53,6 +53,90 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// Get dashboard statistics
+router.get("/:id/stats", async (req, res) => {
+  try {
+    const userId = await ensureUserId(req as express.Request);
+    const dashboardId = Number(req.params.id);
+
+    // Verify dashboard belongs to user
+    const dashboard = await db.oneOrNone(
+      `SELECT id FROM dashboard WHERE id = $1 AND user_id = $2`,
+      [dashboardId, userId]
+    );
+    if (!dashboard) {
+      return res.status(404).json({ error: "Dashboard not found" });
+    }
+
+    // Get quiz statistics
+    const quizStats = await db.oneOrNone(
+      `SELECT 
+        COUNT(*)::int as total_quizzes,
+        COALESCE(AVG(score), 0)::float as average_score,
+        COALESCE(MAX(score), 0)::float as highest_score,
+        COALESCE(MIN(score), 0)::float as lowest_score
+       FROM quiz 
+       WHERE dashboard_id = $1 AND score IS NOT NULL`,
+      [dashboardId]
+    );
+
+    // Get recent quiz scores with timestamps
+    const recentQuizzes = await db.any(
+      `SELECT id, title, score, created_at
+       FROM quiz
+       WHERE dashboard_id = $1 AND score IS NOT NULL
+       ORDER BY created_at DESC
+       LIMIT 10`,
+      [dashboardId]
+    );
+
+    // Get score distribution over time (all quizzes with scores)
+    const scoreHistory = await db.any(
+      `SELECT score, created_at
+       FROM quiz
+       WHERE dashboard_id = $1 AND score IS NOT NULL
+       ORDER BY created_at ASC`,
+      [dashboardId]
+    );
+
+    // Calculate improvement (compare first half vs second half of quizzes)
+    let improvement = null;
+    if (scoreHistory.length >= 4) {
+      const midpoint = Math.floor(scoreHistory.length / 2);
+      const firstHalf = scoreHistory.slice(0, midpoint);
+      const secondHalf = scoreHistory.slice(midpoint);
+      
+      const firstAvg = firstHalf.reduce((sum, q) => sum + q.score, 0) / firstHalf.length;
+      const secondAvg = secondHalf.reduce((sum, q) => sum + q.score, 0) / secondHalf.length;
+      
+      improvement = secondAvg - firstAvg;
+    }
+
+    res.json({
+      stats: {
+        total_quizzes: quizStats?.total_quizzes || 0,
+        average_score: quizStats?.average_score || 0,
+        highest_score: quizStats?.highest_score || 0,
+        lowest_score: quizStats?.lowest_score || 0,
+        improvement,
+        recent_quizzes: recentQuizzes.map(q => ({
+          id: q.id,
+          title: q.title,
+          score: q.score,
+          created_at: q.created_at?.toISOString(),
+        })),
+        score_history: scoreHistory.map(q => ({
+          score: q.score,
+          created_at: q.created_at?.toISOString(),
+        })),
+      },
+    });
+  } catch (err) {
+    console.error("GET /api/dashboards/:id/stats error:", err);
+    res.status(500).json({ error: "Failed to fetch dashboard statistics" });
+  }
+});
+
 // Create dashboard
 router.post("/", async (req, res) => {
   try {
