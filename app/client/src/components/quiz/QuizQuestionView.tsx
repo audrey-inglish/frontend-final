@@ -32,10 +32,10 @@ export function QuizQuestionView({
     initialValue: userAnswer,
   });
 
-  // Sync external answer changes (e.g., when switching questions)
   useEffect(() => {
     setAnswer(userAnswer);
-  }, [userAnswer, setAnswer]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userAnswer]);
 
   return (
     <div className="border-b border-neutral-200 pb-6 last:border-b-0">

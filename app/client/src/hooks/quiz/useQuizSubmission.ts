@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useEvaluateResponse } from "./useQuizzes";
+import { useEvaluateResponse, useUpdateQuizScore } from "./useQuizzes";
 import { showErrorToast, showSuccessToast } from "../../lib/toasts";
 import type { QuizQuestion } from "../../schemas/quiz";
 
@@ -15,14 +15,16 @@ interface EvaluationResult {
 }
 
 interface UseQuizSubmissionOptions {
+  quizId?: number;
   questions: QuizQuestion[];
   onComplete?: (score: number, results: EvaluationResult[]) => void;
 }
 
-export function useQuizSubmission({ questions, onComplete }: UseQuizSubmissionOptions) {
+export function useQuizSubmission({ quizId, questions, onComplete }: UseQuizSubmissionOptions) {
   const [results, setResults] = useState<EvaluationResult[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const evaluateResponse = useEvaluateResponse();
+  const updateQuizScore = useUpdateQuizScore();
 
   const submitQuiz = async (answers: QuizAnswer[]) => {
     setIsSubmitting(true);
@@ -57,6 +59,10 @@ export function useQuizSubmission({ questions, onComplete }: UseQuizSubmissionOp
       // Calculate score
       const correctCount = evaluationResults.filter(r => r.isCorrect).length;
       const score = (correctCount / evaluationResults.length) * 100;
+      
+      if (quizId) {
+          await updateQuizScore.mutateAsync({ quizId, score });
+      }
       
       showSuccessToast(`Quiz submitted! Score: ${score.toFixed(0)}%`);
       

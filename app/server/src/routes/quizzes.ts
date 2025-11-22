@@ -98,4 +98,47 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// PATCH /api/quizzes/:id - Update quiz score
+router.patch("/:id", async (req, res) => {
+  const quizId = Number(req.params.id);
+  const { score } = req.body;
+
+  if (!quizId || isNaN(quizId)) {
+    return res.status(400).json({
+      error: { code: "INVALID_INPUT", message: "Valid quiz ID required" },
+    });
+  }
+
+  if (typeof score !== "number" || score < 0 || score > 100) {
+    return res.status(400).json({
+      error: { code: "INVALID_INPUT", message: "Score must be a number between 0 and 100" },
+    });
+  }
+
+  try {
+    const quiz = await db.oneOrNone(
+      `UPDATE quiz SET score = $1 WHERE id = $2 RETURNING id, dashboard_id, title, score, created_at`,
+      [score, quizId]
+    );
+
+    if (!quiz) {
+      return res.status(404).json({
+        error: { code: "NOT_FOUND", message: "Quiz not found" },
+      });
+    }
+
+    return res.json({
+      quiz: {
+        ...quiz,
+        created_at: quiz.created_at?.toISOString(),
+      },
+    });
+  } catch (err) {
+    console.error("Failed to update quiz score:", err);
+    return res.status(500).json({
+      error: { code: "DATABASE_ERROR", message: "Failed to update quiz score" },
+    });
+  }
+});
+
 export default router;

@@ -40,6 +40,7 @@ export default function QuizPage() {
   const quizGenerator = useQuizGenerator({ dashboardId, notes });
   
   const quizSubmission = useQuizSubmission({
+    quizId: quizGenerator.quiz?.id,
     questions: quizGenerator.questions || [],
     onComplete: (score) => {
       setShowResults(true);

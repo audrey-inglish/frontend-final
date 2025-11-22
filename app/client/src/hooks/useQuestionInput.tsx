@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
 interface QuestionInputOption {
   text: string;
@@ -29,15 +29,15 @@ export function useQuestionInput({
 }: UseQuestionInputProps): UseQuestionInputReturn {
   const [answer, setAnswer] = useState(initialValue);
 
-  const handleAnswerChange = (newAnswer: string) => {
+  const handleAnswerChange = useCallback((newAnswer: string) => {
     setAnswer(newAnswer);
     onAnswerChange?.(newAnswer);
-  };
+  }, [onAnswerChange]);
 
-  const resetAnswer = () => {
+  const resetAnswer = useCallback(() => {
     setAnswer('');
     onAnswerChange?.('');
-  };
+  }, [onAnswerChange]);
 
   const renderInput = () => {
     switch (type) {

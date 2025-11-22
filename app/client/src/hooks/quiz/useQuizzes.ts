@@ -118,3 +118,33 @@ export function useEvaluateResponse() {
     },
   });
 }
+
+interface UpdateQuizScoreRequest {
+  quizId: number;
+  score: number;
+}
+
+export function useUpdateQuizScore() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ quizId, score }: UpdateQuizScoreRequest): Promise<Quiz> => {
+      const res = await apiFetch(`/api/quizzes/${quizId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ score }),
+      });
+
+      const json = await res.json();
+      return json.quiz;
+    },
+    onSuccess: (updatedQuiz) => {
+      queryClient.invalidateQueries({
+        queryKey: quizKeys.list(updatedQuiz.dashboard_id),
+      });
+      queryClient.invalidateQueries({
+        queryKey: quizKeys.detail(updatedQuiz.id),
+      });
+    },
+  });
+}
