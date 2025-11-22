@@ -41,6 +41,7 @@ export interface EvaluationResult {
  */
 export interface StudySessionState {
   sessionId: string;
+  dashboardId?: number; // backwards compatibility
   active: boolean;
   topics: string[];
   masteryLevels: TopicMastery[];
@@ -60,7 +61,7 @@ export interface AgentToolFunction {
   description: string;
   parameters: {
     type: 'object';
-    properties: Record<string, unknown>; // Allow any JSON Schema property definition
+    properties: Record<string, unknown>;
     required: string[];
   };
 }
@@ -83,7 +84,7 @@ export interface AgentToolCall {
   type: 'function';
   function: {
     name: string;
-    arguments: string; // JSON string
+    arguments: string;
   };
 }
 
@@ -107,7 +108,7 @@ export interface GetNextStepArgs {
   options?: string[];
   correctAnswer?: string;
   hint?: string;
-  reasoning: string; // Why this question was chosen
+  reasoning: string;
 }
 
 export interface EvaluateResponseArgs {

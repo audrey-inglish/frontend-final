@@ -103,6 +103,7 @@ export default function StudySessionPage() {
               <StudySession
                 topics={topics}
                 apiKey={apiKey}
+                dashboardId={dashboardId}
                 onComplete={handleComplete}
               />
             </>

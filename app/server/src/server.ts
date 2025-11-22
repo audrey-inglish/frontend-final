@@ -13,6 +13,7 @@ import generateQuizRouter from "./routes/generateQuiz";
 import evaluateResponseRouter from "./routes/evaluateResponse";
 import agentProxyRouter from "./routes/agentProxy";
 import extractTextFromImageRouter from "./routes/extractTextFromImage";
+import aiActionLogsRouter from "./routes/aiActionLogs";
 
 
 const app = express();
@@ -53,6 +54,7 @@ app.use("/api/dashboards", dashboardsRouter);
 app.use("/api/notes", notesRouter);
 app.use("/api/concepts", conceptsRouter);
 app.use("/api/flashcards", flashcardsRouter);
+app.use("/api/ai-actions", aiActionLogsRouter);
 
 app.use(generateConceptsRouter);
 app.use("/api/generateFlashcards", generateFlashcardsRouter);

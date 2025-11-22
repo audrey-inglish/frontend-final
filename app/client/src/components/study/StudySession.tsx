@@ -1,21 +1,27 @@
+import { useState } from "react";
 import { useStudySession } from "../../hooks/study/useStudySession";
 import { StudyQuestionDisplay } from "./StudyQuestionDisplay";
 import { EvaluationConfirmation } from "./EvaluationConfirmation";
 import { SessionStart } from "./SessionStart";
 import { SessionComplete } from "./SessionComplete";
 import { SessionProgress } from "./SessionProgress";
+import { AiActionLogModal } from "./AiActionLogModal";
 
 interface StudySessionProps {
   topics: string[];
   apiKey: string;
+  dashboardId?: number;
   onComplete?: () => void;
 }
 
 export function StudySession({
   topics,
   apiKey,
+  dashboardId,
   onComplete,
 }: StudySessionProps) {
+  const [showAiLog, setShowAiLog] = useState(false);
+  
   const {
     sessionState,
     isLoading,
@@ -28,6 +34,7 @@ export function StudySession({
   } = useStudySession({
     topics,
     apiKey,
+    dashboardId,
     onSessionEnd: onComplete,
   });
 
@@ -68,9 +75,18 @@ export function StudySession({
             <h2 className="text-2xl font-bold text-primary-700">
               Study Session
             </h2>
-            <button onClick={endSession} className="btn-tertiary">
-              End Session
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setShowAiLog(true)}
+                className="btn-secondary text-sm"
+                disabled={!sessionState.sessionId}
+              >
+                View AI Reasoning
+              </button>
+              <button onClick={endSession} className="btn-tertiary">
+                End Session
+              </button>
+            </div>
           </div>
 
           {error && (
@@ -117,6 +133,14 @@ export function StudySession({
           />
         </div>
       </div>
+
+      {/* AI Action Log Modal */}
+      {showAiLog && (
+        <AiActionLogModal
+          sessionId={sessionState.sessionId}
+          onClose={() => setShowAiLog(false)}
+        />
+      )}
     </div>
   );
 }

@@ -15,7 +15,7 @@ The user can review AI actions (like flashcard generation or grading decisions) 
 When generating code, please follow these guidelines:
 
 - Teach about what you are doing, explaining each change to a React novice. DO NOT include this explanation in the code itself.
-- Do not include try/catches where the catch does nothing.
+- Do not include try/catches where they aren't strictly necessary. Instead of using a try/cate, rely on global error handling and error boundaries where appropriate.
 - Use TypeScript's features for type safety.
 - Prefer interfaces over types for object shapes.
 - Avoid excessive comments.

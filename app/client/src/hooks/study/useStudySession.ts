@@ -17,6 +17,7 @@ import { isTopicMastered } from "../../lib/studySession.config";
 interface UseStudySessionOptions {
   topics: string[];
   apiKey: string;
+  dashboardId?: number; // Added for AI action logging
   onSessionEnd?: () => void;
 }
 
@@ -34,10 +35,12 @@ interface UseStudySessionReturn {
 export function useStudySession({
   topics,
   apiKey,
+  dashboardId,
   onSessionEnd,
 }: UseStudySessionOptions): UseStudySessionReturn {
   const [sessionState, setSessionState] = useState<StudySessionState>({
     sessionId: `session-${Date.now()}`,
+    dashboardId,
     active: false,
     topics,
     masteryLevels: initializeMastery(topics),
