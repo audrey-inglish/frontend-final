@@ -12,6 +12,7 @@ import quizzesRouter from "./routes/quizzes";
 import generateQuizRouter from "./routes/generateQuiz";
 import evaluateResponseRouter from "./routes/evaluateResponse";
 import agentProxyRouter from "./routes/agentProxy";
+import extractTextFromImageRouter from "./routes/extractTextFromImage";
 
 
 const app = express();
@@ -38,7 +39,8 @@ app.use("/api", (req, res, next) => {
     req.path === "/health" ||
     req.path === "/test" ||
     req.path === "/generateConcepts" ||
-    req.path === "/generateFlashcards"
+    req.path === "/generateFlashcards" ||
+    req.path === "/extractTextFromImage"
   ) {
     return next();
   }
@@ -53,6 +55,7 @@ app.use("/api/flashcards", flashcardsRouter);
 
 app.use(generateConceptsRouter);
 app.use("/api/generateFlashcards", generateFlashcardsRouter);
+app.use("/api/extractTextFromImage", extractTextFromImageRouter);
 
 app.use("/api/quizzes", quizzesRouter);
 app.use("/api/generateQuiz", generateQuizRouter);

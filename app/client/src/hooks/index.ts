@@ -5,6 +5,7 @@ export * from "./concept/useConcepts";
 export * from "./note/useNoteEditor";
 export * from "./dashboard/useDashboardEditor";
 export * from "./concept/useConceptGenerator";
+export * from "./concept/useImageToText";
 export * from "./flashcard/useFlashcards";
 export * from "./flashcard/useFlashcardGenerator";
 export * from "./quiz/useQuizzes";
