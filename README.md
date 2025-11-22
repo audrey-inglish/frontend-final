@@ -270,7 +270,6 @@ Rubric items:
 - Professional, organized experience
 - Technology: 2+ generic layout components
 
-
 Features:
 - [X] Live adaptive study session (AI selects questions and evaluates progress)
 - [X] Preparedness score with progress visualization
@@ -297,16 +296,17 @@ Features:
 Rubric items:
 - Technology: 10+ pages or views
 
-
 Features:
 - Preparedness score with progress visualization
 - User can see a log of AI reasoning & actions
 
 To-Dos & Subrequirements:
-- [ ] Build visual progress tracker (chart, bar, or ring progress indicator)
+- [ ] Upload pictures for notes and have the AI parse them
+- [ ] save quiz results to the db for stats
 - [ ] Log all AI actions to history for transparency (AI Action History page)
-- [ ] Add time-tracking and “take a break” notifications (?)
 - [ ] Test full end-to-end study session loop
+- [ ] Add unit tests for study session scoring, stats, etc. (client side)
+- [ ] Run client tests in pipeline
 
 #### Delivered
 
@@ -323,17 +323,22 @@ Rubric items:
 - Experience: All experiences mobile friendly
 - Experience: 3 instances where elements reorder on smaller screens
 - Professional, organized, smooth experience
+- Working with pictures
+
 
 Features:
 - Fully responsive layouts
 - Reordering behavior verified on 3 key pages (Dashboard, Flashcards, Quiz)
   
 To-Dos & Subrequirements:
+- [ ] Build visual progress tracker (chart, bar, or ring progress indicator?)
 - [ ] Add responsive breakpoints using Tailwind
 - [ ] Reorder card and column layouts for smaller screens
 - [ ] Optimize Flashcard and Quiz components for touch devices
 - [ ] Adjust spacing, typography, and scaling for mobile
 - [ ] Adjust colors/theming as necessary
+- [ ] Make a page or two accessible without authentication
+- [ ] Make an AI Management page where an admin can view all AI actions for all users
 
 #### Delivered
 
