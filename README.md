@@ -311,9 +311,14 @@ To-Dos & Subrequirements:
 #### Delivered
 
 Rubric Items:
-
+- Technology: 10+ pages or views
 
 Features:
+- Authorized and public pages
+- Testing
+- Study stats and progress tracking
+- User can see a log of AI reasoning & actions
+
 
 ---
 ### 9 - Nov 25: Mobile Responsiveness & UX Polish
@@ -338,7 +343,7 @@ To-Dos & Subrequirements:
 - [ ] Adjust spacing, typography, and scaling for mobile
 - [ ] Adjust colors/theming as necessary
 - [ ] Make a page or two accessible without authentication
-- [ ] Make an AI Management page where an admin can view all AI actions for all users
+- [X] Make an AI Management page where an admin can view all AI actions for all users
 
 #### Delivered
 
