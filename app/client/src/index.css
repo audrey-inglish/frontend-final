@@ -117,4 +117,8 @@ body {
   .table-header {
     @apply px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider;
   }
+
+  .study-tool-icon {
+    @apply w-6 h-6;
+  }
 }

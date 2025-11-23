@@ -43,7 +43,7 @@ export function ConceptsSection({
         </div>
 
         {/* Max height with scroll for concepts */}
-        <div className="max-h-[calc(100vh-12rem)] overflow-y-auto pr-2">
+        <div className="max-h-[calc(100vh-12rem)] overflow-y-auto">
           {isLoading ? (
             <LoadingSpinner />
           ) : concepts && concepts.length > 0 ? (

@@ -110,9 +110,20 @@ export default function Home() {
           </div>
           <button
             onClick={() => setShowCreateForm(!showCreateForm)}
-            className="btn text-blue-white font-medium py-2 px-4 rounded-lg transition-colors"
+            className="btn py-1 px-4 text-xl sm:text-sm sm:py-2 sm:px-4 flex justify-center"
+            aria-label={showCreateForm ? "Cancel create dashboard" : "Create new dashboard"}
           >
-            {showCreateForm ? "Cancel" : "+ New Dashboard"}
+            {showCreateForm ? (
+              <>
+                <span className="sm:hidden">✕</span>
+                <span className="hidden sm:inline">Cancel</span>
+              </>
+            ) : (
+              <>
+                <span className="sm:hidden">+</span>
+                <span className="hidden sm:inline">+ New Dashboard</span>
+              </>
+            )}
           </button>
         </div>
 

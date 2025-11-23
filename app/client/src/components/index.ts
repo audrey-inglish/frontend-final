@@ -18,3 +18,5 @@ export { QuizConfigForm } from "./quiz/QuizConfigForm";
 export { QuizDisplay } from "./quiz/QuizDisplay";
 export { QuizEmptyState } from "./quiz/QuizEmptyState";
 export { StatsCard, ScoreHistoryChart, RecentQuizzesList } from "./stats";
+export { default as StudyToolCard } from "./cards/StudyToolCard";
+export { StudyTools } from "./dashboard/StudyTools";

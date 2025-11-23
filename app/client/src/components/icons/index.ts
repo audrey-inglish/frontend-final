@@ -12,3 +12,4 @@ export { TrophyIcon } from './TrophyIcon';
 export { ChartIcon } from './ChartIcon';
 export { TargetIcon } from './TargetIcon';
 export { ClipboardListIcon } from './ClipboardListIcon';
+export { default as BrainIcon } from './BrainIcon';
