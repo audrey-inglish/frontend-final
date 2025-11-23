@@ -117,7 +117,8 @@ export default function StatsPage() {
                       onClick={() => navigate(`/dashboard/${dashboardId}/quiz`)}
                       className="btn"
                     >
-                      Take Another Quiz
+                      <span className="sm:hidden">New Quiz</span>
+                      <span className="hidden sm:inline">Take Another Quiz</span>
                     </button>
                   </div>
                 </>

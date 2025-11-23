@@ -82,10 +82,10 @@ export function QuizResultsView({
         })}
       </div>
 
-      <div className="mt-6 flex gap-4">
+      <div className="mt-6 flex">
         <button
           onClick={onRetake}
-          className="btn-secondary flex-1"
+          className="btn-secondary text-sm flex-1"
         >
           Retake Quiz
         </button>
@@ -93,7 +93,8 @@ export function QuizResultsView({
           onClick={onGenerateNew}
           className="btn flex-1"
         >
-          Generate New Quiz
+          <span className="sm:hidden">New Quiz</span>
+          <span className="hidden sm:inline">Generate New Quiz</span>
         </button>
       </div>
     </>

@@ -57,7 +57,7 @@ export function EvaluationConfirmation({
         <div className="text-primary-900 whitespace-pre-line">{evaluation.explanation}</div>
       </div>
 
-      <div className="border-t pt-4">
+      <div className="border-t text-primary-100 pt-4">
         <div className="text-sm text-primary-600 mb-4">
           Review the AI's evaluation. Click <strong>Confirm</strong> to accept and continue, or <strong>Reject</strong> to re-answer the question.
         </div>
@@ -65,16 +65,17 @@ export function EvaluationConfirmation({
           <button
             onClick={onReject}
             disabled={isLoading}
-            className="flex-1 btn-secondary"
+            className="flex-1 btn-tertiary text-sm"
           >
             Reject
           </button>
           <button
             onClick={onConfirm}
             disabled={isLoading}
-            className="flex-1 btn"
+            className="flex-2 btn"
           >
-            {isLoading ? 'Loading...' : 'Confirm & Continue'}
+            <span className="sm:hidden">{isLoading ? 'Loading...' : 'Continue'}</span>
+            <span className="hidden sm:inline">{isLoading ? 'Loading...' : 'Confirm & Continue'}</span>
           </button>
         </div>
       </div>

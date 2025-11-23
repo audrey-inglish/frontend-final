@@ -103,7 +103,7 @@ export default function FlashcardsPage() {
                   <h3 className="text-xl font-semibold text-primary-700 mb-4">
                     Ready to study?
                   </h3>
-                  <p className="text-primary-600 mb-6">
+                  <p className="text-primary-400 mb-6">
                     Generate flashcards from your notes to begin studying
                   </p>
                   <button

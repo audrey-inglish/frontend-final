@@ -52,20 +52,20 @@ export function QuizDisplay({
             ))}
           </div>
 
-          <div className="mt-6 flex gap-4">
+          <div className="mt-6 flex">
+            <button
+              onClick={onGenerateNew}
+              disabled={isSubmitting}
+              className="btn-secondary text-sm"
+            >
+              Generate New Quiz
+            </button>
             <button 
               onClick={onSubmit}
               disabled={isSubmitting}
               className="btn flex-1"
             >
-              {isSubmitting ? "Submitting..." : "Submit Quiz"}
-            </button>
-            <button
-              onClick={onGenerateNew}
-              disabled={isSubmitting}
-              className="btn-secondary"
-            >
-              Generate New Quiz
+              {isSubmitting ? "Submitting..." : "Submit"}
             </button>
           </div>
         </>
