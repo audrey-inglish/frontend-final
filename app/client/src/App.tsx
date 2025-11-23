@@ -3,6 +3,7 @@ import { useAuth } from "react-oidc-context";
 import { setTokenProvider } from "./lib/apiFetch";
 import ErrorBoundary from "./components/validation/ErrorBoundary";
 import Home from "./Pages/Home";
+import Preview from "./Pages/Preview";
 import DashboardDetail from "./Pages/DashboardDetail";
 import FlashcardsPage from "./Pages/FlashcardsPage";
 import QuizPage from "./Pages/QuizPage";
@@ -25,6 +26,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/preview" element={<Preview />} />
           <Route path="/dashboard/:id" element={<DashboardDetail />} />
           <Route path="/dashboard/:id/flashcards" element={<FlashcardsPage />} />
           <Route path="/dashboard/:id/quiz" element={<QuizPage />} />

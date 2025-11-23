@@ -80,12 +80,17 @@ export default function Home() {
           <p className="text-gray-600 mb-8">
             Turn your notes into productive study sessions
           </p>
-          <button
-            onClick={() => auth.signinRedirect()}
-            className="btn"
-          >
-            Sign In
-          </button>
+          <div className="">
+            <Link to="/preview" className="btn-secondary py-3">
+              Try It Free
+            </Link>
+            <button
+              onClick={() => auth.signinRedirect()}
+              className="btn"
+            >
+              Sign In
+            </button>
+          </div>
         </div>
       </div>
     );

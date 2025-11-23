@@ -337,12 +337,12 @@ Features:
   
 To-Dos & Subrequirements:
 - [X] Build visual progress tracker (chart, bar, or ring progress indicator?)
-- [ ] Add responsive breakpoints using Tailwind
-- [ ] Reorder card and column layouts for smaller screens
-- [ ] Optimize Flashcard and Quiz components for touch devices
-- [ ] Adjust spacing, typography, and scaling for mobile
-- [ ] Adjust colors/theming as necessary
-- [ ] Make a page or two accessible without authentication
+- [X] Add responsive breakpoints using Tailwind
+- [X] Reorder card and column layouts for smaller screens
+- [X] Optimize Flashcard and Quiz components for touch devices
+- [X] Adjust spacing, typography, and scaling for mobile
+- [X] Adjust colors/theming as necessary
+- [X] Make a page or two accessible without authentication
 - [X] Make an AI Management page where an admin can view all AI actions for all users
 
 #### Delivered
