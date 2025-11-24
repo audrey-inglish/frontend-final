@@ -20,3 +20,6 @@ export { QuizEmptyState } from "./quiz/QuizEmptyState";
 export { StatsCard, ScoreHistoryChart, RecentQuizzesList } from "./stats";
 export { default as StudyToolCard } from "./cards/StudyToolCard";
 export { StudyTools } from "./dashboard/StudyTools";
+export { default as AiLogsTable } from "./admin/AiLogsTable";
+export { default as AiLogRow } from "./admin/AiLogRow";
+export { default as PaginationControls } from "./admin/PaginationControls";

@@ -119,6 +119,10 @@ body {
     @apply px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider;
   }
 
+  .admin-table-td {
+    @apply px-4 py-4 whitespace-nowrap text-sm text-neutral-600;
+  }
+
   .study-tool-icon {
     @apply w-6 h-6;
   }
