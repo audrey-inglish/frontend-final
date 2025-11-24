@@ -348,9 +348,13 @@ To-Dos & Subrequirements:
 #### Delivered
 
 Rubric Items:
-
+- Experience: All experiences mobile friendly
+- Experience: 3 instances where elements reorder on smaller screens
+- Professional, organized, smooth experience
 
 Features:
+- Fully responsive layouts
+- Reordering behavior verified on 3 key pages (Dashboard, Flashcards, Quiz)
 
 ---
 ### 10 - Dec 3: Testing & UI Adjustments
