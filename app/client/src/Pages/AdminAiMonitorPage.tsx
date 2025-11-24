@@ -92,7 +92,6 @@ export default function AdminAiMonitorPage() {
                           <th className="table-header">Dashboard</th>
                           <th className="table-header">Action</th>
                           <th className="table-header">Topic</th>
-                          <th className="table-header">Mastery</th>
                           <th className="table-header">Duration</th>
                         </tr>
                       </thead>
@@ -123,11 +122,6 @@ export default function AdminAiMonitorPage() {
                             </td>
                             <td className="px-4 py-4 text-sm text-neutral-900">
                               {log.topic || "-"}
-                            </td>
-                            <td className="px-4 py-4 whitespace-nowrap text-sm text-neutral-900">
-                              {log.mastery_level !== null
-                                ? `${log.mastery_level}%`
-                                : "-"}
                             </td>
                             <td className="px-4 py-4 whitespace-nowrap text-sm text-neutral-500">
                               {log.duration_ms ? `${log.duration_ms}ms` : "-"}
