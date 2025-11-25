@@ -91,3 +91,4 @@ app/kube/cert_staging.key
 app/kube/backend-secret.yml
 temp.http
 app/client/src/lib/agent/README.md
+app/client/src/lib/agentService.ts
