@@ -35,7 +35,7 @@ export function RecentQuizzesList({ quizzes }: RecentQuizzesListProps) {
   const getScoreColor = (score: number) => {
     if (score >= 90) return 'text-custom-green-600 bg-custom-green-100';
     if (score >= 70) return 'text-blue-600 bg-blue-100';
-    if (score >= 50) return 'text-yellow-600 bg-yellow-100';
+    if (score >= 50) return 'text-yellow-600 bg-orange-100';
     return 'text-custom-red-500 bg-custom-red-100';
   };
 

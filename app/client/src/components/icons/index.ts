@@ -8,6 +8,7 @@ export { default as BookmarkIcon } from './BookmarkIcon';
 export { default as BookmarkFilledIcon } from './BookmarkFilledIcon';
 export { ClipboardIcon } from './ClipboardIcon';
 export { default as ImageUploadIcon } from './ImageUploadIcon';
+export { InfoIcon } from './InfoIcon';
 export { TrophyIcon } from './TrophyIcon';
 export { ChartIcon } from './ChartIcon';
 export { TargetIcon } from './TargetIcon';

@@ -72,7 +72,23 @@ interface AiActionLogEntryProps {
 
 function AiActionLogEntry({ log }: AiActionLogEntryProps) {
   const isNextStep = log.action_type === "get_next_step";
+  const isEvaluate = log.action_type === "evaluate_response";
+  const isHint = log.action_type === "provide_hint";
   const timestamp = new Date(log.created_at).toLocaleTimeString();
+
+  const getActionLabel = () => {
+    if (isNextStep) return "Generated Question";
+    if (isEvaluate) return "Evaluated Answer";
+    if (isHint) return "Hint Requested";
+    return "AI Action";
+  };
+
+  const getActionColors = () => {
+    if (isNextStep) return "bg-accent-50 text-accent-600";
+    if (isEvaluate) return "bg-custom-green-100 text-custom-green-500";
+    if (isHint) return "bg-orange-100 text-yellow-600";
+    return "bg-neutral-100 text-neutral-600";
+  };
 
   return (
     <div className="card border-l-4 border-l-accent-500">
@@ -80,13 +96,9 @@ function AiActionLogEntry({ log }: AiActionLogEntryProps) {
         <div>
           <div className="flex items-center gap-2">
             <span
-              className={`inline-block px-2 py-1 rounded text-xs font-medium ${
-                isNextStep
-                  ? "bg-accent-50 text-accent-600"
-                  : "bg-custom-green-100 text-custom-green-500"
-              }`}
+              className={`inline-block px-2 py-1 rounded text-xs font-medium ${getActionColors()}`}
             >
-              {isNextStep ? "Generated Question" : "Evaluated Answer"}
+              {getActionLabel()}
             </span>
             <span className="text-sm text-neutral-500">{timestamp}</span>
           </div>

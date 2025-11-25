@@ -1,15 +1,18 @@
 import type { StudyQuestion } from '../../lib/studySession.types';
 import { useQuestionInput } from '../../hooks/useQuestionInput';
+import { LightbulbIcon } from '../icons';
 
 interface StudyQuestionDisplayProps {
   question: StudyQuestion;
   onSubmit: (answer: string) => void;
+  onRequestHint?: () => void;
   isLoading: boolean;
 }
 
 export function StudyQuestionDisplay({
   question,
   onSubmit,
+  onRequestHint,
   isLoading,
 }: StudyQuestionDisplayProps) {
   const options = question.options?.map(opt => ({ text: opt })) || [];
@@ -61,18 +64,35 @@ export function StudyQuestionDisplay({
 
         {question.hint && (
           <div className="p-3 bg-accent-50 border border-accent-100 rounded-lg">
-            <div className="text-sm font-medium text-accent-600">Hint:</div>
-            <div className="text-sm text-accent-300 mt-1">{question.hint}</div>
+            <div className="flex items-start space-x-2">
+              <LightbulbIcon className="h-5 w-5 text-accent-600" />
+              <div className="flex-1">
+                <div className="text-sm font-medium text-accent-600">Hint:</div>
+                <div className="text-sm text-accent-600 mt-1">{question.hint}</div>
+              </div>
+            </div>
           </div>
         )}
 
-        <button
-          type="submit"
-          disabled={!answer.trim() || isLoading}
-          className="btn w-full mx-auto"
-        >
-          {isLoading ? 'Evaluating...' : 'Submit Answer'}
-        </button>
+        <div className="flex">
+          {onRequestHint && !question.hint && (
+            <button
+              type="button"
+              onClick={onRequestHint}
+              disabled={isLoading}
+              className="btn-secondary flex-1"
+            >
+              Request Hint
+            </button>
+          )}
+          <button
+            type="submit"
+            disabled={!answer.trim() || isLoading}
+            className={`btn ${onRequestHint && !question.hint ? 'flex-1' : 'w-full'}`}
+          >
+            {isLoading ? 'Evaluating...' : 'Submit Answer'}
+          </button>
+        </div>
       </form>
     </div>
   );

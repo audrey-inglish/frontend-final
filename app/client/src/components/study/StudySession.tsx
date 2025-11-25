@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useStudySession } from "../../hooks/study/useStudySession";
 import { StudyQuestionDisplay } from "./StudyQuestionDisplay";
 import { EvaluationConfirmation } from "./EvaluationConfirmation";
+import { HintConfirmation } from "./HintConfirmation";
 import { SessionStart } from "./SessionStart";
 import { SessionComplete } from "./SessionComplete";
 import { SessionProgress } from "./SessionProgress";
@@ -31,6 +32,9 @@ export function StudySession({
     confirmEvaluation,
     rejectEvaluation,
     endSession,
+    requestHintForQuestion,
+    acceptHint,
+    rejectHint,
   } = useStudySession({
     topics,
     apiKey,
@@ -38,7 +42,6 @@ export function StudySession({
     onSessionEnd: onComplete,
   });
 
-  // Check for session completion first (before checking active state)
   if (
     sessionState.questionHistory.length > 0 &&
     !sessionState.currentQuestion &&
@@ -68,7 +71,7 @@ export function StudySession({
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-2">
+    <div className="max-w-5xl mx-auto p-2">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
           <div className="flex items-center justify-between">
@@ -91,15 +94,16 @@ export function StudySession({
             </div>
           </div>
 
-          {error && (
-            <div className="p-4 bg-custom-red-100 border border-custom-red-500 rounded-lg text-custom-red-500">
-              {error}
-            </div>
-          )}
-
           {/* Main Card */}
           <div className="card">
-            {sessionState.pendingEvaluation ? (
+            {sessionState.pendingHint ? (
+              <HintConfirmation
+                hint={sessionState.pendingHint}
+                onAccept={acceptHint}
+                onReject={rejectHint}
+                isLoading={isLoading}
+              />
+            ) : sessionState.pendingEvaluation ? (
               <EvaluationConfirmation
                 question={sessionState.pendingEvaluation.question}
                 userAnswer={sessionState.pendingEvaluation.answer}
@@ -112,6 +116,7 @@ export function StudySession({
               <StudyQuestionDisplay
                 question={sessionState.currentQuestion}
                 onSubmit={submitAnswer}
+                onRequestHint={requestHintForQuestion}
                 isLoading={isLoading}
               />
             ) : (
@@ -123,6 +128,12 @@ export function StudySession({
               </div>
             )}
           </div>
+
+          {error && (
+            <div className="p-4 bg-custom-red-100 border border-custom-red-500 rounded-lg text-custom-red-500">
+              {error}
+            </div>
+          )}
         </div>
 
         <div className="lg:col-span-1">

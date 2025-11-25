@@ -370,8 +370,8 @@ Features:
 - Verified smooth user flow (loading states, error handling for API and UI)
 
 To-Dos & Subrequirements:
-- [ ] run through full user flow on desktop, adjust UI as needed
-- [ ] responsive checks - run through full user flow on mobile, adjusting as needed
+- [X] run through full user flow on desktop, adjust UI as needed
+- [X] responsive checks - run through full user flow on mobile, adjusting as needed
 - [ ] hunt for bugs
 
 

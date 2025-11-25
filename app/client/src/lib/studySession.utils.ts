@@ -26,7 +26,6 @@ export function argsToQuestion(
     question: args.question,
     options: args.options,
     correctAnswer: args.correctAnswer,
-    hint: args.hint,
   };
 }
 

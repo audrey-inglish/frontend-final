@@ -36,10 +36,16 @@ export default function AiLogRow({ log, isExpanded, onToggle }: AiLogRowProps) {
             className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
               log.action_type === "get_next_step"
                 ? "bg-accent-50 text-accent-600"
-                : "bg-custom-green-100 text-custom-green-600"
+                : log.action_type === "provide_hint"
+                  ? "bg-orange-100 text-yellow-600"
+                  : "bg-custom-green-100 text-custom-green-600"
             }`}
           >
-            {log.action_type === "get_next_step" ? "Question" : "Evaluation"}
+            {log.action_type === "get_next_step"
+              ? "Question"
+              : log.action_type === "provide_hint"
+                ? "Hint"
+                : "Evaluation"}
           </span>
         </td>
         <td className="admin-table-td">{log.topic || "-"}</td>

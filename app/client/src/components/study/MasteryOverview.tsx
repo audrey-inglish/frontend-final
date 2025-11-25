@@ -21,8 +21,8 @@ export function MasteryOverview({ masteryLevels, className = '' }: MasteryOvervi
     <div className={`space-y-4 ${className}`}>
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-primary-800">Mastery Progress</h3>
-        <div className="text-sm text-primary-600">
-          Average: <span className="font-semibold text-primary-800">{averageMastery}%</span>
+        <div className="text-xs text-primary-400">
+          Average: <span className="font-semibold text-primary-500">{averageMastery}%</span>
         </div>
       </div>
 
