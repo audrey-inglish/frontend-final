@@ -103,7 +103,6 @@ describe('studySession.utils', () => {
         question: 'What is a component?',
         options: ['A function', 'A class', 'Both', 'Neither'],
         correctAnswer: 'Both',
-        hint: 'Think about React 16.8+',
         reasoning: 'Testing component knowledge',
       };
 
@@ -117,7 +116,6 @@ describe('studySession.utils', () => {
         question: 'What is a component?',
         options: ['A function', 'A class', 'Both', 'Neither'],
         correctAnswer: 'Both',
-        hint: 'Think about React 16.8+',
       });
     });
 
