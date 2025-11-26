@@ -36,7 +36,6 @@ export async function requestEvaluation(
     [EVALUATE_RESPONSE_TOOL],
     apiKey
   );
-  console.log("Evaluation requested");
   const duration = Math.round(performance.now() - startTime);
 
   const toolCall = response.choices[0]?.message?.tool_calls?.[0];

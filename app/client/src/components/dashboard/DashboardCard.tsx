@@ -42,13 +42,7 @@ export default function DashboardCard({
           <Link
             to={`/dashboard/${id}`}
             onClick={() => {
-              try {
                 localStorage.setItem("mindset.lastDashboard", String(id));
-              } catch {
-                console.log(
-                  "Could not retrieve last dashboard from localStorage"
-                );
-              }
             }}
             className="btn bg-accent-200 block text-center rounded-lg"
           >

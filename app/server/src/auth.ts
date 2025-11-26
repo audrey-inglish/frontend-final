@@ -88,8 +88,6 @@ export async function authMiddleware(
 
     const user = await verifyJWT(authHeader);
     req.user = user;
-
-    console.log(`Authenticated request from user: ${user.email} (${user.sub})`);
     next();
   } catch (error) {
     const errorMessage =

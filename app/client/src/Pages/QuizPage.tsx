@@ -47,9 +47,8 @@ export default function QuizPage() {
   const quizSubmission = useQuizSubmission({
     quizId: quizGenerator.quiz?.id,
     questions: quizGenerator.questions || [],
-    onComplete: (score) => {
+    onComplete: () => {
       setShowResults(true);
-      console.log(`Quiz completed with score: ${score}%`);
     },
   });
 

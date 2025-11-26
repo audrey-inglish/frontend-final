@@ -61,14 +61,12 @@ export async function apiFetch(
           res.status === 401
             ? "Your session has expired. Please log in again."
             : "You don't have permission to access this resource.";
-        console.log("Authentication error:", messageFromServer || authMessage);
         throw new HttpError(messageFromServer || authMessage, res.status);
       }
 
       const message =
         messageFromServer ||
         `${statusText} (${res.status}) when calling ${url}`;
-      console.log("API error:", message);
       throw new HttpError(message, res.status);
     }
 

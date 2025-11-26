@@ -40,8 +40,6 @@ export async function requestHint(
     const reasoning = reasoningMatch?.[1]?.trim() || content || "AI decided not to provide a hint at this time";
     const userMessage = messageMatch?.[1]?.trim() || "I believe you can solve this without a hint. Give it a try!";
 
-    console.log("📝 Logging NO HINT decision:", { reasoning, userMessage });
-
     // Log the decision NOT to provide a hint
     if (sessionState.dashboardId && sessionState.currentQuestion) {
       const currentTopic = sessionState.masteryLevels.find(
@@ -74,11 +72,6 @@ export async function requestHint(
   }
 
   const args: ProvideHintArgs = JSON.parse(toolCall.function.arguments);
-
-  console.log("💡 Hint Provided:", {
-    hint: args.hint,
-    reasoning: args.reasoning,
-  });
 
   // Log this AI action
   if (sessionState.dashboardId && sessionState.currentQuestion) {
