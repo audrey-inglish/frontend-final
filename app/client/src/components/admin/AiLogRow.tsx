@@ -38,14 +38,22 @@ export default function AiLogRow({ log, isExpanded, onToggle }: AiLogRowProps) {
                 ? "bg-accent-50 text-accent-600"
                 : log.action_type === "provide_hint"
                   ? "bg-orange-100 text-yellow-600"
-                  : "bg-custom-green-100 text-custom-green-600"
+                  : log.action_type === "evaluate_response"
+                    ? "bg-custom-green-100 text-custom-green-600"
+                    : log.action_type === "decide_next_action"
+                      ? "bg-gray-100 text-gray-500"
+                      : "bg-neutral-100 text-neutral-600"
             }`}
           >
             {log.action_type === "get_next_step"
               ? "Question"
               : log.action_type === "provide_hint"
                 ? "Hint"
-                : "Evaluation"}
+                : log.action_type === "evaluate_response"
+                  ? "Evaluation"
+                  : log.action_type === "decide_next_action"
+                    ? "Decision"
+                    : log.action_type}
           </span>
         </td>
         <td className="admin-table-td">{log.topic || "-"}</td>

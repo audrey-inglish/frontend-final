@@ -6,7 +6,7 @@ export const AiActionLogSchema = z.object({
   user_id: z.number(),
   dashboard_id: z.number(),
   session_id: z.string(),
-  action_type: z.enum(["get_next_step", "evaluate_response", "provide_hint"]),
+  action_type: z.enum(["get_next_step", "evaluate_response", "provide_hint", "decide_next_action"]),
   
   request_messages: z.any().nullable(),
   response_data: z.any().nullable(),
@@ -26,7 +26,7 @@ export const AiActionLogSchema = z.object({
 export const AiActionLogCreateSchema = z.object({
   dashboard_id: z.number(),
   session_id: z.string(),
-  action_type: z.enum(["get_next_step", "evaluate_response", "provide_hint"]),
+  action_type: z.enum(["get_next_step", "evaluate_response", "provide_hint", "decide_next_action"]),
   
   request_messages: z.any().optional(),
   response_data: z.any().optional(),

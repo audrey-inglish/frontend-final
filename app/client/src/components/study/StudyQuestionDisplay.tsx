@@ -1,6 +1,6 @@
 import type { StudyQuestion } from '../../lib/studySession.types';
 import { useQuestionInput } from '../../hooks/useQuestionInput';
-import { LightbulbIcon } from '../icons';
+import { LightbulbIcon, SpinnerIcon } from '../icons';
 
 interface StudyQuestionDisplayProps {
   question: StudyQuestion;
@@ -88,8 +88,9 @@ export function StudyQuestionDisplay({
           <button
             type="submit"
             disabled={!answer.trim() || isLoading}
-            className={`btn ${onRequestHint && !question.hint ? 'flex-1' : 'w-full'}`}
+            className={`btn ${onRequestHint && !question.hint ? 'flex-2' : 'w-full'} flex items-center justify-center gap-2`}
           >
+            {isLoading && <SpinnerIcon />}
             {isLoading ? 'Evaluating...' : 'Submit Answer'}
           </button>
         </div>

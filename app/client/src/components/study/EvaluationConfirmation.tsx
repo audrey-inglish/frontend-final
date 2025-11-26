@@ -1,4 +1,5 @@
 import type { StudyQuestion, UserAnswer, EvaluationResult } from '../../lib/studySession.types';
+import { SpinnerIcon } from '../icons';
 
 interface EvaluationConfirmationProps {
   question: StudyQuestion;
@@ -19,7 +20,7 @@ export function EvaluationConfirmation({
     <div className="space-y-6">
       <div className={`p-4 rounded-lg ${
         evaluation.isCorrect
-          ? 'bg-custom-green-100'
+          ? 'bg-custom-green-100/50'
           : 'bg-custom-red-100'
       }`}>
         <div className="flex items-center space-x-2">
@@ -59,8 +60,9 @@ export function EvaluationConfirmation({
         <button
           onClick={onConfirm}
           disabled={isLoading}
-          className="w-full btn mx-auto"
+          className="w-full btn mx-auto flex items-center justify-center gap-2"
         >
+          {isLoading && <SpinnerIcon />}
           {isLoading ? 'Loading next question...' : 'Continue'}
         </button>
       </div>

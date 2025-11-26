@@ -63,6 +63,16 @@ export interface StudySessionState {
     hint: string;
     reasoning: string;
   };
+  pendingHintSuggestion?: {
+    hint: string;
+    reasoning: string;
+    nextQuestion?: StudyQuestion;
+  };
+  pendingSessionEnd?: {
+    sessionSummary: string;
+    reasoning: string;
+  };
+  userDeclinedSessionEnd?: boolean;
 }
 
 export interface AgentToolFunction {
@@ -140,3 +150,14 @@ export interface HintResponse {
   hint: ProvideHintArgs | null;
   aiMessage?: string; // AI gives a message if it decides not to provide a hint
 }
+
+export type NextActionType = 'continue_session' | 'suggest_hint' | 'adjust_difficulty' | 'end_session';
+
+export interface DecideNextActionArgs {
+  action: NextActionType;
+  reasoning: string;
+  hintText?: string;
+  targetDifficulty?: DifficultyLevel;
+  sessionSummary?: string;
+}
+

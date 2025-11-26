@@ -1,5 +1,4 @@
 export const STUDY_SESSION_CONFIG = {
-
   agent: {
     // Prefer an explicit environment variable set at build time. If missing,
     // default to the same-origin server proxy we added at `/api/agent` so the
@@ -34,7 +33,6 @@ export const STUDY_SESSION_CONFIG = {
     autoSaveInterval: 30000,
   },
 
-
   ui: {
     showReasoning: import.meta.env.DEV,
     animationsEnabled: true,
@@ -45,11 +43,11 @@ export const STUDY_SESSION_CONFIG = {
     preferences: {
       "multiple-choice": 3,
       "true-false": 2,
-      "short-answer": 1,
-      "flashcard": 1,
+      "short-answer": 3,
+      flashcard: 1,
     },
-    // "multiple-choice", "true-false",
-    enabled: [ "short-answer"] as const,
+
+    enabled: ["multiple-choice", "true-false", "short-answer"] as const,
   },
 
   /**
@@ -92,26 +90,42 @@ export function getDifficultyForMastery(
 
 export function getQuestionTypeGuidance(): string {
   const { preferences, enabled } = STUDY_SESSION_CONFIG.questionTypes;
-  
+
   const sortedTypes = enabled
-    .map(type => ({ type, weight: preferences[type] || 1 }))
+    .map((type) => ({ type, weight: preferences[type] || 1 }))
     .sort((a, b) => b.weight - a.weight);
-  
-  const primary = sortedTypes.filter(t => t.weight === sortedTypes[0].weight).map(t => t.type);
-  const secondary = sortedTypes.filter(t => t.weight < sortedTypes[0].weight && t.weight > sortedTypes[sortedTypes.length - 1].weight).map(t => t.type);
-  const occasional = sortedTypes.filter(t => t.weight === sortedTypes[sortedTypes.length - 1].weight && t.weight < sortedTypes[0].weight).map(t => t.type);
-  
-  let guidance = `Available question types: ${enabled.join(', ')}.\n`;
-  
+
+  const primary = sortedTypes
+    .filter((t) => t.weight === sortedTypes[0].weight)
+    .map((t) => t.type);
+  const secondary = sortedTypes
+    .filter(
+      (t) =>
+        t.weight < sortedTypes[0].weight &&
+        t.weight > sortedTypes[sortedTypes.length - 1].weight
+    )
+    .map((t) => t.type);
+  const occasional = sortedTypes
+    .filter(
+      (t) =>
+        t.weight === sortedTypes[sortedTypes.length - 1].weight &&
+        t.weight < sortedTypes[0].weight
+    )
+    .map((t) => t.type);
+
+  let guidance = `Available question types: ${enabled.join(", ")}.\n`;
+
   if (primary.length > 0) {
-    guidance += `Prioritize: ${primary.join(', ')} (use these most frequently).\n`;
+    guidance += `Prioritize: ${primary.join(
+      ", "
+    )} (use these most frequently).\n`;
   }
   if (secondary.length > 0) {
-    guidance += `Use regularly: ${secondary.join(', ')}.\n`;
+    guidance += `Use regularly: ${secondary.join(", ")}.\n`;
   }
-  if (occasional.length > 0 && occasional.some(t => !primary.includes(t))) {
-    guidance += `Use occasionally for variety: ${occasional.join(', ')}.`;
+  if (occasional.length > 0 && occasional.some((t) => !primary.includes(t))) {
+    guidance += `Use occasionally for variety: ${occasional.join(", ")}.`;
   }
-  
+
   return guidance;
 }

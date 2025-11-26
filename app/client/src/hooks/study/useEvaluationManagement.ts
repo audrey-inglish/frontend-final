@@ -27,41 +27,58 @@ export function useEvaluationManagement({
   const confirmEvaluation = useCallback(async () => {
     if (!sessionState.pendingEvaluation) return;
 
+    const hasPreloadedQuestion = !!sessionState.pendingEvaluation.nextQuestion;
+
     setIsLoading(true);
     setError(null);
 
     try {
-      const newState: StudySessionState = {
-        ...sessionState,
-        pendingEvaluation: undefined,
-        currentQuestion: undefined,
-      };
-
-      const allMastered = sessionState.masteryLevels.every((m: TopicMastery) =>
-        isTopicMastered(m.level)
-      );
+      // Use functional setState to get the latest state
+      let shouldLoadQuestion = false;
       
-      if (allMastered) {
-        setSessionState({
-          ...newState,
-          active: false,
-        });
-        return;
-      }
+      setSessionState(prev => {
+        const allMastered = prev.masteryLevels.every((m: TopicMastery) =>
+          isTopicMastered(m.level)
+        );
+        
+        if (allMastered) {
+          return {
+            ...prev,
+            pendingEvaluation: undefined,
+            currentQuestion: undefined,
+            active: false,
+          };
+        }
 
-      // use preloaded question if available, otherwise load now
-      let nextQuestion = sessionState.pendingEvaluation.nextQuestion;
-      
-      if (!nextQuestion) {
-        const nextStepArgs = await requestNextStep(newState, apiKey);
-        nextQuestion = argsToQuestion(nextStepArgs, `q-${Date.now()}`);
-      }
-
-      setSessionState({
-        ...newState,
-        currentQuestion: nextQuestion,
-        questionHistory: [...newState.questionHistory, nextQuestion],
+        const nextQuestion = prev.pendingEvaluation?.nextQuestion;
+        
+        if (nextQuestion) {
+          return {
+            ...prev,
+            pendingEvaluation: undefined,
+            currentQuestion: nextQuestion,
+            questionHistory: [...prev.questionHistory, nextQuestion],
+          };
+        }
+        
+        shouldLoadQuestion = true;
+        return {
+          ...prev,
+          pendingEvaluation: undefined,
+          currentQuestion: undefined,
+        };
       });
+
+      if (!hasPreloadedQuestion && shouldLoadQuestion) {
+        const nextStepArgs = await requestNextStep(sessionState, apiKey);
+        const nextQuestion = argsToQuestion(nextStepArgs, `q-${Date.now()}`);
+
+        setSessionState(prev => ({
+          ...prev,
+          currentQuestion: nextQuestion,
+          questionHistory: [...prev.questionHistory, nextQuestion],
+        }));
+      }
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Failed to get next question"

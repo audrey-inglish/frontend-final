@@ -9,7 +9,7 @@ interface NotesSectionProps {
 
 export function NotesSection({ notes, noteEditor }: NotesSectionProps) {
   return (
-    <div className="lg:col-span-2 ">
+    <div className="lg:col-span-2 mr-6 ">
       <div className="flex justify-between items-center mb-2">
         <h3 className="text-xl font-bold text-neutral-800">Notes</h3>
         <button

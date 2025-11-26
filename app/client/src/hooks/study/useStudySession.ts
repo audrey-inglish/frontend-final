@@ -3,7 +3,6 @@ import type {
   StudySessionState,
   UserAnswer,
   EvaluationResult,
-  TopicMastery,
 } from "../../lib/studySession.types";
 import { requestNextStep } from "../../lib/agent/nextStepService";
 import { requestEvaluation } from "../../lib/agent/evaluationService";
@@ -13,9 +12,9 @@ import {
   calculateMasteryLevel,
   applyMasteryUpdates,
 } from "../../lib/studySession.utils";
-import { isTopicMastered } from "../../lib/studySession.config";
 import { useHintManagement } from "./useHintManagement";
 import { useEvaluationManagement } from "./useEvaluationManagement";
+import { useAutonomousActionManagement } from "./useAutonomousActionManagement";
 
 interface UseStudySessionOptions {
   topics: string[];
@@ -35,6 +34,10 @@ interface UseStudySessionReturn {
   requestHintForQuestion: () => Promise<void>;
   acceptHint: () => void;
   rejectHint: () => void;
+  acceptHintSuggestion: () => void;
+  rejectHintSuggestion: () => Promise<void>;
+  acceptSessionEnd: () => void;
+  rejectSessionEnd: () => Promise<void>;
 }
 
 export function useStudySession({
@@ -77,6 +80,21 @@ export function useStudySession({
     setSessionState,
     setIsLoading,
     setError,
+  });
+
+  const {
+    executeAutonomousDecision,
+    acceptHintSuggestion,
+    rejectHintSuggestion,
+    acceptSessionEnd,
+    rejectSessionEnd,
+  } = useAutonomousActionManagement({
+    sessionState,
+    apiKey,
+    setSessionState,
+    setIsLoading,
+    setError,
+    onSessionEnd,
   });
 
   const startSession = useCallback(async () => {
@@ -123,92 +141,74 @@ export function useStudySession({
           apiKey
         );
 
-        const updatedMastery = applyMasteryUpdates(
-          sessionState.masteryLevels,
-          evaluationArgs.masteryUpdates
-        );
-
-        const evaluation: EvaluationResult = {
-          questionId: sessionState.currentQuestion.id,
-          isCorrect: evaluationArgs.isCorrect,
-          explanation: evaluationArgs.explanation,
-          correctAnswer: evaluationArgs.correctAnswer,
-          masteryUpdates: updatedMastery,
-        };
-
-        const masteryWithCounters = updatedMastery.map((m) => {
-          if (m.topic === sessionState.currentQuestion!.topic) {
-            const newQuestionsAnswered = m.questionsAnswered + 1;
-            const newQuestionsCorrect =
-              m.questionsCorrect + (evaluation.isCorrect ? 1 : 0);
-            const calculatedLevel = calculateMasteryLevel(
-              newQuestionsCorrect,
-              newQuestionsAnswered
-            );
-
-            return {
-              ...m,
-              questionsAnswered: newQuestionsAnswered,
-              questionsCorrect: newQuestionsCorrect,
-              level: calculatedLevel,
-              lastAsked: userAnswer.timestamp,
-            };
+        setSessionState((prev: StudySessionState) => {
+          const currentQuestion = prev.currentQuestion;
+          if (!currentQuestion) {
+            console.error('submitAnswer called but no current question in state');
+            return prev;
           }
-          return m;
+          
+          const updatedMastery = applyMasteryUpdates(
+            prev.masteryLevels,
+            evaluationArgs.masteryUpdates
+          );
+
+          const evaluation: EvaluationResult = {
+            questionId: currentQuestion.id,
+            isCorrect: evaluationArgs.isCorrect,
+            explanation: evaluationArgs.explanation,
+            correctAnswer: evaluationArgs.correctAnswer,
+            masteryUpdates: updatedMastery,
+          };
+
+          const masteryWithCounters = updatedMastery.map((m) => {
+            if (m.topic === currentQuestion.topic) {
+              const newQuestionsAnswered = m.questionsAnswered + 1;
+              const newQuestionsCorrect =
+                m.questionsCorrect + (evaluation.isCorrect ? 1 : 0);
+              const calculatedLevel = calculateMasteryLevel(
+                newQuestionsCorrect,
+                newQuestionsAnswered
+              );
+
+              return {
+                ...m,
+                questionsAnswered: newQuestionsAnswered,
+                questionsCorrect: newQuestionsCorrect,
+                level: calculatedLevel,
+                lastAsked: userAnswer.timestamp,
+              };
+            }
+            return m;
+          });
+
+
+          setTimeout(async () => {
+            await executeAutonomousDecision(masteryWithCounters);
+          }, 0);
+
+          return {
+            ...prev,
+            answerHistory: [...prev.answerHistory, userAnswer],
+            evaluationHistory: [...prev.evaluationHistory, evaluation],
+            masteryLevels: masteryWithCounters,
+            pendingEvaluation: {
+              question: currentQuestion,
+              answer: userAnswer,
+              evaluation,
+            },
+          };
         });
 
-        setSessionState((prev: StudySessionState) => ({
-          ...prev,
-          answerHistory: [...prev.answerHistory, userAnswer],
-          evaluationHistory: [...prev.evaluationHistory, evaluation],
-          masteryLevels: masteryWithCounters,
-          pendingEvaluation: {
-            question: sessionState.currentQuestion!,
-            answer: userAnswer,
-            evaluation,
-          },
-        }));
-
-        // Preload next question immediately (don't wait for user to click Continue)
-        // Check if session should end first
-        const allMastered = masteryWithCounters.every((m: TopicMastery) =>
-          isTopicMastered(m.level)
-        );
-        
-        if (!allMastered) {
-          try {
-            const tempState: StudySessionState = {
-              ...sessionState,
-              answerHistory: [...sessionState.answerHistory, userAnswer],
-              evaluationHistory: [...sessionState.evaluationHistory, evaluation],
-              masteryLevels: masteryWithCounters,
-              currentQuestion: undefined,
-            };
-            
-            const nextStepArgs = await requestNextStep(tempState, apiKey);
-            const nextQuestion = argsToQuestion(nextStepArgs, `q-${Date.now()}`);
-            
-            setSessionState((prev: StudySessionState) => ({
-              ...prev,
-              pendingEvaluation: prev.pendingEvaluation ? {
-                ...prev.pendingEvaluation,
-                nextQuestion,
-              } : undefined,
-            }));
-          } catch (preloadErr) {
-            // silently fail preload - will load on confirm if needed
-            console.warn("Failed to preload next question:", preloadErr);
-          }
-        }
+        setIsLoading(false);
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "Failed to evaluate answer"
         );
-      } finally {
         setIsLoading(false);
       }
     },
-    [sessionState, apiKey]
+    [sessionState, apiKey, executeAutonomousDecision]
   );
 
   const endSession = useCallback(() => {
@@ -232,5 +232,9 @@ export function useStudySession({
     requestHintForQuestion,
     acceptHint,
     rejectHint,
+    acceptHintSuggestion,
+    rejectHintSuggestion,
+    acceptSessionEnd,
+    rejectSessionEnd,
   };
 }

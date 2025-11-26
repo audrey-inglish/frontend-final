@@ -3,6 +3,8 @@ import { useStudySession } from "../../hooks/study/useStudySession";
 import { StudyQuestionDisplay } from "./StudyQuestionDisplay";
 import { EvaluationConfirmation } from "./EvaluationConfirmation";
 import { HintConfirmation } from "./HintConfirmation";
+import { HintSuggestionConfirmation } from './HintSuggestionConfirmation';
+import { SessionEndConfirmation } from './SessionEndConfirmation';
 import { SessionStart } from "./SessionStart";
 import { SessionComplete } from "./SessionComplete";
 import { SessionProgress } from "./SessionProgress";
@@ -34,6 +36,10 @@ export function StudySession({
     requestHintForQuestion,
     acceptHint,
     rejectHint,
+    acceptHintSuggestion,
+    rejectHintSuggestion,
+    acceptSessionEnd,
+    rejectSessionEnd,
   } = useStudySession({
     topics,
     apiKey,
@@ -73,8 +79,8 @@ export function StudySession({
     <div className="max-w-5xl mx-auto p-2">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-primary-700">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-xl font-bold text-primary-700">
               Study Session
             </h2>
             <div className="flex">
@@ -83,7 +89,7 @@ export function StudySession({
                 className="btn-secondary"
                 disabled={!sessionState.sessionId}
               >
-                <span className="sm:hidden pl-2">Reasoning</span>
+                <span className="sm:hidden">Reasoning</span>
                 <span className="hidden sm:inline">View AI Reasoning</span>
               </button>
               <button onClick={endSession} className="btn-secondary">
@@ -95,7 +101,23 @@ export function StudySession({
 
           {/* Main Card */}
           <div className="card">
-            {sessionState.pendingHint ? (
+            {sessionState.pendingSessionEnd ? (
+              <SessionEndConfirmation
+                sessionSummary={sessionState.pendingSessionEnd.sessionSummary}
+                reasoning={sessionState.pendingSessionEnd.reasoning}
+                onAccept={acceptSessionEnd}
+                onReject={rejectSessionEnd}
+                isLoading={isLoading}
+              />
+            ) : sessionState.pendingHintSuggestion ? (
+              <HintSuggestionConfirmation
+                hint={sessionState.pendingHintSuggestion.hint}
+                reasoning={sessionState.pendingHintSuggestion.reasoning}
+                onAccept={acceptHintSuggestion}
+                onReject={rejectHintSuggestion}
+                isLoading={isLoading}
+              />
+            ) : sessionState.pendingHint ? (
               <HintConfirmation
                 hint={sessionState.pendingHint}
                 onAccept={acceptHint}
@@ -121,7 +143,7 @@ export function StudySession({
               <div className="text-center py-12">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent-600 mx-auto"></div>
                 <p className="text-primary-600 mt-4">
-                  Generating next question...
+                  AI is deciding what to do next...
                 </p>
               </div>
             )}

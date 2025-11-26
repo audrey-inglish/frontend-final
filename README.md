@@ -373,7 +373,9 @@ To-Dos & Subrequirements:
 - [X] run through full user flow on desktop, adjust UI as needed
 - [X] responsive checks - run through full user flow on mobile, adjusting as needed
 - [ ] hunt for bugs
-
+- [X] add more toolcalls
+- [X] user experience adjustments -- speed, feedback, clarity
+- [X] adjust prompts to use configuration values from studySession.config.ts
 
 #### Delivered
 

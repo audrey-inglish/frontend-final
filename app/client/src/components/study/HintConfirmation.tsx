@@ -1,5 +1,5 @@
 import type { ProvideHintArgs } from '../../lib/studySession.types';
-import { InfoIcon } from '../icons';
+import { SpinnerIcon, InfoIcon } from '../icons';
 
 interface HintConfirmationProps {
   hint: ProvideHintArgs;
@@ -23,7 +23,7 @@ export function HintConfirmation({
           </div>
           <div className="flex-1">
             <h3 className="text-lg font-semibold text-accent-800 mb-1">
-              The AI wants to provide a hint
+              Want a hint?
             </h3>
             <p className="text-sm text-accent-600 mb-3">{hint.reasoning}</p>
           </div>
@@ -46,8 +46,9 @@ export function HintConfirmation({
           <button
             onClick={onAccept}
             disabled={isLoading}
-            className="flex-1 btn"
+            className="flex-1 btn flex items-center justify-center gap-2"
           >
+            {isLoading && <SpinnerIcon />}
             {isLoading ? 'Loading...' : 'Show Me The Hint'}
           </button>
         </div>
