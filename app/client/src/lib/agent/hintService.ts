@@ -3,8 +3,8 @@
  */
 
 import type { StudySessionState, ProvideHintArgs, HintResponse } from "../studySession.types";
-import { PROVIDE_HINT_TOOL } from "./toolDefinitions";
-import { buildHintRequestMessages } from "./prompts";
+import { PROVIDE_HINT_TOOL } from "./tools/provideHint/definition";
+import { buildHintRequestMessages } from "./tools/provideHint/prompt";
 import { callAgentWithTools } from "./apiClient";
 import { logAiAction } from "../aiActionLogger";
 

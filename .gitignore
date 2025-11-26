@@ -92,3 +92,5 @@ app/kube/backend-secret.yml
 temp.http
 app/client/src/lib/agent/README.md
 app/client/src/lib/agentService.ts
+app/client/src/lib/agent/prompts.ts
+app/client/src/lib/agent/toolDefinitions.ts

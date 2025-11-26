@@ -6,8 +6,8 @@
  */
 
 import type { StudySessionState, DecideNextActionArgs } from "../studySession.types";
-import { DECIDE_NEXT_ACTION_TOOL } from "./toolDefinitions";
-import { buildDecideNextActionMessages } from "./prompts";
+import { DECIDE_NEXT_ACTION_TOOL } from "./tools/decideNextAction/definition";
+import { buildDecideNextActionMessages } from "./tools/decideNextAction/prompt";
 import { callAgentWithTools } from "./apiClient";
 import { logAiAction } from "../aiActionLogger";
 

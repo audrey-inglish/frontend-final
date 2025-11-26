@@ -1,6 +1,6 @@
 import type { StudySessionState, EvaluateResponseArgs } from "../studySession.types";
-import { EVALUATE_RESPONSE_TOOL } from "./toolDefinitions";
-import { buildEvaluationMessages } from "./prompts";
+import { EVALUATE_RESPONSE_TOOL } from "./tools/evaluateResponse/definition";
+import { buildEvaluationMessages } from "./tools/evaluateResponse/prompt";
 import { callAgentWithTools } from "./apiClient";
 import { logAiAction } from "../aiActionLogger";
 

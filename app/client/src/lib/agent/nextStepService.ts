@@ -3,8 +3,8 @@
  */
 
 import type { StudySessionState, GetNextStepArgs } from "../studySession.types";
-import { GET_NEXT_STEP_TOOL } from "./toolDefinitions";
-import { buildNextStepMessages } from "./prompts";
+import { GET_NEXT_STEP_TOOL } from "./tools/getNextStep/definition";
+import { buildNextStepMessages } from "./tools/getNextStep/prompt";
 import { callAgentWithTools } from "./apiClient";
 import { logAiAction } from "../aiActionLogger";
 

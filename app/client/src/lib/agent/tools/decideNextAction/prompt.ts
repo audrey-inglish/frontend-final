@@ -1,7 +1,7 @@
-import type { AgentMessage, StudySessionState } from "../studySession.types";
-import { STUDY_SESSION_CONFIG, getQuestionTypeGuidance } from "../studySession.config";
+import type { AgentMessage, StudySessionState } from "../../../studySession.types";
+import { STUDY_SESSION_CONFIG, getQuestionTypeGuidance } from "../../../studySession.config";
 
-export function buildSystemPrompt(sessionState: StudySessionState): string {
+function buildSystemPrompt(sessionState: StudySessionState): string {
   const masteryThreshold = STUDY_SESSION_CONFIG.mastery.masteryThreshold;
   const questionTypeGuidance = getQuestionTypeGuidance();
 
@@ -36,120 +36,6 @@ Your responsibilities:
    - Recommend ending when all topics reach ${masteryThreshold}%+ mastery
 
 Be supportive and adaptive. Focus on helping the student truly understand the material.`;
-}
-
-export function buildNextStepMessages(
-  sessionState: StudySessionState
-): AgentMessage[] {
-  const lastQuestion = sessionState.questionHistory[sessionState.questionHistory.length - 1];
-  
-  let userMessage = "";
-  
-  if (sessionState.questionHistory.length === 0) {
-    userMessage = "Start the study session by generating the first question.";
-  } else {
-    userMessage = `Generate the next question based on the current mastery levels and progress.
-
-Recent Question History:
-${sessionState.questionHistory.slice(-3).map((q, i) => 
-  `  ${sessionState.questionHistory.length - 2 + i}. ${q.topic} (${q.difficulty})`
-).join('\n')}
-
-IMPORTANT: The last question was about "${lastQuestion?.topic}". You MUST choose a DIFFERENT topic for this next question, even if ${lastQuestion?.topic} has the lowest mastery level. Vary the topics to maintain engagement.`;
-  }
-
-  return [
-    {
-      role: "system",
-      content: buildSystemPrompt(sessionState),
-    },
-    {
-      role: "user",
-      content: userMessage,
-    },
-  ];
-}
-
-export function buildEvaluationMessages(
-  sessionState: StudySessionState,
-  userAnswer: string
-): AgentMessage[] {
-  const currentQ = sessionState.currentQuestion!;
-
-  return [
-    {
-      role: "system",
-      content: buildSystemPrompt(sessionState),
-    },
-    {
-      role: "user",
-      content: `Question: ${currentQ.question}
-
-User's Answer: ${userAnswer}
-
-Correct Answer: ${currentQ.correctAnswer}
-
-Evaluate this answer and update the mastery levels accordingly. Be forgiving of minor typos in the user's answer.`,
-    },
-  ];
-}
-
-export function buildHintRequestMessages(
-  sessionState: StudySessionState
-): AgentMessage[] {
-  if (!sessionState.currentQuestion) {
-    throw new Error("No current question for hint");
-  }
-
-  const topicMastery = sessionState.masteryLevels.find(
-    (m) => m.topic === sessionState.currentQuestion?.topic
-  );
-
-  const questionsAnswered = topicMastery?.questionsAnswered ?? 0;
-  const questionsCorrect = topicMastery?.questionsCorrect ?? 0;
-  const masteryLevel = topicMastery?.level ?? 0;
-  const hasStruggled =
-    questionsAnswered > 0 && questionsCorrect < questionsAnswered;
-
-  return [
-    {
-      role: "system",
-      content: buildSystemPrompt(sessionState),
-    },
-    {
-      role: "user",
-      content: `The user has been assigned the following question, and they'd like to request a hint:
-
-Question: "${sessionState.currentQuestion.question}"
-Topic: ${sessionState.currentQuestion.topic}
-Difficulty: ${sessionState.currentQuestion.difficulty}
-
-Performance on this topic:
-- Questions Answered: ${questionsAnswered}
-- Questions Correct: ${questionsCorrect}
-- Current Mastery: ${masteryLevel}%
-- Has struggled with this topic: ${hasStruggled ? "YES" : "NO"}
-
-Decide whether to provide a hint. Call provide_hint ONLY if:
-- The user has answered questions on this topic incorrectly before (questionsCorrect < questionsAnswered)
-- A hint would be educational **without giving away the answer**
-
-DO NOT call provide_hint if:
-- This is the user's first question on this topic (questionsAnswered = 0)
-- The user recently answered a question on this topic correctly (within the last 3 questions)
-- The user has perfect accuracy on this topic
-- The question is easy and user has good mastery
-- The user has high mastery (>60%) in this topic
-- A hint would essentially reveal the answer
-
-If you 
-If you choose not to provide a hint, simply respond without calling any tool. Your response should be in this format, and formatted as plain text:
-
-REASONING: [Explain your decision-making process. Why did you decide not to provide a hint? Reference specific criteria like mastery level, question difficulty, or past performance data.]
-
-MESSAGE: [Clearly state that a hint will not be provided. Brief, encouraging message to the user.]`,
-    },
-  ];
 }
 
 export function buildDecideNextActionMessages(

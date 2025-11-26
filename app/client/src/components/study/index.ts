@@ -30,4 +30,4 @@ export {
   GET_NEXT_STEP_TOOL,
   EVALUATE_RESPONSE_TOOL,
   PROVIDE_HINT_TOOL,
-} from "../../lib/agent/toolDefinitions";
+} from "../../lib/agent/tools";
