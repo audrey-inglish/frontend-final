@@ -40,8 +40,13 @@ export function ConceptGenerationProvider({
     if (!notes || notes.length === 0) return 'idle';
     
     const currentHash = createNotesHash(notes);
+
     if (conceptsData?.concepts && conceptsData.concepts.length > 0) {
-      if (currentHash === lastNotesHash.current) {
+      if (lastNotesHash.current === '') {
+        lastNotesHash.current = currentHash;
+        return 'ready';
+      }
+            if (currentHash === lastNotesHash.current) {
         return 'ready';
       }
       return 'stale';
