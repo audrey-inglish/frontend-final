@@ -8,14 +8,13 @@ import {
 } from "../hooks";
 import {
   Navbar,
-  DashboardForm,
   LoadingSpinner,
   NotesSection,
   ConceptsSection,
   ProtectedRoute,
   StudyTools,
 } from "../components";
-import { EditIcon } from "../components/icons";
+import { DashboardHeader } from "../components/dashboard/DashboardHeader";
 import { ConceptGenerationProvider, useConceptGeneration } from "../contexts";
 import type { Dashboard } from "../schemas/dashboard";
 import type { Note } from "../schemas/note";
@@ -35,42 +34,18 @@ function DashboardContent({
 
   return (
     <>
-      <div className="card p-6 mb-6">
-        {!dashboardEditor.isEditing ? (
-          <>
-            <div className="flex justify-between items-start">
-              <div>
-                <h2 className="text-2xl font-bold text-neutral-800 mb-2">
-                  {dashboard.title}
-                </h2>
-                {dashboard.description && (
-                  <p className="text-neutral-600">
-                    {dashboard.description}
-                  </p>
-                )}
-              </div>
-              <button
-                onClick={dashboardEditor.handleEdit}
-                className="text-neutral-600 hover:text-accent-600 transition-colors"
-                title="Edit dashboard"
-              >
-                <EditIcon className="w-5 h-5" />
-              </button>
-            </div>
-          </>
-        ) : (
-          <DashboardForm
-            title={dashboardEditor.title}
-            description={dashboardEditor.description}
-            onTitleChange={dashboardEditor.setTitle}
-            onDescriptionChange={dashboardEditor.setDescription}
-            onSubmit={dashboardEditor.handleUpdate}
-            onCancel={dashboardEditor.handleCancel}
-            isPending={dashboardEditor.isUpdating}
-            submitLabel="Save"
-          />
-        )}
-      </div>
+      <DashboardHeader
+        dashboard={dashboard}
+        isEditing={dashboardEditor.isEditing}
+        title={dashboardEditor.title}
+        description={dashboardEditor.description}
+        onEdit={dashboardEditor.handleEdit}
+        onTitleChange={dashboardEditor.setTitle}
+        onDescriptionChange={dashboardEditor.setDescription}
+        onSubmit={dashboardEditor.handleUpdate}
+        onCancel={dashboardEditor.handleCancel}
+        isPending={dashboardEditor.isUpdating}
+      />
 
       {/* Study tools section */}
       {notes && notes.length > 0 && (

@@ -22,6 +22,10 @@ export { MasteryOverview } from "./MasteryOverview";
 export { SessionStart } from "./SessionStart";
 export { SessionComplete } from "./SessionComplete";
 export { SessionProgress } from "./SessionProgress";
+export { ApiKeyRequired } from "./ApiKeyRequired";
+export { GeneratingConcepts } from "./GeneratingConcepts";
+export { NoTopicsFound } from "./NoTopicsFound";
+export { StudySessionWrapper } from "./StudySessionWrapper";
 
 export { requestNextStep } from "../../lib/agent/nextStepService";
 export { requestEvaluation } from "../../lib/agent/evaluationService";

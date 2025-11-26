@@ -40,6 +40,8 @@ interface UseStudySessionReturn {
   rejectSessionEnd: () => Promise<void>;
 }
 
+export type { StudySessionState };
+
 export function useStudySession({
   topics,
   apiKey,

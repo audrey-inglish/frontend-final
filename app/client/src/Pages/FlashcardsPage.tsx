@@ -9,9 +9,13 @@ import {
   useMarkFlashcard,
 } from "../hooks";
 import { Navbar, LoadingSpinner, ProtectedRoute } from "../components";
-import { Carousel } from "../components/layout/Carousel";
-import { FlipCard } from "../components/flashcard/FlipCard";
-import { FlashcardActionButtons } from "../components/flashcard/FlashcardActionButtons";
+import {
+  FlashcardPageHeader,
+  FlashcardEmptyState,
+  FlashcardFilter,
+  FlashcardCarousel,
+  FlashcardActionButtons,
+} from "../components/flashcard";
 
 type FlashcardFilter = "all" | "marked";
 
@@ -87,93 +91,32 @@ export default function FlashcardsPage() {
 
           {!isLoading && dashboard && (
             <>
-              {/* Header */}
-              <div className="mb-8">
-                <h1 className="text-3xl font-bold text-primary-800 mb-2">
-                  Flashcards: {dashboard.title}
-                </h1>
-                <p className="text-primary-600">
-                  Study with AI-generated flashcards from your notes
-                </p>
-              </div>
+              <FlashcardPageHeader dashboardTitle={dashboard.title} />
 
-              {/* Generate button or flashcard display */}
               {!hasFlashcards ? (
-                <div className="card p-8 text-center">
-                  <h3 className="text-xl font-semibold text-primary-700 mb-4">
-                    Ready to study?
-                  </h3>
-                  <p className="text-primary-400 mb-6">
-                    Generate flashcards from your notes to begin studying
-                  </p>
-                  <button
-                    onClick={handleGenerateFlashcards}
-                    disabled={
-                      flashcardGenerator.isGenerating ||
-                      !notes ||
-                      notes.length === 0
-                    }
-                    className="btn"
-                  >
-                    {flashcardGenerator.isGenerating
-                      ? "Generating..."
-                      : "Generate Flashcards"}
-                  </button>
-                  {(!notes || notes.length === 0) && (
-                    <p className="text-custom-red-500 mt-4 text-sm">
-                      Add some notes to your dashboard first
-                    </p>
-                  )}
-                </div>
+                <FlashcardEmptyState
+                  onGenerate={handleGenerateFlashcards}
+                  isGenerating={flashcardGenerator.isGenerating}
+                  hasNotes={!!notes && notes.length > 0}
+                />
               ) : (
                 <div className="space-y-6">
-                  {/* Filter segmented control - only show for saved cards */}
                   {savedFlashcards && savedFlashcards.length > 0 && (
-                    <div className="flex justify-between items-center">
-                      <div className="inline-flex rounded-lg border border-neutral-300 bg-custom-white p-1">
-                        <button
-                          onClick={() => handleFilterChange("all")}
-                          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                            filter === "all"
-                              ? "bg-primary-500 text-custom-white"
-                              : "text-neutral-500 hover:text-primary-500"
-                          }`}
-                        >
-                          All Cards
-                        </button>
-                        <button
-                          onClick={() => handleFilterChange("marked")}
-                          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                            filter === "marked"
-                              ? "bg-primary-500 text-custom-white"
-                              : "text-neutral-500 hover:text-primary-500"
-                          }`}
-                        >
-                          Marked ({markedCount})
-                        </button>
-                      </div>
-                    </div>
+                    <FlashcardFilter
+                      filter={filter}
+                      markedCount={markedCount}
+                      onFilterChange={handleFilterChange}
+                    />
                   )}
 
-                  {/* Flashcard carousel */}
-                  <Carousel
+                  <FlashcardCarousel
+                    flashcards={flashcards}
                     currentIndex={currentIndex}
                     onPrevious={handlePrevious}
                     onNext={handleNext}
-                  >
-                    {flashcards.map((card, index) => (
-                      <FlipCard 
-                        key={card.id || index} 
-                        front={card.front} 
-                        back={card.back}
-                        id={card.id}
-                        needsReview={card.needs_review}
-                        onToggleReview={handleToggleReview}
-                      />
-                    ))}
-                  </Carousel>
+                    onToggleReview={handleToggleReview}
+                  />
 
-                  {/* Action buttons */}
                   <FlashcardActionButtons
                     onBack={() => navigate(`/dashboard/${dashboardId}`)}
                     onRegenerate={handleGenerateFlashcards}

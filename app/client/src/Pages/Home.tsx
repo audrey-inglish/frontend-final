@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "react-router";
 import { useAuth } from "react-oidc-context";
 import {
   useGetDashboards,
@@ -9,12 +8,16 @@ import {
 import { showErrorToast, showSuccessToast } from "../lib/toasts";
 import {
   Navbar,
-  DashboardForm,
   DashboardCard,
   LoadingSpinner,
   EmptyState,
   CardsLayout,
 } from "../components";
+import {
+  LandingPage,
+  DashboardHeader,
+  CreateDashboardForm,
+} from "../components/home";
 import { useLocalStorage } from "../lib/useLocalStorage";
 import type { DashboardCreate, Dashboard } from "../schemas/dashboard";
 
@@ -73,27 +76,7 @@ export default function Home() {
   };
 
   if (!auth.isAuthenticated) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-neutral-100">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Mindset</h1>
-          <p className="text-gray-600 mb-8">
-            Turn your notes into productive study sessions
-          </p>
-          <div className="">
-            <Link to="/preview" className="btn-secondary py-3">
-              Try It Free
-            </Link>
-            <button
-              onClick={() => auth.signinRedirect()}
-              className="btn"
-            >
-              Sign In
-            </button>
-          </div>
-        </div>
-      </div>
-    );
+    return <LandingPage onSignIn={() => auth.signinRedirect()} />;
   }
 
   return (
@@ -101,51 +84,23 @@ export default function Home() {
       <Navbar />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex justify-between items-start mb-6">
-          <div className="flex flex-col">
-            <h2 className="text-2xl font-bold text-neutral-800">My Dashboards</h2>
-            {lastDashboard && dashboards?.some((d) => d.id === lastDashboard) && (
-              <Link
-                to={`/dashboard/${lastDashboard}`}
-                className="text-xs text-neutral-400 mt-1 hover:underline hover:text-neutral-500"
-              >
-                Continue where you left off
-              </Link>
-            )}
-          </div>
-          <button
-            onClick={() => setShowCreateForm(!showCreateForm)}
-            className="btn py-1 px-4 text-xl sm:text-sm sm:py-2 sm:px-4 flex justify-center"
-            aria-label={showCreateForm ? "Cancel create dashboard" : "Create new dashboard"}
-          >
-            {showCreateForm ? (
-              <>
-                <span className="sm:hidden">✕</span>
-                <span className="hidden sm:inline">Cancel</span>
-              </>
-            ) : (
-              <>
-                <span className="sm:hidden">+</span>
-                <span className="hidden sm:inline">+ New Dashboard</span>
-              </>
-            )}
-          </button>
-        </div>
+        <DashboardHeader
+          lastDashboard={lastDashboard}
+          dashboards={dashboards}
+          onNewDashboard={() => setShowCreateForm(!showCreateForm)}
+          showCreateForm={showCreateForm}
+        />
 
         {showCreateForm && (
-          <div className="bg-custom-white rounded-lg shadow p-6 mb-6">
-            <h3 className="text-lg font-semibold mb-4">Create Dashboard</h3>
-            <DashboardForm
-              title={title}
-              description={description}
-              onTitleChange={setTitle}
-              onDescriptionChange={setDescription}
-              onSubmit={handleCreate}
-              onCancel={() => setShowCreateForm(false)}
-              isPending={createDashboard.isPending}
-              submitLabel="Create"
-            />
-          </div>
+          <CreateDashboardForm
+            title={title}
+            description={description}
+            onTitleChange={setTitle}
+            onDescriptionChange={setDescription}
+            onSubmit={handleCreate}
+            onCancel={() => setShowCreateForm(false)}
+            isPending={createDashboard.isPending}
+          />
         )}
 
         {isLoading && <LoadingSpinner message="Loading dashboards..." />}

@@ -1,14 +1,11 @@
 import { useState } from "react";
 import { useStudySession } from "../../hooks/study/useStudySession";
-import { StudyQuestionDisplay } from "./StudyQuestionDisplay";
-import { EvaluationConfirmation } from "./EvaluationConfirmation";
-import { HintConfirmation } from "./HintConfirmation";
-import { HintSuggestionConfirmation } from './HintSuggestionConfirmation';
-import { SessionEndConfirmation } from './SessionEndConfirmation';
 import { SessionStart } from "./SessionStart";
 import { SessionComplete } from "./SessionComplete";
 import { SessionProgress } from "./SessionProgress";
 import { AiActionLogModal } from "./AiActionLogModal";
+import { StudySessionHeader } from "./StudySessionHeader";
+import { StudySessionMainCard } from "./StudySessionMainCard";
 
 interface StudySessionProps {
   topics: string[];
@@ -79,75 +76,25 @@ export function StudySession({
     <div className="max-w-5xl mx-auto p-2">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-xl font-bold text-primary-700">
-              Study Session
-            </h2>
-            <div className="flex">
-              <button
-                onClick={() => setShowAiLog(true)}
-                className="btn-secondary"
-                disabled={!sessionState.sessionId}
-              >
-                <span className="sm:hidden">Reasoning</span>
-                <span className="hidden sm:inline">View AI Reasoning</span>
-              </button>
-              <button onClick={endSession} className="btn-secondary">
-                <span className="sm:hidden">End</span>
-                <span className="hidden sm:inline">End Session</span>
-              </button>
-            </div>
-          </div>
+          <StudySessionHeader
+            onShowAiLog={() => setShowAiLog(true)}
+            onEndSession={endSession}
+            hasSession={!!sessionState.sessionId}
+          />
 
-          {/* Main Card */}
-          <div className="card">
-            {sessionState.pendingSessionEnd ? (
-              <SessionEndConfirmation
-                sessionSummary={sessionState.pendingSessionEnd.sessionSummary}
-                reasoning={sessionState.pendingSessionEnd.reasoning}
-                onAccept={acceptSessionEnd}
-                onReject={rejectSessionEnd}
-                isLoading={isLoading}
-              />
-            ) : sessionState.pendingHintSuggestion ? (
-              <HintSuggestionConfirmation
-                hint={sessionState.pendingHintSuggestion.hint}
-                reasoning={sessionState.pendingHintSuggestion.reasoning}
-                onAccept={acceptHintSuggestion}
-                onReject={rejectHintSuggestion}
-                isLoading={isLoading}
-              />
-            ) : sessionState.pendingHint ? (
-              <HintConfirmation
-                hint={sessionState.pendingHint}
-                onAccept={acceptHint}
-                onReject={rejectHint}
-                isLoading={isLoading}
-              />
-            ) : sessionState.pendingEvaluation ? (
-              <EvaluationConfirmation
-                question={sessionState.pendingEvaluation.question}
-                userAnswer={sessionState.pendingEvaluation.answer}
-                evaluation={sessionState.pendingEvaluation.evaluation}
-                onConfirm={confirmEvaluation}
-                isLoading={isLoading}
-              />
-            ) : sessionState.currentQuestion ? (
-              <StudyQuestionDisplay
-                question={sessionState.currentQuestion}
-                onSubmit={submitAnswer}
-                onRequestHint={requestHintForQuestion}
-                isLoading={isLoading}
-              />
-            ) : (
-              <div className="text-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent-600 mx-auto"></div>
-                <p className="text-primary-600 mt-4">
-                  AI is deciding what to do next...
-                </p>
-              </div>
-            )}
-          </div>
+          <StudySessionMainCard
+            sessionState={sessionState}
+            isLoading={isLoading}
+            onSubmitAnswer={submitAnswer}
+            onRequestHint={requestHintForQuestion}
+            onConfirmEvaluation={confirmEvaluation}
+            onAcceptHint={acceptHint}
+            onRejectHint={rejectHint}
+            onAcceptHintSuggestion={acceptHintSuggestion}
+            onRejectHintSuggestion={rejectHintSuggestion}
+            onAcceptSessionEnd={acceptSessionEnd}
+            onRejectSessionEnd={rejectSessionEnd}
+          />
 
           {error && (
             <div className="p-4 bg-custom-red-100 border border-custom-red-500 rounded-lg text-custom-red-500">
@@ -167,7 +114,6 @@ export function StudySession({
         </div>
       </div>
 
-      {/* AI Action Log Modal */}
       {showAiLog && (
         <AiActionLogModal
           sessionId={sessionState.sessionId}
