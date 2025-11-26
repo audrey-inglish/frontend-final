@@ -1,4 +1,4 @@
-import { DashboardForm } from "../dashboard/DashboardForm";
+import DashboardForm from "../dashboard/DashboardForm";
 
 interface CreateDashboardFormProps {
   title: string;
