@@ -38,12 +38,18 @@ export const STUDY_SESSION_CONFIG = {
   ui: {
     showReasoning: import.meta.env.DEV,
     animationsEnabled: true,
-    enabledQuestionTypes: [
-      "multiple-choice",
-      "true-false",
-      "short-answer",
-      "flashcard",
-    ],
+  },
+
+  questionTypes: {
+    // Question types with preference weights (higher = prioritize more)
+    preferences: {
+      "multiple-choice": 3,
+      "true-false": 2,
+      "short-answer": 1,
+      "flashcard": 1,
+    },
+    // "multiple-choice", "true-false",
+    enabled: [ "short-answer"] as const,
   },
 
   /**
@@ -82,4 +88,30 @@ export function getDifficultyForMastery(
   } else {
     return "hard";
   }
+}
+
+export function getQuestionTypeGuidance(): string {
+  const { preferences, enabled } = STUDY_SESSION_CONFIG.questionTypes;
+  
+  const sortedTypes = enabled
+    .map(type => ({ type, weight: preferences[type] || 1 }))
+    .sort((a, b) => b.weight - a.weight);
+  
+  const primary = sortedTypes.filter(t => t.weight === sortedTypes[0].weight).map(t => t.type);
+  const secondary = sortedTypes.filter(t => t.weight < sortedTypes[0].weight && t.weight > sortedTypes[sortedTypes.length - 1].weight).map(t => t.type);
+  const occasional = sortedTypes.filter(t => t.weight === sortedTypes[sortedTypes.length - 1].weight && t.weight < sortedTypes[0].weight).map(t => t.type);
+  
+  let guidance = `Available question types: ${enabled.join(', ')}.\n`;
+  
+  if (primary.length > 0) {
+    guidance += `Prioritize: ${primary.join(', ')} (use these most frequently).\n`;
+  }
+  if (secondary.length > 0) {
+    guidance += `Use regularly: ${secondary.join(', ')}.\n`;
+  }
+  if (occasional.length > 0 && occasional.some(t => !primary.includes(t))) {
+    guidance += `Use occasionally for variety: ${occasional.join(', ')}.`;
+  }
+  
+  return guidance;
 }

@@ -1,8 +1,9 @@
 import type { AgentMessage, StudySessionState } from "../studySession.types";
-import { STUDY_SESSION_CONFIG } from "../studySession.config";
+import { STUDY_SESSION_CONFIG, getQuestionTypeGuidance } from "../studySession.config";
 
 export function buildSystemPrompt(sessionState: StudySessionState): string {
   const masteryThreshold = STUDY_SESSION_CONFIG.mastery.masteryThreshold;
+  const questionTypeGuidance = getQuestionTypeGuidance();
 
   return `You are an adaptive AI tutor conducting a study session. Your goal is to help the student master these topics: ${sessionState.topics.join(
     ", "
@@ -19,6 +20,7 @@ ${sessionState.masteryLevels
 Your responsibilities:
 1. When calling get_next_study_step:
    - Choose topics with lower mastery levels
+   - ${questionTypeGuidance}
    - Vary question types to keep engagement high -- don't repeat the same question type consecutively
    - Match difficulty to current mastery (0-40% = easy, 41-70% = medium, 71-100% = hard)
    - Create clear, educational questions
@@ -71,7 +73,7 @@ User's Answer: ${userAnswer}
 
 Correct Answer: ${currentQ.correctAnswer}
 
-Evaluate this answer and update the mastery levels accordingly.`,
+Evaluate this answer and update the mastery levels accordingly. Be forgiving of minor typos in the user's answer.`,
     },
   ];
 }
@@ -114,7 +116,7 @@ Performance on this topic:
 
 Decide whether to provide a hint. Call provide_hint ONLY if:
 - The user has answered questions on this topic incorrectly before (questionsCorrect < questionsAnswered)
-- A hint would be educational without giving away the answer
+- A hint would be educational **without giving away the answer**
 
 DO NOT call provide_hint if:
 - This is the user's first question on this topic (questionsAnswered = 0)
