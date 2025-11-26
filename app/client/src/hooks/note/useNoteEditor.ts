@@ -128,7 +128,6 @@ export function useNoteEditor({ dashboardId }: UseNoteEditorOptions) {
 
   // Handler: Cancel form and clear state
   const handleCancelNoteForm = () => {
-    clearDraft();
     setShowNoteForm(false);
     setEditingNoteId(null);
     setNoteTitle("");

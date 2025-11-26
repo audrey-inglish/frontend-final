@@ -29,15 +29,10 @@ export default function NoteForm({
   onImageUpload,
   isProcessingImage = false,
 }: NoteFormProps) {
-  const { draftSaved, clearDraft } = useDraftAutoSave({ title, content, draftKey });
+  const { draftSaved } = useDraftAutoSave({ title, content, draftKey });
 
   const handleSubmit = (e: React.FormEvent) => {
     onSubmit(e);
-  };
-
-  const handleCancel = () => {
-    clearDraft();
-    onCancel();
   };
   
   return (
@@ -73,7 +68,7 @@ export default function NoteForm({
         )}
         <div className="flex items-center">
           <FormButtons
-            onCancel={handleCancel}
+            onCancel={onCancel}
             isPending={isPending}
             submitLabel={isEditing ? "Update" : "Create"}
           />
