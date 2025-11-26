@@ -12,3 +12,4 @@ export * from "./quiz/useQuizzes";
 export * from "./quiz/useQuizGenerator";
 export * from "./quiz/useQuizSubmission";
 export * from "./aiActionLogs/useAiActionLogs";
+export * from "./useIsAdmin";

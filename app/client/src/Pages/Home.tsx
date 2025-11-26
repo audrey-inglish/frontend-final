@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useAuth } from "react-oidc-context";
+import { Link } from "react-router";
 import {
   useGetDashboards,
   useCreateDashboard,
   useDeleteDashboard,
+  useIsAdmin,
 } from "../hooks";
 import { showErrorToast, showSuccessToast } from "../lib/toasts";
 import {
@@ -13,6 +15,7 @@ import {
   EmptyState,
   CardsLayout,
 } from "../components";
+import { SettingsIcon } from "../components/icons";
 import {
   LandingPage,
   DashboardHeader,
@@ -26,6 +29,7 @@ export default function Home() {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const { isAdmin } = useIsAdmin();
 
   // Only fetch dashboards when fully authenticated with token
   const shouldFetch = auth.isAuthenticated && !auth.isLoading && !!auth.user?.access_token;
@@ -84,6 +88,18 @@ export default function Home() {
       <Navbar />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {isAdmin && (
+          <div className="flex justify-end">
+            <Link
+              to="/admin/ai-monitor"
+              className="btn-secondary flex items-center gap-2"
+            >
+              <SettingsIcon />
+              <span>Admin Panel</span>
+            </Link>
+          </div>
+        )}
+
         <DashboardHeader
           lastDashboard={lastDashboard}
           dashboards={dashboards}
