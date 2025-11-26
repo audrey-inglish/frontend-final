@@ -2,11 +2,12 @@ import { useState } from "react";
 import { SelectInput, TextInput, ToggleInput } from "../form";
 import { showErrorToast } from "../../lib/toasts";
 import type { Difficulty } from "../../schemas/quiz";
+import { SpinnerIcon } from "../icons";
 
 interface QuizConfigFormProps {
   onGenerate: (
     numQuestions: number,
-    questionTypes: Array<'multiple-choice' | 'short-answer'>,
+    questionTypes: Array<"multiple-choice" | "short-answer">,
     difficulty: Difficulty
   ) => Promise<void>;
   isGenerating: boolean;
@@ -21,20 +22,20 @@ export function QuizConfigForm({
   const [numQuestions, setNumQuestions] = useState<string>("5");
   const [includeMultipleChoice, setIncludeMultipleChoice] = useState(true);
   const [includeShortAnswer, setIncludeShortAnswer] = useState(false);
-  const [difficulty, setDifficulty] = useState<Difficulty>('medium');
+  const [difficulty, setDifficulty] = useState<Difficulty>("medium");
 
   const difficultyOptions = [
-    { value: 'easy', label: 'Easy - Basic Recall & Understanding' },
-    { value: 'medium', label: 'Medium - Applied Knowledge & Analysis' },
-    { value: 'hard', label: 'Hard - Critical Thinking & Synthesis' },
+    { value: "easy", label: "Easy - Basic Recall & Understanding" },
+    { value: "medium", label: "Medium - Applied Knowledge & Analysis" },
+    { value: "hard", label: "Hard - Critical Thinking & Synthesis" },
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const questionTypes: Array<'multiple-choice' | 'short-answer'> = [];
-    if (includeMultipleChoice) questionTypes.push('multiple-choice');
-    if (includeShortAnswer) questionTypes.push('short-answer');
+    const questionTypes: Array<"multiple-choice" | "short-answer"> = [];
+    if (includeMultipleChoice) questionTypes.push("multiple-choice");
+    if (includeShortAnswer) questionTypes.push("short-answer");
 
     if (questionTypes.length === 0) {
       showErrorToast("Please select at least one question type");
@@ -57,7 +58,8 @@ export function QuizConfigForm({
           Quiz Configuration
         </h3>
         <p className="text-primary-600 mb-6">
-          Customize your quiz by selecting the number of questions, difficulty level, and question types.
+          Customize your quiz by selecting the number of questions, difficulty
+          level, and question types.
         </p>
       </div>
 
@@ -100,7 +102,14 @@ export function QuizConfigForm({
         disabled={isGenerating || disabled}
         className="btn m-auto block w-full"
       >
-        {isGenerating ? "Generating Quiz..." : "Generate Quiz"}
+        {isGenerating ? (
+          <span className="flex items-center justify-center gap-2">
+            <SpinnerIcon className="animate-spin h-4 w-4" />
+            <span className="hidden sm:inline">Generating...</span>
+          </span>
+        ) : (
+          "Generate Quiz"
+        )}
       </button>
 
       {disabled && (
