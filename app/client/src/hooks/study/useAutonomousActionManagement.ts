@@ -98,7 +98,6 @@ export function useAutonomousActionManagement({
         }
 
         case "end_session": {
-          console.log("🤖 AI suggests ending session:", decision.reasoning);
           setSessionState(prev => ({
             ...prev,
             pendingSessionEnd: {
