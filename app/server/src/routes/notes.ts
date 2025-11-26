@@ -1,5 +1,4 @@
 import express from "express";
-import { db } from "../db";
 import { ensureUserId } from "../utils/user";
 import {
   NoteCreateSchema,
@@ -7,6 +6,7 @@ import {
   NoteSchema,
   NotesListResponseSchema,
 } from "../schemas";
+import { noteService } from "../services";
 
 const router = express.Router();
 
@@ -16,16 +16,9 @@ router.get("/", async (req, res) => {
     const userId = await ensureUserId(req as express.Request);
     const dashboardId = req.query.dashboard_id
       ? Number(req.query.dashboard_id)
-      : null;
+      : undefined;
 
-    const notes = await db.any(
-      `SELECT n.id, n.dashboard_id, n.title, n.content, n.source, n.uploaded_at
-			 FROM note_upload n
-			 JOIN dashboard d ON d.id = n.dashboard_id
-			 WHERE d.user_id = $1 ${dashboardId ? "AND d.id = $2" : ""}
-			 ORDER BY n.uploaded_at DESC`,
-      dashboardId ? [userId, dashboardId] : [userId]
-    );
+    const notes = await noteService.listByUserId(userId, dashboardId);
     // validate response shape
     const parsed = NotesListResponseSchema.safeParse({ notes });
     if (!parsed.success) {
@@ -44,13 +37,7 @@ router.get("/:id", async (req, res) => {
   try {
     const userId = await ensureUserId(req as express.Request);
     const id = Number(req.params.id);
-    const note = await db.oneOrNone(
-      `SELECT n.id, n.dashboard_id, n.title, n.content, n.source, n.uploaded_at
-			 FROM note_upload n
-			 JOIN dashboard d ON d.id = n.dashboard_id
-			 WHERE n.id = $1 AND d.user_id = $2`,
-      [id, userId]
-    );
+    const note = await noteService.getById(id, userId);
     if (!note) return res.status(404).json({ error: "Not found" });
     const parsed = NoteSchema.safeParse(note);
     if (!parsed.success) {
@@ -74,22 +61,13 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ error: "Invalid request", details: parsed.error.format() });
     const { dashboard_id, title, content, source } = parsed.data;
 
-    // ensure dashboard belongs to user
-    if (dashboard_id) {
-      const d = await db.oneOrNone(
-        `SELECT id FROM dashboard WHERE id = $1 AND user_id = $2`,
-        [dashboard_id, userId]
-      );
-      if (!d)
-        return res
-          .status(400)
-          .json({ error: "dashboard not found or not owned" });
+    const created = await noteService.create(userId, dashboard_id, title, content, source);
+    if (!created) {
+      return res
+        .status(400)
+        .json({ error: "dashboard not found or not owned" });
     }
 
-    const created = await db.one(
-      `INSERT INTO note_upload (dashboard_id, title, content, source) VALUES ($1, $2, $3, $4) RETURNING id, dashboard_id, title, content, source, uploaded_at`,
-      [dashboard_id || null, title, content, source || null]
-    );
     const validated = NoteSchema.safeParse(created);
     if (!validated.success) {
       console.error("Validation error for created note:", validated.error.format());
@@ -112,16 +90,9 @@ router.put("/:id", async (req, res) => {
       return res.status(400).json({ error: "Invalid request", details: parsed.error.format() });
     const { title, content, source } = parsed.data;
 
-    const existing = await db.oneOrNone(
-      `SELECT n.id FROM note_upload n JOIN dashboard d ON d.id = n.dashboard_id WHERE n.id = $1 AND d.user_id = $2`,
-      [id, userId]
-    );
-    if (!existing) return res.status(404).json({ error: "Not found" });
+    const updated = await noteService.update(id, userId, title, content, source);
+    if (!updated) return res.status(404).json({ error: "Not found" });
 
-    const updated = await db.one(
-      `UPDATE note_upload SET title = $1, content = $2, source = $3 WHERE id = $4 RETURNING id, dashboard_id, title, content, source, uploaded_at`,
-      [title || null, content || null, source || null, id]
-    );
     const validated = NoteSchema.safeParse(updated);
     if (!validated.success) {
       console.error("Validation error for updated note:", validated.error.format());
@@ -140,11 +111,8 @@ router.delete("/:id", async (req, res) => {
     const userId = await ensureUserId(req as express.Request);
     const id = Number(req.params.id);
 
-    const result = await db.result(
-      `DELETE FROM note_upload n USING dashboard d WHERE n.id = $1 AND n.dashboard_id = d.id AND d.user_id = $2`,
-      [id, userId]
-    );
-    if (result.rowCount === 0)
+    const deleted = await noteService.delete(id, userId);
+    if (!deleted)
       return res.status(404).json({ error: "Not found" });
     res.status(204).send();
   } catch (err) {

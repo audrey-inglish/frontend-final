@@ -1,11 +1,11 @@
 import express from "express";
-import { db } from "../db";
 import { ensureUserId } from "../utils/user";
 import { requireAdmin } from "../auth";
 import {
   AiActionLogCreateSchema,
   AiActionLogsArraySchema,
 } from "../schemas/aiActionLog";
+import { aiActionLogService } from "../services";
 
 const router = express.Router();
 
@@ -25,15 +25,8 @@ router.post("/", async (req, res) => {
       });
     }
 
-    const data = parsed.data;
-
-    // Verify that the dashboard belongs to the user
-    const dashboardCheck = await db.oneOrNone(
-      `SELECT id FROM dashboard WHERE id = $1 AND user_id = $2`,
-      [data.dashboard_id, userId]
-    );
-
-    if (!dashboardCheck) {
+    const log = await aiActionLogService.create(userId, parsed.data);
+    if (!log) {
       return res.status(403).json({
         error: {
           code: "FORBIDDEN",
@@ -41,32 +34,6 @@ router.post("/", async (req, res) => {
         },
       });
     }
-
-    // Insert the AI action log
-    const log = await db.one(
-      `INSERT INTO ai_action_log (
-        user_id, dashboard_id, session_id, action_type,
-        request_messages, response_data, tool_call_data, reasoning,
-        question_id, topic, mastery_level, duration_ms
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
-      RETURNING id, user_id, dashboard_id, session_id, action_type,
-                request_messages, response_data, tool_call_data, reasoning,
-                question_id, topic, mastery_level, created_at, duration_ms`,
-      [
-        userId,
-        data.dashboard_id,
-        data.session_id,
-        data.action_type,
-        data.request_messages ? JSON.stringify(data.request_messages) : null,
-        data.response_data ? JSON.stringify(data.response_data) : null,
-        data.tool_call_data ? JSON.stringify(data.tool_call_data) : null,
-        data.reasoning || null,
-        data.question_id || null,
-        data.topic || null,
-        data.mastery_level || null,
-        data.duration_ms || null,
-      ]
-    );
 
     res.status(201).json({ log });
   } catch (err) {
@@ -85,38 +52,11 @@ router.get("/", async (req, res) => {
     const userId = await ensureUserId(req as express.Request);
     const dashboardId = req.query.dashboard_id
       ? Number(req.query.dashboard_id)
-      : null;
+      : undefined;
     const sessionId = req.query.session_id as string | undefined;
     const limit = req.query.limit ? Number(req.query.limit) : 100;
 
-    let query = `
-      SELECT aal.id, aal.user_id, aal.dashboard_id, aal.session_id, aal.action_type,
-             aal.request_messages, aal.response_data, aal.tool_call_data, aal.reasoning,
-             aal.question_id, aal.topic, aal.mastery_level, aal.created_at, aal.duration_ms
-      FROM ai_action_log aal
-      JOIN dashboard d ON d.id = aal.dashboard_id
-      WHERE d.user_id = $1
-    `;
-
-    const params: (number | string)[] = [userId];
-    let paramCount = 1;
-
-    if (dashboardId) {
-      paramCount++;
-      query += ` AND aal.dashboard_id = $${paramCount}`;
-      params.push(dashboardId);
-    }
-
-    if (sessionId) {
-      paramCount++;
-      query += ` AND aal.session_id = $${paramCount}`;
-      params.push(sessionId);
-    }
-
-    query += ` ORDER BY aal.created_at DESC LIMIT $${paramCount + 1}`;
-    params.push(limit);
-
-    const logs = await db.any(query, params);
+    const logs = await aiActionLogService.listByUserId(userId, dashboardId, sessionId, limit);
 
     const parsed = AiActionLogsArraySchema.safeParse({ logs });
     if (!parsed.success) {
@@ -140,16 +80,7 @@ router.get("/session/:sessionId", async (req, res) => {
     const userId = await ensureUserId(req as express.Request);
     const { sessionId } = req.params;
 
-    const logs = await db.any(
-      `SELECT aal.id, aal.user_id, aal.dashboard_id, aal.session_id, aal.action_type,
-              aal.request_messages, aal.response_data, aal.tool_call_data, aal.reasoning,
-              aal.question_id, aal.topic, aal.mastery_level, aal.created_at, aal.duration_ms
-       FROM ai_action_log aal
-       JOIN dashboard d ON d.id = aal.dashboard_id
-       WHERE aal.session_id = $1 AND d.user_id = $2
-       ORDER BY aal.created_at ASC`,
-      [sessionId, userId]
-    );
+    const logs = await aiActionLogService.listBySessionId(sessionId, userId);
 
     const parsed = AiActionLogsArraySchema.safeParse({ logs });
     if (!parsed.success) {
@@ -171,72 +102,21 @@ router.get("/session/:sessionId", async (req, res) => {
  */
 router.get("/admin/all", requireAdmin, async (req, res) => {
   try {
-    const userIdFilter = req.query.user_id ? Number(req.query.user_id) : null;
+    const userIdFilter = req.query.user_id ? Number(req.query.user_id) : undefined;
     const dashboardIdFilter = req.query.dashboard_id
       ? Number(req.query.dashboard_id)
-      : null;
+      : undefined;
     const limit = req.query.limit ? Number(req.query.limit) : 100;
     const offset = req.query.offset ? Number(req.query.offset) : 0;
 
-    let query = `
-      SELECT aal.id, aal.user_id, aal.dashboard_id, aal.session_id, aal.action_type,
-             aal.request_messages, aal.response_data, aal.tool_call_data, aal.reasoning,
-             aal.question_id, aal.topic, aal.mastery_level, aal.created_at, aal.duration_ms,
-             u.email, u.username, d.title as dashboard_title
-      FROM ai_action_log aal
-      JOIN app_user u ON u.id = aal.user_id
-      JOIN dashboard d ON d.id = aal.dashboard_id
-      WHERE 1=1
-    `;
+    const { logs, pagination } = await aiActionLogService.listAllWithPagination(
+      userIdFilter,
+      dashboardIdFilter,
+      limit,
+      offset
+    );
 
-    const params: number[] = [];
-    let paramCount = 0;
-
-    if (userIdFilter) {
-      paramCount++;
-      query += ` AND aal.user_id = $${paramCount}`;
-      params.push(userIdFilter);
-    }
-
-    if (dashboardIdFilter) {
-      paramCount++;
-      query += ` AND aal.dashboard_id = $${paramCount}`;
-      params.push(dashboardIdFilter);
-    }
-
-    query += ` ORDER BY aal.created_at DESC LIMIT $${paramCount + 1} OFFSET $${paramCount + 2}`;
-    params.push(limit, offset);
-
-    const logs = await db.any(query, params);
-
-    // Get total count for pagination
-    let countQuery = `SELECT COUNT(*) as total FROM ai_action_log WHERE 1=1`;
-    const countParams: number[] = [];
-    let countParamCount = 0;
-
-    if (userIdFilter) {
-      countParamCount++;
-      countQuery += ` AND user_id = $${countParamCount}`;
-      countParams.push(userIdFilter);
-    }
-
-    if (dashboardIdFilter) {
-      countParamCount++;
-      countQuery += ` AND dashboard_id = $${countParamCount}`;
-      countParams.push(dashboardIdFilter);
-    }
-
-    const { total } = await db.one(countQuery, countParams);
-
-    res.json({
-      logs,
-      pagination: {
-        total: Number(total),
-        limit,
-        offset,
-        hasMore: offset + logs.length < Number(total),
-      },
-    });
+    res.json({ logs, pagination });
   } catch (err) {
     console.error("GET /api/ai-actions/admin/all error:", err);
     res.status(500).json({ error: "Failed to fetch AI action logs" });

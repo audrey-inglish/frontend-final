@@ -1,6 +1,6 @@
 import express from "express";
-import { db } from "../db";
 import { QuizzesArraySchema, QuizSchema } from "../schemas/quiz";
+import { quizService } from "../services";
 
 const router = express.Router();
 
@@ -15,20 +15,8 @@ router.get("/", async (req, res) => {
   }
 
   try {
-    const quizzes = await db.any(
-      `SELECT id, dashboard_id, title, score, created_at
-       FROM quiz
-       WHERE dashboard_id = $1
-       ORDER BY created_at DESC`,
-      [dashboardId]
-    );
-
-    const formatted = quizzes.map((q) => ({
-      ...q,
-      created_at: q.created_at?.toISOString(),
-    }));
-
-    const validated = QuizzesArraySchema.parse(formatted);
+    const quizzes = await quizService.listByDashboardId(dashboardId);
+    const validated = QuizzesArraySchema.parse(quizzes);
     return res.json({ quizzes: validated });
   } catch (err) {
     console.error("Failed to fetch quizzes:", err);
@@ -49,10 +37,7 @@ router.get("/:id", async (req, res) => {
   }
 
   try {
-    const quiz = await db.oneOrNone(
-      `SELECT id, dashboard_id, title, score, created_at FROM quiz WHERE id = $1`,
-      [quizId]
-    );
+    const quiz = await quizService.getById(quizId);
 
     if (!quiz) {
       return res.status(404).json({
@@ -60,35 +45,7 @@ router.get("/:id", async (req, res) => {
       });
     }
 
-    const questions = await db.any(
-      `SELECT id, quiz_id, question_text, correct_answer, user_answer, ai_explanation, created_at
-       FROM quiz_question WHERE quiz_id = $1`,
-      [quizId]
-    );
-
-    const questionsWithAnswers = await Promise.all(
-      questions.map(async (q) => {
-        const answers = await db.any(
-          `SELECT id, quiz_question_id, answer_text, is_correct
-           FROM quiz_answer WHERE quiz_question_id = $1`,
-          [q.id]
-        );
-
-        return {
-          ...q,
-          question_type: answers.length > 0 ? 'multiple-choice' : 'short-answer',
-          answers,
-          created_at: q.created_at?.toISOString(),
-        };
-      })
-    );
-
-    const validated = QuizSchema.parse({
-      ...quiz,
-      created_at: quiz.created_at?.toISOString(),
-      questions: questionsWithAnswers,
-    });
-
+    const validated = QuizSchema.parse(quiz);
     return res.json({ quiz: validated });
   } catch (err) {
     console.error("Failed to fetch quiz:", err);
@@ -116,10 +73,7 @@ router.patch("/:id", async (req, res) => {
   }
 
   try {
-    const quiz = await db.oneOrNone(
-      `UPDATE quiz SET score = $1 WHERE id = $2 RETURNING id, dashboard_id, title, score, created_at`,
-      [score, quizId]
-    );
+    const quiz = await quizService.updateScore(quizId, score);
 
     if (!quiz) {
       return res.status(404).json({
@@ -127,12 +81,7 @@ router.patch("/:id", async (req, res) => {
       });
     }
 
-    return res.json({
-      quiz: {
-        ...quiz,
-        created_at: quiz.created_at?.toISOString(),
-      },
-    });
+    return res.json({ quiz });
   } catch (err) {
     console.error("Failed to update quiz score:", err);
     return res.status(500).json({
