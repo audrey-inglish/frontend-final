@@ -101,7 +101,12 @@ describe('studySession.utils', () => {
         topic: 'React',
         difficulty: 'medium',
         question: 'What is a component?',
-        options: ['A function', 'A class', 'Both', 'Neither'],
+        options: [
+          { text: 'A function', explanation: 'Correct! Components can be functions.' },
+          { text: 'A class', explanation: 'Also correct! Components can be classes.' },
+          { text: 'Both', explanation: 'Exactly right! Components can be either functions or classes.' },
+          { text: 'Neither', explanation: 'Incorrect. Components are indeed functions or classes.' },
+        ],
         correctAnswer: 'Both',
         reasoning: 'Testing component knowledge',
       };
@@ -114,7 +119,12 @@ describe('studySession.utils', () => {
         topic: 'React',
         difficulty: 'medium',
         question: 'What is a component?',
-        options: ['A function', 'A class', 'Both', 'Neither'],
+        options: [
+          { text: 'A function', explanation: 'Correct! Components can be functions.' },
+          { text: 'A class', explanation: 'Also correct! Components can be classes.' },
+          { text: 'Both', explanation: 'Exactly right! Components can be either functions or classes.' },
+          { text: 'Neither', explanation: 'Incorrect. Components are indeed functions or classes.' },
+        ],
         correctAnswer: 'Both',
       });
     });
@@ -142,7 +152,10 @@ describe('studySession.utils', () => {
         topic: 'JavaScript',
         difficulty: 'easy',
         question: 'Is JavaScript single-threaded?',
-        options: ['True', 'False'],
+        options: [
+          { text: 'True', explanation: 'Correct! JavaScript executes on a single thread.' },
+          { text: 'False', explanation: 'Incorrect. JavaScript is single-threaded.' },
+        ],
         correctAnswer: 'True',
         reasoning: 'Basic JS concepts',
       };
@@ -150,7 +163,10 @@ describe('studySession.utils', () => {
       const result = argsToQuestion(args, 'q-789');
 
       expect(result.type).toBe('true-false');
-      expect(result.options).toEqual(['True', 'False']);
+      expect(result.options).toEqual([
+        { text: 'True', explanation: 'Correct! JavaScript executes on a single thread.' },
+        { text: 'False', explanation: 'Incorrect. JavaScript is single-threaded.' },
+      ]);
     });
   });
 });

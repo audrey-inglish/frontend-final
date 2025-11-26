@@ -15,7 +15,7 @@ export function StudyQuestionDisplay({
   onRequestHint,
   isLoading,
 }: StudyQuestionDisplayProps) {
-  const options = question.options?.map(opt => ({ text: opt })) || [];
+  const options = question.options || [];
 
   const { answer, renderInput, resetAnswer } = useQuestionInput({
     type: question.type,

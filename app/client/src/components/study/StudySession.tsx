@@ -30,7 +30,6 @@ export function StudySession({
     startSession,
     submitAnswer,
     confirmEvaluation,
-    rejectEvaluation,
     endSession,
     requestHintForQuestion,
     acceptHint,
@@ -109,7 +108,6 @@ export function StudySession({
                 userAnswer={sessionState.pendingEvaluation.answer}
                 evaluation={sessionState.pendingEvaluation.evaluation}
                 onConfirm={confirmEvaluation}
-                onReject={rejectEvaluation}
                 isLoading={isLoading}
               />
             ) : sessionState.currentQuestion ? (

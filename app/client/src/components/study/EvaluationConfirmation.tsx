@@ -5,7 +5,6 @@ interface EvaluationConfirmationProps {
   userAnswer: UserAnswer;
   evaluation: EvaluationResult;
   onConfirm: () => void;
-  onReject: () => void;
   isLoading: boolean;
 }
 
@@ -14,7 +13,6 @@ export function EvaluationConfirmation({
   userAnswer,
   evaluation,
   onConfirm,
-  onReject,
   isLoading,
 }: EvaluationConfirmationProps) {
   return (
@@ -58,26 +56,13 @@ export function EvaluationConfirmation({
       </div>
 
       <div className="border-t text-primary-100 pt-4">
-        <div className="text-sm text-primary-600 mb-4">
-          Review the AI's evaluation. Click <strong>Confirm</strong> to accept and continue, or <strong>Reject</strong> to re-answer the question.
-        </div>
-        <div className="flex">
-          <button
-            onClick={onReject}
-            disabled={isLoading}
-            className="flex-1 btn-tertiary text-sm"
-          >
-            Reject
-          </button>
-          <button
-            onClick={onConfirm}
-            disabled={isLoading}
-            className="flex-2 btn"
-          >
-            <span className="sm:hidden">{isLoading ? 'Loading...' : 'Continue'}</span>
-            <span className="hidden sm:inline">{isLoading ? 'Loading...' : 'Confirm & Continue'}</span>
-          </button>
-        </div>
+        <button
+          onClick={onConfirm}
+          disabled={isLoading}
+          className="w-full btn mx-auto"
+        >
+          {isLoading ? 'Loading next question...' : 'Continue'}
+        </button>
       </div>
     </div>
   );

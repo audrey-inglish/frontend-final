@@ -9,14 +9,19 @@ export interface TopicMastery {
 export type QuestionType = 'multiple-choice' | 'true-false' | 'short-answer' | 'flashcard';
 export type DifficultyLevel = 'easy' | 'medium' | 'hard';
 
+export interface AnswerOption {
+  text: string;
+  explanation: string;
+}
+
 export interface StudyQuestion {
   id: string;
   type: QuestionType;
   topic: string;
   difficulty: DifficultyLevel;
   question: string;
-  options?: string[]; // For multiple-choice
-  correctAnswer?: string; // Not shown to user
+  options?: AnswerOption[];
+  correctAnswer?: string;
   hint?: string;
 }
 
@@ -36,9 +41,8 @@ export interface EvaluationResult {
   masteryUpdates: TopicMastery[];
 }
 
-/**
- * Overall study session state
- */
+
+//Overall study session stat
 export interface StudySessionState {
   sessionId: string;
   dashboardId?: number; // backwards compatibility
@@ -53,6 +57,7 @@ export interface StudySessionState {
     question: StudyQuestion;
     answer: UserAnswer;
     evaluation: EvaluationResult;
+    nextQuestion?: StudyQuestion;
   };
   pendingHint?: {
     hint: string;
@@ -109,7 +114,7 @@ export interface GetNextStepArgs {
   topic: string;
   difficulty: DifficultyLevel;
   question: string;
-  options?: string[];
+  options?: AnswerOption[];
   correctAnswer?: string;
   reasoning: string;
 }

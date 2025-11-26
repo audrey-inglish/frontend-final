@@ -3,6 +3,7 @@ import type {
   StudySessionState,
   UserAnswer,
   EvaluationResult,
+  TopicMastery,
 } from "../../lib/studySession.types";
 import { requestNextStep } from "../../lib/agent/nextStepService";
 import { requestEvaluation } from "../../lib/agent/evaluationService";
@@ -12,6 +13,7 @@ import {
   calculateMasteryLevel,
   applyMasteryUpdates,
 } from "../../lib/studySession.utils";
+import { isTopicMastered } from "../../lib/studySession.config";
 import { useHintManagement } from "./useHintManagement";
 import { useEvaluationManagement } from "./useEvaluationManagement";
 
@@ -29,7 +31,6 @@ interface UseStudySessionReturn {
   startSession: () => Promise<void>;
   submitAnswer: (answer: string) => Promise<void>;
   confirmEvaluation: () => void;
-  rejectEvaluation: () => void;
   endSession: () => void;
   requestHintForQuestion: () => Promise<void>;
   acceptHint: () => void;
@@ -70,7 +71,6 @@ export function useStudySession({
 
   const {
     confirmEvaluation,
-    rejectEvaluation,
   } = useEvaluationManagement({
     sessionState,
     apiKey,
@@ -168,6 +168,38 @@ export function useStudySession({
             evaluation,
           },
         }));
+
+        // Preload next question immediately (don't wait for user to click Continue)
+        // Check if session should end first
+        const allMastered = masteryWithCounters.every((m: TopicMastery) =>
+          isTopicMastered(m.level)
+        );
+        
+        if (!allMastered) {
+          try {
+            const tempState: StudySessionState = {
+              ...sessionState,
+              answerHistory: [...sessionState.answerHistory, userAnswer],
+              evaluationHistory: [...sessionState.evaluationHistory, evaluation],
+              masteryLevels: masteryWithCounters,
+              currentQuestion: undefined,
+            };
+            
+            const nextStepArgs = await requestNextStep(tempState, apiKey);
+            const nextQuestion = argsToQuestion(nextStepArgs, `q-${Date.now()}`);
+            
+            setSessionState((prev: StudySessionState) => ({
+              ...prev,
+              pendingEvaluation: prev.pendingEvaluation ? {
+                ...prev.pendingEvaluation,
+                nextQuestion,
+              } : undefined,
+            }));
+          } catch (preloadErr) {
+            // silently fail preload - will load on confirm if needed
+            console.warn("Failed to preload next question:", preloadErr);
+          }
+        }
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "Failed to evaluate answer"
@@ -196,7 +228,6 @@ export function useStudySession({
     startSession,
     submitAnswer,
     confirmEvaluation,
-    rejectEvaluation,
     endSession,
     requestHintForQuestion,
     acceptHint,

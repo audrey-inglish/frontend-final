@@ -31,8 +31,22 @@ export const GET_NEXT_STEP_TOOL: AgentTool = {
         options: {
           type: "array",
           description:
-            "Answer options (required for multiple-choice, should include 3-4 options). There should only be one correct answer.",
-          items: { type: "string" },
+            "Answer options for multiple-choice and true-false questions. Each option must include the answer text and an explanation of why it's correct/incorrect for instant feedback.",
+          items: {
+            type: "object",
+            properties: {
+              text: {
+                type: "string",
+                description: "The answer option text",
+              },
+              explanation: {
+                type: "string",
+                description:
+                  "Explanation of why this option is correct or incorrect. Be educational and encouraging.",
+              },
+            },
+            required: ["text", "explanation"],
+          },
         },
         correctAnswer: {
           type: "string",

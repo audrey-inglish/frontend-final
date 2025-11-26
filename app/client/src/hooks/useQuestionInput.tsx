@@ -78,7 +78,7 @@ export function useQuestionInput({
               onClick={() => handleAnswerChange('True')}
               className={`flex-1 py-3 px-6 rounded-lg font-medium transition-colors ${
                 answer === 'True'
-                  ? 'bg-accent-600 text-blue-white'
+                  ? 'bg-accent-200/70 text-blue-white'
                   : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
               }`}
             >
@@ -89,7 +89,7 @@ export function useQuestionInput({
               onClick={() => handleAnswerChange('False')}
               className={`flex-1 py-3 px-6 rounded-lg font-medium transition-colors ${
                 answer === 'False'
-                  ? 'bg-accent-600 text-blue-white'
+                  ? 'bg-accent-200/70 text-blue-white'
                   : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
               }`}
             >

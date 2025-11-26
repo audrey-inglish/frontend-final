@@ -14,7 +14,6 @@ interface UseEvaluationManagementOptions {
 
 interface UseEvaluationManagementReturn {
   confirmEvaluation: () => Promise<void>;
-  rejectEvaluation: () => void;
 }
 
 
@@ -41,6 +40,7 @@ export function useEvaluationManagement({
       const allMastered = sessionState.masteryLevels.every((m: TopicMastery) =>
         isTopicMastered(m.level)
       );
+      
       if (allMastered) {
         setSessionState({
           ...newState,
@@ -49,8 +49,13 @@ export function useEvaluationManagement({
         return;
       }
 
-      const nextStepArgs = await requestNextStep(newState, apiKey);
-      const nextQuestion = argsToQuestion(nextStepArgs, `q-${Date.now()}`);
+      // use preloaded question if available, otherwise load now
+      let nextQuestion = sessionState.pendingEvaluation.nextQuestion;
+      
+      if (!nextQuestion) {
+        const nextStepArgs = await requestNextStep(newState, apiKey);
+        nextQuestion = argsToQuestion(nextStepArgs, `q-${Date.now()}`);
+      }
 
       setSessionState({
         ...newState,
@@ -66,42 +71,7 @@ export function useEvaluationManagement({
     }
   }, [sessionState, apiKey, setSessionState, setIsLoading, setError]);
 
-  const rejectEvaluation = useCallback(() => {
-    if (!sessionState.pendingEvaluation) return;
-
-    const newAnswerHistory = sessionState.answerHistory.slice(0, -1);
-    const newEvaluationHistory = sessionState.evaluationHistory.slice(0, -1);
-
-    const revertedMastery = sessionState.masteryLevels.map((m) => {
-      if (m.topic === sessionState.currentQuestion?.topic) {
-        return {
-          ...m,
-          questionsAnswered: Math.max(0, m.questionsAnswered - 1),
-          questionsCorrect: Math.max(
-            0,
-            m.questionsCorrect -
-              (sessionState.pendingEvaluation!.evaluation.isCorrect ? 1 : 0)
-          ),
-          lastAsked:
-            newAnswerHistory.length > 0
-              ? newAnswerHistory[newAnswerHistory.length - 1].timestamp
-              : undefined,
-        };
-      }
-      return m;
-    });
-
-    setSessionState((prev: StudySessionState) => ({
-      ...prev,
-      answerHistory: newAnswerHistory,
-      evaluationHistory: newEvaluationHistory,
-      masteryLevels: revertedMastery,
-      pendingEvaluation: undefined,
-    }));
-  }, [sessionState, setSessionState]);
-
   return {
     confirmEvaluation,
-    rejectEvaluation,
   };
 }

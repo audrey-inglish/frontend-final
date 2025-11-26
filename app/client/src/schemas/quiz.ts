@@ -5,6 +5,7 @@ export const QuizAnswerSchema = z.object({
   quiz_question_id: z.number().optional(),
   answer_text: z.string(),
   is_correct: z.boolean(),
+  explanation: z.string().optional(),
 });
 
 export const QuizQuestionSchema = z.object({

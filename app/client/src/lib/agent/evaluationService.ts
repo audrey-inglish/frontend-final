@@ -9,6 +9,26 @@ export async function requestEvaluation(
   userAnswer: string,
   apiKey: string
 ): Promise<EvaluateResponseArgs> {
+  const currentQuestion = sessionState.currentQuestion;
+  
+  // For multiple-choice and true-false, use pre-generated explanations (instant feedback)
+  if (currentQuestion && (currentQuestion.type === 'multiple-choice' || currentQuestion.type === 'true-false')) {
+    const selectedOption = currentQuestion.options?.find(opt => opt.text === userAnswer);
+    
+    if (selectedOption) {
+      const isCorrect = userAnswer === currentQuestion.correctAnswer;
+      
+      return {
+        isCorrect,
+        explanation: selectedOption.explanation,
+        correctAnswer: currentQuestion.correctAnswer,
+        masteryUpdates: [], // will be recalculated by the system
+        recommendation: 'continue' as const,
+      };
+    }
+  }
+  
+  // For short-answer and flashcard, or if option not found, use AI evaluation
   const startTime = performance.now();
   const messages = buildEvaluationMessages(sessionState, userAnswer);
   const response = await callAgentWithTools(
@@ -16,6 +36,7 @@ export async function requestEvaluation(
     [EVALUATE_RESPONSE_TOOL],
     apiKey
   );
+  console.log("Evaluation requested");
   const duration = Math.round(performance.now() - startTime);
 
   const toolCall = response.choices[0]?.message?.tool_calls?.[0];
