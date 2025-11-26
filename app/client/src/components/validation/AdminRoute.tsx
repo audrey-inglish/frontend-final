@@ -27,7 +27,6 @@ export default function AdminRoute({ children }: AdminRouteProps) {
 
         if (!mounted) return;
 
-        // Server returns plain text "User is an admin" or "User is not an admin"
         setIsAdmin(text.toLowerCase().includes("user is an admin"));
       } catch (err) {
         if (!mounted) return;

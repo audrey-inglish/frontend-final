@@ -35,20 +35,13 @@ export function useDashboardEditor({ dashboard }: UseDashboardEditorOptions) {
       return;
     }
 
-    try {
-      const data: DashboardUpdate = {
-        title: title.trim(),
-        description: description.trim() || null,
-      };
-      await updateDashboard.mutateAsync({ id: dashboard.id, data });
-      showSuccessToast("Dashboard updated!");
-      setIsEditing(false);
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Failed to update dashboard";
-      showErrorToast(message);
-      console.error(error);
-    }
+    const data: DashboardUpdate = {
+      title: title.trim(),
+      description: description.trim() || null,
+    };
+    await updateDashboard.mutateAsync({ id: dashboard.id, data });
+    showSuccessToast("Dashboard updated!");
+    setIsEditing(false);
   };
 
   const handleCancel = () => {

@@ -49,34 +49,22 @@ export default function Home() {
       return;
     }
 
-    try {
-      const data: DashboardCreate = {
-        title: title.trim(),
-        description: description.trim() || null,
-      };
-      await createDashboard.mutateAsync(data);
-      showSuccessToast("Dashboard created!");
-      setTitle("");
-      setDescription("");
-      setShowCreateForm(false);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to create dashboard";
-      showErrorToast(message);
-      console.error(error);
-    }
+    const data: DashboardCreate = {
+      title: title.trim(),
+      description: description.trim() || null,
+    };
+    await createDashboard.mutateAsync(data);
+    showSuccessToast("Dashboard created!");
+    setTitle("");
+    setDescription("");
+    setShowCreateForm(false);
   };
 
   const handleDelete = async (id: number, title: string) => {
     if (!confirm(`Delete "${title}"?`)) return;
 
-    try {
-      await deleteDashboard.mutateAsync(id);
-      showSuccessToast("Dashboard deleted");
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to delete dashboard";
-      showErrorToast(message);
-      console.error(error);
-    }
+    await deleteDashboard.mutateAsync(id);
+    showSuccessToast("Dashboard deleted");
   };
 
   if (!auth.isAuthenticated) {

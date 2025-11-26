@@ -23,29 +23,22 @@ export function useQuizGenerator({
       return;
     }
 
-    try {
-      const combinedText = notes
-        .map((note) => `${note.title}\n\n${note.content}`)
-        .join("\n\n---\n\n");
+    const combinedText = notes
+      .map((note) => `${note.title}\n\n${note.content}`)
+      .join("\n\n---\n\n");
 
-      const result = await generateQuiz.mutateAsync({
-        text: combinedText,
-        dashboard_id: dashboardId,
-        num_questions: numQuestions,
-        question_types: questionTypes,
-        difficulty,
-      });
+    const result = await generateQuiz.mutateAsync({
+      text: combinedText,
+      dashboard_id: dashboardId,
+      num_questions: numQuestions,
+      question_types: questionTypes,
+      difficulty,
+    });
 
-      showSuccessToast(
-        `Generated ${result.questions.length} ${difficulty} questions!`
-      );
-      return result;
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Failed to generate quiz";
-      showErrorToast(message);
-      console.error(error);
-    }
+    showSuccessToast(
+      `Generated ${result.questions.length} ${difficulty} questions!`
+    );
+    return result;
   };
 
   return {

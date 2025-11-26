@@ -54,24 +54,17 @@ export function useNoteEditor({ dashboardId }: UseNoteEditorOptions) {
       return;
     }
 
-    try {
-      const data: NoteCreate = {
-        dashboard_id: dashboardId,
-        title: noteTitle.trim(),
-        content: noteContent.trim(),
-      };
-      await createNote.mutateAsync(data);
-      showSuccessToast("Note created!");
-      clearDraft();
-      setNoteTitle("");
-      setNoteContent("");
-      setShowNoteForm(false);
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Failed to create note";
-      showErrorToast(message);
-      console.error(error);
-    }
+    const data: NoteCreate = {
+      dashboard_id: dashboardId,
+      title: noteTitle.trim(),
+      content: noteContent.trim(),
+    };
+    await createNote.mutateAsync(data);
+    showSuccessToast("Note created!");
+    clearDraft();
+    setNoteTitle("");
+    setNoteContent("");
+    setShowNoteForm(false);
   };
 
   // Handler: Open edit form with existing note data
@@ -91,39 +84,25 @@ export function useNoteEditor({ dashboardId }: UseNoteEditorOptions) {
       return;
     }
 
-    try {
-      const data: NoteUpdate = {
-        title: noteTitle.trim(),
-        content: noteContent.trim(),
-      };
-      await updateNote.mutateAsync({ id: editingNoteId, data });
-      showSuccessToast("Note updated!");
-      clearDraft();
-      setNoteTitle("");
-      setNoteContent("");
-      setEditingNoteId(null);
-      setShowNoteForm(false);
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Failed to update note";
-      showErrorToast(message);
-      console.error(error);
-    }
+    const data: NoteUpdate = {
+      title: noteTitle.trim(),
+      content: noteContent.trim(),
+    };
+    await updateNote.mutateAsync({ id: editingNoteId, data });
+    showSuccessToast("Note updated!");
+    clearDraft();
+    setNoteTitle("");
+    setNoteContent("");
+    setEditingNoteId(null);
+    setShowNoteForm(false);
   };
 
   // Handler: Delete a note (with confirmation)
   const handleDeleteNote = async (noteId: number, title: string) => {
     if (!confirm(`Delete note "${title}"?`)) return;
 
-    try {
-      await deleteNote.mutateAsync(noteId);
-      showSuccessToast("Note deleted");
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Failed to delete note";
-      showErrorToast(message);
-      console.error(error);
-    }
+    await deleteNote.mutateAsync(noteId);
+    showSuccessToast("Note deleted");
   };
 
   // Handler: Cancel form and clear state
@@ -141,27 +120,21 @@ export function useNoteEditor({ dashboardId }: UseNoteEditorOptions) {
 
   // Handler: Upload image and extract text
   const handleImageUpload = async (file: File) => {
-    try {
-      const extractedText = await extractTextFromImage(file);
-      
-      if (!extractedText || extractedText.trim().length === 0) {
-        showErrorToast("No text could be extracted from the image");
-        return;
-      }
-
-      setNoteContent(extractedText);
-      
-      // Optionally suggest a title if one isn't set
-      if (!noteTitle.trim()) {
-        setNoteTitle("Notes from Image");
-      }
-      
-      showSuccessToast("Text extracted from image! You can now edit and save.");
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to process image";
-      showErrorToast(message);
-      console.error(error);
+    const extractedText = await extractTextFromImage(file);
+    
+    if (!extractedText || extractedText.trim().length === 0) {
+      showErrorToast("No text could be extracted from the image");
+      return;
     }
+
+    setNoteContent(extractedText);
+    
+    // Optionally suggest a title if one isn't set
+    if (!noteTitle.trim()) {
+      setNoteTitle("Notes from Image");
+    }
+    
+    showSuccessToast("Text extracted from image! You can now edit and save.");
   };
 
   return {
