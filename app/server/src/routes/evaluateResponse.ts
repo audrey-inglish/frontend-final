@@ -29,7 +29,7 @@ router.post("/", async (req, res) => {
 
     if (question_type === 'multiple-choice') {
       const selectedAnswer = await db.oneOrNone(
-        `SELECT explanation, is_correct 
+        `SELECT is_correct 
          FROM quiz_answer 
          WHERE quiz_question_id = $1 AND answer_text = $2`,
         [question_id, user_answer]
@@ -37,9 +37,9 @@ router.post("/", async (req, res) => {
 
       if (selectedAnswer) {
         isCorrect = selectedAnswer.is_correct;
-        explanation = selectedAnswer.explanation || (isCorrect 
+        explanation = isCorrect 
           ? "Correct!" 
-          : `Incorrect. The correct answer is: ${correct_answer}`);
+          : `Incorrect. The correct answer is: ${correct_answer}`;
       } else {
         // Fallback if answer not found
         isCorrect = user_answer.trim().toLowerCase() === correct_answer.trim().toLowerCase();
