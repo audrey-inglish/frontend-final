@@ -1,12 +1,14 @@
 import { LoadingSpinner, EmptyState, ConceptList } from "../index";
 import { SpinnerIcon, LightbulbIcon } from "../icons";
 import type { Concept } from "../../schemas/concept";
+import type { ConceptGenerationStatus } from "../../contexts";
 
 interface ConceptsSectionProps {
   concepts: Concept[] | undefined;
   isLoading: boolean;
   isGenerating: boolean;
   onGenerate: () => void;
+  status?: ConceptGenerationStatus;
 }
 
 

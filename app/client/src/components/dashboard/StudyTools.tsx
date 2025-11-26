@@ -4,9 +4,10 @@ import StudyToolCard from "../cards/StudyToolCardSimple";
 
 interface StudyToolsProps {
   dashboardId: number;
+  conceptsReady?: boolean;
 }
 
-export function StudyTools({ dashboardId }: StudyToolsProps) {
+export function StudyTools({ dashboardId, conceptsReady = true }: StudyToolsProps) {
   const navigate = useNavigate();
 
   const studyTools = [
@@ -14,6 +15,8 @@ export function StudyTools({ dashboardId }: StudyToolsProps) {
       title: "AI Study Session",
       icon: <BrainIcon className="study-tool-icon" />,
       onClick: () => navigate(`/dashboard/${dashboardId}/study`),
+      disabled: !conceptsReady,
+      tooltip: !conceptsReady ? "Waiting for concepts to be generated..." : undefined,
     },
     {
       title: "Flashcards",
@@ -44,6 +47,8 @@ export function StudyTools({ dashboardId }: StudyToolsProps) {
             title={tool.title}
             icon={tool.icon}
             onClick={tool.onClick}
+            disabled={tool.disabled}
+            tooltip={tool.tooltip}
           />
         ))}
       </div>
