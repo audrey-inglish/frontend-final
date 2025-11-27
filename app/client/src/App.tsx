@@ -12,7 +12,6 @@ import StudySessionPage from "./Pages/StudySessionPage";
 import AuthCallback from "./Pages/AuthCallback";
 import AdminAiMonitorPage from "./Pages/AdminAiMonitorPage";
 import "./App.css";
-import { AgentApiKeySettings } from "./components/settings/AgentApiKeySettings";
 
 function App() {
   const auth = useAuth();
@@ -33,7 +32,6 @@ function App() {
           <Route path="/dashboard/:id/stats" element={<StatsPage />} />
           <Route path="/dashboard/:id/study" element={<StudySessionPage />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
-          <Route path="/settings" element={<AgentApiKeySettings />} />
           <Route path="/admin/ai-monitor" element={<AdminAiMonitorPage />} />
         </Routes>
       </BrowserRouter>

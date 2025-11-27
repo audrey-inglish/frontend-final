@@ -9,8 +9,7 @@ import { callAgentWithTools } from "./apiClient";
 import { logAiAction } from "../aiActionLogger";
 
 export async function requestHint(
-  sessionState: StudySessionState,
-  apiKey: string
+  sessionState: StudySessionState
 ): Promise<HintResponse> {
   const startTime = performance.now();
   
@@ -22,8 +21,7 @@ export async function requestHint(
 
   const response = await callAgentWithTools(
     messages,
-    [PROVIDE_HINT_TOOL],
-    apiKey
+    [PROVIDE_HINT_TOOL]
   );
   const duration = Math.round(performance.now() - startTime);
 

@@ -6,8 +6,7 @@ import { logAiAction } from "../aiActionLogger";
 
 export async function requestEvaluation(
   sessionState: StudySessionState,
-  userAnswer: string,
-  apiKey: string
+  userAnswer: string
 ): Promise<EvaluateResponseArgs> {
   const currentQuestion = sessionState.currentQuestion;
   
@@ -33,8 +32,7 @@ export async function requestEvaluation(
   const messages = buildEvaluationMessages(sessionState, userAnswer);
   const response = await callAgentWithTools(
     messages,
-    [EVALUATE_RESPONSE_TOOL],
-    apiKey
+    [EVALUATE_RESPONSE_TOOL]
   );
   const duration = Math.round(performance.now() - startTime);
 

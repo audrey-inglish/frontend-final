@@ -6,7 +6,6 @@ import { isTopicMastered } from "../../lib/studySession.config";
 
 interface UseEvaluationManagementOptions {
   sessionState: StudySessionState;
-  apiKey: string;
   setSessionState: React.Dispatch<React.SetStateAction<StudySessionState>>;
   setIsLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
@@ -19,7 +18,6 @@ interface UseEvaluationManagementReturn {
 
 export function useEvaluationManagement({
   sessionState,
-  apiKey,
   setSessionState,
   setIsLoading,
   setError,
@@ -70,7 +68,7 @@ export function useEvaluationManagement({
       });
 
       if (!hasPreloadedQuestion && shouldLoadQuestion) {
-        const nextStepArgs = await requestNextStep(sessionState, apiKey);
+        const nextStepArgs = await requestNextStep(sessionState);
         const nextQuestion = argsToQuestion(nextStepArgs, `q-${Date.now()}`);
 
         setSessionState(prev => ({
@@ -86,7 +84,7 @@ export function useEvaluationManagement({
     } finally {
       setIsLoading(false);
     }
-  }, [sessionState, apiKey, setSessionState, setIsLoading, setError]);
+  }, [sessionState, setSessionState, setIsLoading, setError]);
 
   return {
     confirmEvaluation,

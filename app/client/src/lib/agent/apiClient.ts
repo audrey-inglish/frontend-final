@@ -4,14 +4,12 @@ import { getAgentEndpoint, getAgentModel } from "../studySession.config";
 export async function callAgentWithTools(
   messages: AgentMessage[],
   tools: AgentTool[],
-  apiKey: string,
   toolChoice: "auto" | "required" | { type: "function"; function: { name: string } } = "auto"
 ): Promise<AgentResponse> {
   const response = await fetch(getAgentEndpoint(), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
       model: getAgentModel(),

@@ -9,14 +9,12 @@ import { StudySessionMainCard } from "./StudySessionMainCard";
 
 interface StudySessionProps {
   topics: string[];
-  apiKey: string;
   dashboardId?: number;
   onComplete?: () => void;
 }
 
 export function StudySession({
   topics,
-  apiKey,
   dashboardId,
   onComplete,
 }: StudySessionProps) {
@@ -39,7 +37,6 @@ export function StudySession({
     rejectSessionEnd,
   } = useStudySession({
     topics,
-    apiKey,
     dashboardId,
     onSessionEnd: onComplete,
   });

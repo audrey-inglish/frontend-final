@@ -21,6 +21,8 @@ services:
       KEYCLOAK_AUDIENCE: "account"
       KEYCLOAK_CLIENT_ID: "audrey-final"
       KEYCLOAK_JWKS_URI: "https://auth-dev.snowse.io/realms/DevRealm/protocol/openid-connect/certs"
+      AGENT_BACKEND_URL: ${AGENT_BACKEND_URL:-http://ai-snow.reindeer-pinecone.ts.net:9292/v1/chat/completions}
+      AGENT_BACKEND_API_KEY: ${AGENT_BACKEND_API_KEY}
     depends_on:
       - db
 
@@ -36,9 +38,7 @@ services:
     command: sh -c "npm install -g pnpm && pnpm install && pnpm dev"
     environment:
       - NODE_ENV=development
-      - VITE_AGENT_ENDPOINT=${VITE_AGENT_ENDPOINT:-http://ai-snow.reindeer-pinecone.ts.net:9292/v1/chat/completions}
-      - VITE_AGENT_MODEL=${VITE_AGENT_MODEL:-gpt-oss-120b}
-      - VITE_AGENT_API_KEY=${VITE_AGENT_API_KEY}
+      - VITE_AGENT_ENDPOINT=/api/agent
     depends_on:
       - server
 

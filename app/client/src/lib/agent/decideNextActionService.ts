@@ -12,8 +12,7 @@ import { callAgentWithTools } from "./apiClient";
 import { logAiAction } from "../aiActionLogger";
 
 export async function requestNextAction(
-  sessionState: StudySessionState,
-  apiKey: string
+  sessionState: StudySessionState
 ): Promise<DecideNextActionArgs> {
   const startTime = performance.now();
   
@@ -22,7 +21,6 @@ export async function requestNextAction(
   const response = await callAgentWithTools(
     messages,
     [DECIDE_NEXT_ACTION_TOOL],
-    apiKey,
     "required" // Force the LLM to call the tool
   );
   const duration = Math.round(performance.now() - startTime);

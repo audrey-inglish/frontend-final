@@ -7,7 +7,6 @@ import { isTopicMastered } from "../../lib/studySession.config";
 
 interface UseAutonomousActionManagementOptions {
   sessionState: StudySessionState;
-  apiKey: string;
   setSessionState: React.Dispatch<React.SetStateAction<StudySessionState>>;
   setIsLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
@@ -24,7 +23,6 @@ interface UseAutonomousActionManagementReturn {
 
 export function useAutonomousActionManagement({
   sessionState,
-  apiKey,
   setSessionState,
   setIsLoading,
   setError,
@@ -41,7 +39,7 @@ export function useAutonomousActionManagement({
         ? { ...sessionState, masteryLevels: updatedMastery }
         : sessionState;
       
-      const decision = await requestNextAction(stateToUse, apiKey);
+      const decision = await requestNextAction(stateToUse);
 
       switch (decision.action) {
         case "continue_session": {
@@ -68,7 +66,7 @@ export function useAutonomousActionManagement({
           }
 
           // Preload next question
-          const nextStepArgs = await requestNextStep(stateToUse, apiKey);
+          const nextStepArgs = await requestNextStep(stateToUse);
           const nextQuestion = argsToQuestion(nextStepArgs, `q-${Date.now()}`);
 
           setSessionState(prev => ({
@@ -83,7 +81,7 @@ export function useAutonomousActionManagement({
 
         case "suggest_hint": {
           // Preload the next question when suggesting a hint
-          const nextStepArgs = await requestNextStep(stateToUse, apiKey);
+          const nextStepArgs = await requestNextStep(stateToUse);
           const nextQuestion = argsToQuestion(nextStepArgs, `q-${Date.now()}`);
           
           setSessionState(prev => ({
@@ -115,7 +113,7 @@ export function useAutonomousActionManagement({
     } finally {
       setIsLoading(false);
     }
-  }, [sessionState, apiKey, setSessionState, setIsLoading, setError]);
+  }, [sessionState, setSessionState, setIsLoading, setError]);
 
   const acceptHintSuggestion = useCallback(() => {
     if (!sessionState.pendingHintSuggestion) return;
@@ -180,7 +178,7 @@ export function useAutonomousActionManagement({
     // User wants to continue - load next question
     setIsLoading(true);
     try {
-      const nextStepArgs = await requestNextStep(sessionState, apiKey);
+      const nextStepArgs = await requestNextStep(sessionState);
       const nextQuestion = argsToQuestion(nextStepArgs, `q-${Date.now()}`);
 
       setSessionState(prev => ({
@@ -193,7 +191,7 @@ export function useAutonomousActionManagement({
     } finally {
       setIsLoading(false);
     }
-  }, [sessionState, apiKey, setSessionState, setIsLoading, setError]);
+  }, [sessionState, setSessionState, setIsLoading, setError]);
 
   return {
     executeAutonomousDecision,

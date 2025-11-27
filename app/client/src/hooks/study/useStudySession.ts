@@ -18,7 +18,6 @@ import { useAutonomousActionManagement } from "./useAutonomousActionManagement";
 
 interface UseStudySessionOptions {
   topics: string[];
-  apiKey: string;
   dashboardId?: number; // Added for AI action logging
   onSessionEnd?: () => void;
 }
@@ -44,7 +43,6 @@ export type { StudySessionState };
 
 export function useStudySession({
   topics,
-  apiKey,
   dashboardId,
   onSessionEnd,
 }: UseStudySessionOptions): UseStudySessionReturn {
@@ -68,7 +66,6 @@ export function useStudySession({
     rejectHint,
   } = useHintManagement({
     sessionState,
-    apiKey,
     setSessionState,
     setIsLoading,
     setError,
@@ -78,7 +75,6 @@ export function useStudySession({
     confirmEvaluation,
   } = useEvaluationManagement({
     sessionState,
-    apiKey,
     setSessionState,
     setIsLoading,
     setError,
@@ -92,7 +88,6 @@ export function useStudySession({
     rejectSessionEnd,
   } = useAutonomousActionManagement({
     sessionState,
-    apiKey,
     setSessionState,
     setIsLoading,
     setError,
@@ -104,7 +99,7 @@ export function useStudySession({
     setError(null);
 
     try {
-      const nextStepArgs = await requestNextStep(sessionState, apiKey);
+      const nextStepArgs = await requestNextStep(sessionState);
       const question = argsToQuestion(nextStepArgs, `q-${Date.now()}`);
 
       setSessionState((prev: StudySessionState) => ({
@@ -118,7 +113,7 @@ export function useStudySession({
     } finally {
       setIsLoading(false);
     }
-  }, [sessionState, apiKey]);
+  }, [sessionState]);
 
   const submitAnswer = useCallback(
     async (answer: string) => {
@@ -139,8 +134,7 @@ export function useStudySession({
 
         const evaluationArgs = await requestEvaluation(
           sessionState,
-          answer,
-          apiKey
+          answer
         );
 
         setSessionState((prev: StudySessionState) => {
@@ -210,7 +204,7 @@ export function useStudySession({
         setIsLoading(false);
       }
     },
-    [sessionState, apiKey, executeAutonomousDecision]
+    [sessionState, executeAutonomousDecision]
   );
 
   const endSession = useCallback(() => {

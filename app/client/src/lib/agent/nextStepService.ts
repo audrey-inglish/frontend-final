@@ -9,15 +9,13 @@ import { callAgentWithTools } from "./apiClient";
 import { logAiAction } from "../aiActionLogger";
 
 export async function requestNextStep(
-  sessionState: StudySessionState,
-  apiKey: string
+  sessionState: StudySessionState
 ): Promise<GetNextStepArgs> {
   const startTime = performance.now();
   const messages = buildNextStepMessages(sessionState);
   const response = await callAgentWithTools(
     messages,
-    [GET_NEXT_STEP_TOOL],
-    apiKey
+    [GET_NEXT_STEP_TOOL]
   );
   const duration = Math.round(performance.now() - startTime);
 

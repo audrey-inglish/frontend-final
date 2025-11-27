@@ -243,7 +243,7 @@ Rubric items:
 Features:
 - [X] AI creates quizzes and grades answers
 - [X] Results summarized per topic
-- [ ] upload notes as pngs and pdfs
+- [X] upload notes as pngs and pdfs
 
 To-Dos & Subrequirements:
 - [X] basic form for quiz config -- choose question types & number of questions, then click "generate"
@@ -368,21 +368,30 @@ Rubric items:
 
 Features:
 - Verified smooth user flow (loading states, error handling for API and UI)
+- autonomous agentic loop with multiple toolcalls
 
 To-Dos & Subrequirements:
+- [X] implement additional toolcalls (including a truly autonomous loop)
 - [X] run through full user flow on desktop, adjust UI as needed
 - [X] responsive checks - run through full user flow on mobile, adjusting as needed
-- [ ] hunt for bugs
+- [X] hunt for bugs
 - [X] add more toolcalls
 - [X] user experience adjustments -- speed, feedback, clarity
 - [X] adjust prompts to use configuration values from studySession.config.ts
 
 #### Delivered
-
 Rubric Items:
+- Technology: Tests run in pipeline, pipeline aborts if they fail
+- Technology: Linting in pipeline
+- Technology: Error handling (both on api requests and render errors)
+- Professional, organized and smooth experience
 
 
 Features:
+- Verified smooth user flow (loading states, error handling for API and UI)
+- autonomous agentic loop with multiple toolcalls
+
+
 
 ---
 ### Dec 6 - FINAL DEADLINE
@@ -398,7 +407,7 @@ Features:
 
 To-Dos & Subrequirements:
 - [ ] prep presentation
-- [ ] verify each rubric requirement is met
+- [ ] verify each rubric requirement is met, making adjustments as needed
 - [ ] final submission
 
 #### Delivered

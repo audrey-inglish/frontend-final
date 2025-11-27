@@ -4,7 +4,6 @@ import { requestHint } from "../../lib/agent/hintService";
 
 interface UseHintManagementOptions {
   sessionState: StudySessionState;
-  apiKey: string;
   setSessionState: React.Dispatch<React.SetStateAction<StudySessionState>>;
   setIsLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
@@ -18,7 +17,6 @@ interface UseHintManagementReturn {
 
 export function useHintManagement({
   sessionState,
-  apiKey,
   setSessionState,
   setIsLoading,
   setError,
@@ -32,7 +30,7 @@ export function useHintManagement({
     setIsLoading(true);
     setError(null);
 
-    const hintResponse = await requestHint(sessionState, apiKey);
+    const hintResponse = await requestHint(sessionState);
 
     if (hintResponse.hint) {
       // LLM decided to provide a hint - show confirmation
@@ -47,7 +45,7 @@ export function useHintManagement({
     }
 
     setIsLoading(false);
-  }, [sessionState, apiKey, setSessionState, setIsLoading, setError]);
+  }, [sessionState, setSessionState, setIsLoading, setError]);
 
   const acceptHint = useCallback(() => {
     if (!sessionState.pendingHint || !sessionState.currentQuestion) return;

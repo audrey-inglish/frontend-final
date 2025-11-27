@@ -5,7 +5,6 @@ import type { Dashboard } from "../../schemas/dashboard";
 interface StudySessionWrapperProps {
   dashboard: Dashboard;
   topics: string[];
-  apiKey: string;
   dashboardId: number;
   onComplete: () => void;
 }
@@ -13,7 +12,6 @@ interface StudySessionWrapperProps {
 export function StudySessionWrapper({
   dashboard,
   topics,
-  apiKey,
   dashboardId,
   onComplete,
 }: StudySessionWrapperProps) {
@@ -31,7 +29,6 @@ export function StudySessionWrapper({
 
       <StudySession
         topics={topics}
-        apiKey={apiKey}
         dashboardId={dashboardId}
         onComplete={onComplete}
       />
