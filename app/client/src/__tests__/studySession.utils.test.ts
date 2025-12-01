@@ -47,7 +47,7 @@ describe('studySession.utils', () => {
 
     it('should update mastery level for matching topic', () => {
       const updates = [
-        { topic: 'React', newLevel: 65, reasoning: 'Correct answer' },
+        { topic: 'React', newLevel: 66, reasoning: 'Correct answer' },
       ];
 
       const result = applyMasteryUpdates(initialMastery, updates);
