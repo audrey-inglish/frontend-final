@@ -30,7 +30,6 @@ export default function Home() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const { isAdmin } = useIsAdmin();
-  const [test, setTest] = useState();
 
   // Only fetch dashboards when fully authenticated with token
   const shouldFetch = auth.isAuthenticated && !auth.isLoading && !!auth.user?.access_token;
