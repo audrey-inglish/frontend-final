@@ -35,14 +35,14 @@ router.post("/", async (req, res) => {
   };
 
   const systemPrompt = `You are a strict JSON generator. Create ${num_questions} quiz questions from the provided notes.
-Question types: ${question_types.join(", ")}.
+Question types: ONLY generate questions of these types: ${question_types.join(', ')}. DO NOT generate any other question types.
 Difficulty level: ${difficulty} - focus on ${
     difficultyDescriptions[difficulty]
   }.
 
 Return ONLY a JSON array. Each item must have:
 - "question_text": the question
-- "question_type": either "multiple-choice" or "short-answer"
+- "question_type": MUST be one of: ${question_types.map(t => `"${t}"`).join(' or ')}
 - "correct_answer": the correct answer text
 - "answers": (for multiple-choice only) array of 4 objects with "answer_text" and "is_correct" (boolean)
 
@@ -104,6 +104,22 @@ Example short-answer:
       });
     }
 
+    // Filter out questions that don't match the requested types
+    const filteredQuestions = validated.data.filter(q => 
+      question_types.includes(q.question_type)
+    );
+
+    // Ensure we have at least some questions after filtering
+    if (filteredQuestions.length === 0) {
+      console.error("No questions matched requested types:", question_types);
+      return res.status(502).json({
+        error: {
+          code: "NO_MATCHING_QUESTIONS",
+          message: "AI did not generate questions of the requested types",
+        },
+      });
+    }
+
     // Save to database
     const dashboard = await db.oneOrNone(
       `SELECT id FROM dashboard WHERE id = $1`,
@@ -123,7 +139,7 @@ Example short-answer:
     );
 
     const savedQuestions = [];
-    for (const q of validated.data) {
+    for (const q of filteredQuestions) {
       const question = await db.one(
         `INSERT INTO quiz_question (quiz_id, question_text, correct_answer) 
          VALUES ($1, $2, $3) 

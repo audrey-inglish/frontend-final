@@ -71,7 +71,14 @@ Respond with JSON:
       });
 
       const rawText = completion.choices[0]?.message?.content || "";
-      const result = JSON.parse(rawText);
+      
+      let jsonText = rawText.trim();
+      const codeBlockMatch = jsonText.match(/```(?:json)?\s*([\s\S]*?)```/);
+      if (codeBlockMatch) {
+        jsonText = codeBlockMatch[1].trim();
+      }
+      
+      const result = JSON.parse(jsonText);
       
       isCorrect = result.is_correct;
       explanation = result.explanation;
