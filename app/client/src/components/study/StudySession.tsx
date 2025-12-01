@@ -38,13 +38,11 @@ export function StudySession({
   } = useStudySession({
     topics,
     dashboardId,
-    onSessionEnd: onComplete,
   });
 
   if (
-    sessionState.questionHistory.length > 0 &&
-    !sessionState.currentQuestion &&
-    !sessionState.pendingEvaluation
+    !sessionState.active &&
+    sessionState.questionHistory.length > 0
   ) {
     return (
       <SessionComplete
@@ -58,6 +56,7 @@ export function StudySession({
     );
   }
 
+  // Show session start if session hasn't started yet
   if (!sessionState.active) {
     return (
       <SessionStart

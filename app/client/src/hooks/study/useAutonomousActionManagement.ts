@@ -10,7 +10,6 @@ interface UseAutonomousActionManagementOptions {
   setSessionState: React.Dispatch<React.SetStateAction<StudySessionState>>;
   setIsLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
-  onSessionEnd?: () => void;
 }
 
 interface UseAutonomousActionManagementReturn {
@@ -26,7 +25,6 @@ export function useAutonomousActionManagement({
   setSessionState,
   setIsLoading,
   setError,
-  onSessionEnd,
 }: UseAutonomousActionManagementOptions): UseAutonomousActionManagementReturn {
 
   const executeAutonomousDecision = useCallback(async (updatedMastery?: TopicMastery[]) => {
@@ -165,8 +163,7 @@ export function useAutonomousActionManagement({
       active: false,
       pendingSessionEnd: undefined,
     }));
-    onSessionEnd?.();
-  }, [setSessionState, onSessionEnd]);
+  }, [setSessionState]);
 
   const rejectSessionEnd = useCallback(async () => {
     setSessionState(prev => ({

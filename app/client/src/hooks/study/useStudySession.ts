@@ -19,7 +19,6 @@ import { useAutonomousActionManagement } from "./useAutonomousActionManagement";
 interface UseStudySessionOptions {
   topics: string[];
   dashboardId?: number; // Added for AI action logging
-  onSessionEnd?: () => void;
 }
 
 interface UseStudySessionReturn {
@@ -44,7 +43,6 @@ export type { StudySessionState };
 export function useStudySession({
   topics,
   dashboardId,
-  onSessionEnd,
 }: UseStudySessionOptions): UseStudySessionReturn {
   const [sessionState, setSessionState] = useState<StudySessionState>({
     sessionId: `session-${Date.now()}`,
@@ -91,7 +89,6 @@ export function useStudySession({
     setSessionState,
     setIsLoading,
     setError,
-    onSessionEnd,
   });
 
   const startSession = useCallback(async () => {
@@ -214,8 +211,7 @@ export function useStudySession({
       currentQuestion: undefined,
       pendingEvaluation: undefined,
     }));
-    onSessionEnd?.();
-  }, [onSessionEnd]);
+  }, []);
 
   return {
     sessionState,
