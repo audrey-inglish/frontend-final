@@ -7,7 +7,7 @@ export const FlashcardSchema = z.object({
 	back: z.string().min(1),
 	created_at: z.string().optional(),
 	mastery_score: z.number().optional(),
-	needs_review: z.boolean().optional(),
+	needs_review: z.boolean().nullable().optional(),
 	last_reviewed: z.string().nullable().optional(),
 });
 
