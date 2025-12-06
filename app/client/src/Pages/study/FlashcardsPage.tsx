@@ -63,11 +63,6 @@ export default function FlashcardsPage() {
   };
 
   const handleToggleReview = (flashcardId: number, currentState: boolean) => {
-    if (!savedFlashcards?.some(card => card.id === flashcardId)) {
-      console.warn('Cannot mark unsaved flashcard');
-      return;
-    }
-    
     markFlashcard.mutate({
       flashcardId,
       needsReview: !currentState,
