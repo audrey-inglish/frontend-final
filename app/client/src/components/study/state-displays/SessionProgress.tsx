@@ -1,4 +1,4 @@
-import type { TopicMastery } from "../../lib/studySession.types";
+import type { TopicMastery } from "../../../lib/studySession.types";
 import { MasteryOverview } from "./MasteryOverview";
 
 interface SessionProgressProps {

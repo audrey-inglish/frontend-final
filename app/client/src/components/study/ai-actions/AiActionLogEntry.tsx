@@ -1,4 +1,4 @@
-import type { AiActionLog } from "../../schemas/aiActionLog";
+import type { AiActionLog } from "../../../schemas/aiActionLog";
 
 interface AiActionLogEntryProps {
   log: AiActionLog;
