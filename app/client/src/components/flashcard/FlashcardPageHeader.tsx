@@ -1,17 +1,19 @@
 import { Link } from 'react-router';
 
 interface FlashcardPageHeaderProps {
-  dashboardTitle: string;
+  dashboardTitle?: string;
   dashboardId: number;
   onRegenerate?: () => Promise<void>;
   isGenerating?: boolean;
+  isLoading?: boolean;
 }
 
 export function FlashcardPageHeader({ 
   dashboardTitle, 
   dashboardId,
   onRegenerate,
-  isGenerating = false
+  isGenerating = false,
+  isLoading = false
 }: FlashcardPageHeaderProps) {
   return (
     <div className="mb-8">
@@ -23,14 +25,18 @@ export function FlashcardPageHeader({
       </Link>
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-primary-800 mb-2">
-            Flashcards: {dashboardTitle}
-          </h1>
+          {isLoading ? (
+            <div className="h-9 w-64 bg-neutral-200 animate-pulse rounded mb-2"></div>
+          ) : (
+            <h1 className="text-3xl font-bold text-primary-800 mb-2">
+              Flashcards: {dashboardTitle}
+            </h1>
+          )}
           <p className="text-primary-600">
             Study with AI-generated flashcards from your notes
           </p>
         </div>
-        {onRegenerate && (
+        {onRegenerate && !isLoading && (
           <button
             onClick={() => onRegenerate()}
             disabled={isGenerating}

@@ -2,12 +2,14 @@ interface FlashcardEmptyStateProps {
   onGenerate: () => void;
   isGenerating: boolean;
   hasNotes: boolean;
+  isLoadingNotes?: boolean;
 }
 
 export function FlashcardEmptyState({
   onGenerate,
   isGenerating,
   hasNotes,
+  isLoadingNotes = false,
 }: FlashcardEmptyStateProps) {
   return (
     <div className="card p-8 text-center">
@@ -19,12 +21,12 @@ export function FlashcardEmptyState({
       </p>
       <button
         onClick={onGenerate}
-        disabled={isGenerating || !hasNotes}
+        disabled={isGenerating || (!hasNotes && !isLoadingNotes)}
         className="btn"
       >
-        {isGenerating ? "Generating..." : "Generate Flashcards"}
+        {isGenerating ? "Generating..." : isLoadingNotes ? "Loading Notes..." : "Generate Flashcards"}
       </button>
-      {!hasNotes && (
+      {!hasNotes && !isLoadingNotes && (
         <p className="text-custom-red-500 mt-4 text-sm">
           Add some notes to your dashboard first
         </p>

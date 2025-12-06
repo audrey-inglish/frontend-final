@@ -117,8 +117,36 @@ export function useMarkFlashcard() {
       const json = await res.json();
       return json.flashcard;
     },
-    onSuccess: () => {
-      // Invalidate all flashcard queries for this dashboard
+    onMutate: async ({ flashcardId, needsReview }) => {
+      await queryClient.cancelQueries({ queryKey: flashcardKeys.lists() });
+
+      const previousFlashcards = queryClient.getQueriesData({
+        queryKey: flashcardKeys.lists(),
+      });
+
+      // optimistically update
+      queryClient.setQueriesData(
+        { queryKey: flashcardKeys.lists() },
+        (old: unknown) => {
+          if (!old || !Array.isArray(old)) return old;
+          return old.map((card: Flashcard) =>
+            card.id === flashcardId
+              ? { ...card, needs_review: needsReview }
+              : card
+          );
+        }
+      );
+
+      return { previousFlashcards };
+    },
+    onError: (_err, _newTodo, context) => {
+      if (context?.previousFlashcards) {
+        context.previousFlashcards.forEach(([queryKey, data]) => {
+          queryClient.setQueryData(queryKey, data);
+        });
+      }
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: flashcardKeys.lists(),
       });

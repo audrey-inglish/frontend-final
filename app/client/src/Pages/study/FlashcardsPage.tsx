@@ -39,7 +39,7 @@ export default function FlashcardsPage() {
   );
 
   // Load notes in background - needed for generation but shouldn't block initial render
-  const { data: notes } = useGetNotes(
+  const { data: notes, isLoading: notesLoading } = useGetNotes(
     dashboardId,
     isAuthReady
   );
@@ -80,19 +80,6 @@ export default function FlashcardsPage() {
   const hasFlashcards = flashcards && flashcards.length > 0;
   const markedCount = savedFlashcards?.filter((card) => card.needs_review).length ?? 0;
 
-  if (dashboardLoading) {
-    return (
-      <ProtectedRoute>
-        <div className="min-h-screen bg-neutral-100">
-          <Navbar showBackButton />
-          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <LoadingSpinner />
-          </main>
-        </div>
-      </ProtectedRoute>
-    );
-  }
-
   const isFlashcardsLoading = flashcardsLoading && !savedFlashcards && !flashcardGenerator.flashcards;
 
   return (
@@ -101,45 +88,43 @@ export default function FlashcardsPage() {
         <Navbar showBackButton />
 
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {dashboard && (
+          <FlashcardPageHeader 
+            dashboardTitle={dashboard?.title} 
+            dashboardId={dashboardId}
+            onRegenerate={hasFlashcards ? handleGenerateFlashcards : undefined}
+            isGenerating={flashcardGenerator.isGenerating}
+            isLoading={dashboardLoading}
+          />
+
+          {isFlashcardsLoading ? (
+            <LoadingSpinner message="Loading flashcards..." />
+          ) : (
             <>
-              <FlashcardPageHeader 
-                dashboardTitle={dashboard.title} 
-                dashboardId={dashboardId}
-                onRegenerate={hasFlashcards ? handleGenerateFlashcards : undefined}
-                isGenerating={flashcardGenerator.isGenerating}
-              />
-
-              {isFlashcardsLoading ? (
-                <LoadingSpinner message="Loading flashcards..." />
+              {!hasFlashcards ? (
+                <FlashcardEmptyState
+                  onGenerate={handleGenerateFlashcards}
+                  isGenerating={flashcardGenerator.isGenerating}
+                  hasNotes={!!notes && notes.length > 0}
+                  isLoadingNotes={notesLoading}
+                />
               ) : (
-                <>
-                  {!hasFlashcards ? (
-                    <FlashcardEmptyState
-                      onGenerate={handleGenerateFlashcards}
-                      isGenerating={flashcardGenerator.isGenerating}
-                      hasNotes={!!notes && notes.length > 0}
+                <div className="space-y-2">
+                  {hasFlashcards && (
+                    <FlashcardFilter
+                      filter={filter}
+                      markedCount={markedCount}
+                      onFilterChange={handleFilterChange}
                     />
-                  ) : (
-                    <div className="space-y-2">
-                      {hasFlashcards && (
-                        <FlashcardFilter
-                          filter={filter}
-                          markedCount={markedCount}
-                          onFilterChange={handleFilterChange}
-                        />
-                      )}
-
-                      <FlashcardCarousel
-                        flashcards={flashcards}
-                        currentIndex={currentIndex}
-                        onPrevious={handlePrevious}
-                        onNext={handleNext}
-                        onToggleReview={handleToggleReview}
-                      />
-                    </div>
                   )}
-                </>
+
+                  <FlashcardCarousel
+                    flashcards={flashcards}
+                    currentIndex={currentIndex}
+                    onPrevious={handlePrevious}
+                    onNext={handleNext}
+                    onToggleReview={handleToggleReview}
+                  />
+                </div>
               )}
             </>
           )}
