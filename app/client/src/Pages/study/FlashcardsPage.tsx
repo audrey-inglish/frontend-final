@@ -31,14 +31,16 @@ export default function FlashcardsPage() {
     dashboardId,
     isAuthReady
   );
-  const { data: notes, isLoading: notesLoading } = useGetNotes(
-    dashboardId,
-    isAuthReady
-  );
-
+  
   const { data: savedFlashcards, isLoading: flashcardsLoading } = useGetFlashcards(
     dashboardId,
     filter === "marked" ? true : undefined,
+    isAuthReady
+  );
+
+  // Load notes in background - needed for generation but shouldn't block initial render
+  const { data: notes } = useGetNotes(
+    dashboardId,
     isAuthReady
   );
 
@@ -73,7 +75,8 @@ export default function FlashcardsPage() {
     setCurrentIndex(0);
   };
 
-  const isLoading = dashboardLoading || notesLoading || flashcardsLoading || flashcardGenerator.isGenerating;
+  // Don't block the page on notes loading - they're only needed for generation
+  const isLoading = dashboardLoading || flashcardsLoading || flashcardGenerator.isGenerating;
   // Prefer saved flashcards (with IDs) over freshly generated ones
   const flashcards = savedFlashcards ?? flashcardGenerator.flashcards ?? [];
   const hasFlashcards = flashcards && flashcards.length > 0;
