@@ -75,12 +75,25 @@ export default function FlashcardsPage() {
     setCurrentIndex(0);
   };
 
-  // Don't block the page on notes loading - they're only needed for generation
-  const isLoading = dashboardLoading || flashcardsLoading || flashcardGenerator.isGenerating;
   // Prefer saved flashcards (with IDs) over freshly generated ones
   const flashcards = savedFlashcards ?? flashcardGenerator.flashcards ?? [];
   const hasFlashcards = flashcards && flashcards.length > 0;
   const markedCount = savedFlashcards?.filter((card) => card.needs_review).length ?? 0;
+
+  if (dashboardLoading) {
+    return (
+      <ProtectedRoute>
+        <div className="min-h-screen bg-neutral-100">
+          <Navbar showBackButton />
+          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <LoadingSpinner />
+          </main>
+        </div>
+      </ProtectedRoute>
+    );
+  }
+
+  const isFlashcardsLoading = flashcardsLoading && !savedFlashcards && !flashcardGenerator.flashcards;
 
   return (
     <ProtectedRoute>
@@ -88,9 +101,7 @@ export default function FlashcardsPage() {
         <Navbar showBackButton />
 
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {isLoading && <LoadingSpinner />}
-
-          {!isLoading && dashboard && (
+          {dashboard && (
             <>
               <FlashcardPageHeader 
                 dashboardTitle={dashboard.title} 
@@ -99,30 +110,36 @@ export default function FlashcardsPage() {
                 isGenerating={flashcardGenerator.isGenerating}
               />
 
-              {!hasFlashcards ? (
-                <FlashcardEmptyState
-                  onGenerate={handleGenerateFlashcards}
-                  isGenerating={flashcardGenerator.isGenerating}
-                  hasNotes={!!notes && notes.length > 0}
-                />
+              {isFlashcardsLoading ? (
+                <LoadingSpinner message="Loading flashcards..." />
               ) : (
-                <div className="space-y-2">
-                  {savedFlashcards && savedFlashcards.length > 0 && (
-                    <FlashcardFilter
-                      filter={filter}
-                      markedCount={markedCount}
-                      onFilterChange={handleFilterChange}
+                <>
+                  {!hasFlashcards ? (
+                    <FlashcardEmptyState
+                      onGenerate={handleGenerateFlashcards}
+                      isGenerating={flashcardGenerator.isGenerating}
+                      hasNotes={!!notes && notes.length > 0}
                     />
-                  )}
+                  ) : (
+                    <div className="space-y-2">
+                      {hasFlashcards && (
+                        <FlashcardFilter
+                          filter={filter}
+                          markedCount={markedCount}
+                          onFilterChange={handleFilterChange}
+                        />
+                      )}
 
-                  <FlashcardCarousel
-                    flashcards={flashcards}
-                    currentIndex={currentIndex}
-                    onPrevious={handlePrevious}
-                    onNext={handleNext}
-                    onToggleReview={handleToggleReview}
-                  />
-                </div>
+                      <FlashcardCarousel
+                        flashcards={flashcards}
+                        currentIndex={currentIndex}
+                        onPrevious={handlePrevious}
+                        onNext={handleNext}
+                        onToggleReview={handleToggleReview}
+                      />
+                    </div>
+                  )}
+                </>
               )}
             </>
           )}
