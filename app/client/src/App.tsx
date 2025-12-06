@@ -2,16 +2,15 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import { useAuth } from "react-oidc-context";
 import { setTokenProvider } from "./lib/apiFetch";
 import ErrorBoundary from "./components/validation/ErrorBoundary";
-import Home from "./Pages/Home";
+import Home from "./Pages/dashboard/Home";
 import Preview from "./Pages/Preview";
-import DashboardDetail from "./Pages/DashboardDetail";
-import FlashcardsPage from "./Pages/FlashcardsPage";
-import QuizPage from "./Pages/QuizPage";
-import StatsPage from "./Pages/StatsPage";
-import StudySessionPage from "./Pages/StudySessionPage";
+import DashboardDetail from "./Pages/dashboard/DashboardDetail";
+import FlashcardsPage from "./Pages/study/FlashcardsPage";
+import QuizPage from "./Pages/study/QuizPage";
+import StatsPage from "./Pages/dashboard/StatsPage";
+import StudySessionPage from "./Pages/study/StudySessionPage";
 import AuthCallback from "./Pages/AuthCallback";
 import AdminAiMonitorPage from "./Pages/AdminAiMonitorPage";
-import "./App.css";
 
 function App() {
   const auth = useAuth();

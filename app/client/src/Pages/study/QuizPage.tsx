@@ -5,8 +5,8 @@ import {
   useGetNotes,
   useQuizGenerator,
   useQuizSubmission,
-} from "../hooks";
-import { useQuizAnswers } from "../hooks/quiz/useQuizAnswers";
+} from "../../hooks";
+import { useQuizAnswers } from "../../hooks/quiz/useQuizAnswers";
 import {
   Navbar,
   LoadingSpinner,
@@ -14,9 +14,9 @@ import {
   QuizConfigForm,
   QuizDisplay,
   QuizEmptyState,
-} from "../components";
-import { QuizPageHeader } from "../components/quiz/QuizPageHeader";
-import type { Difficulty } from "../schemas/quiz";
+} from "../../components";
+import { QuizPageHeader } from "../../components/quiz/QuizPageHeader";
+import type { Difficulty } from "../../schemas/quiz";
 
 export default function QuizPage() {
   const { id } = useParams();

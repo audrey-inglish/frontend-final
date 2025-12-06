@@ -6,23 +6,23 @@ import {
   useCreateDashboard,
   useDeleteDashboard,
   useIsAdmin,
-} from "../hooks";
-import { showErrorToast, showSuccessToast } from "../lib/toasts";
+} from "../../hooks";
+import { showErrorToast, showSuccessToast } from "../../lib/toasts";
 import {
   Navbar,
   DashboardCard,
   LoadingSpinner,
   EmptyState,
   CardsLayout,
-} from "../components";
-import { SettingsIcon } from "../components/icons";
+} from "../../components";
+import { SettingsIcon } from "../../components/icons";
 import {
   LandingPage,
   DashboardHeader,
   CreateDashboardForm,
-} from "../components/home";
-import { useLocalStorage } from "../lib/useLocalStorage";
-import type { DashboardCreate, Dashboard } from "../schemas/dashboard";
+} from "../../components/home";
+import { useLocalStorage } from "../../lib/useLocalStorage";
+import type { DashboardCreate, Dashboard } from "../../schemas/dashboard";
 
 export default function Home() {
   const auth = useAuth();

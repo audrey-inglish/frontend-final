@@ -1,6 +1,6 @@
 import { StudySession } from "./StudySession";
-import { getStudySessionTitle } from "../../lib/studyTopicExtractor";
-import type { Dashboard } from "../../schemas/dashboard";
+import { getStudySessionTitle } from "../../../lib/studyTopicExtractor";
+import type { Dashboard } from "../../../schemas/dashboard";
 
 interface StudySessionWrapperProps {
   dashboard: Dashboard;

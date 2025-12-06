@@ -7,15 +7,15 @@ import {
   useFlashcardGenerator,
   useGetFlashcards,
   useMarkFlashcard,
-} from "../hooks";
-import { Navbar, LoadingSpinner, ProtectedRoute } from "../components";
+} from "../../hooks";
+import { Navbar, LoadingSpinner, ProtectedRoute } from "../../components";
 import {
   FlashcardPageHeader,
   FlashcardEmptyState,
   FlashcardFilter,
   FlashcardCarousel,
   FlashcardActionButtons,
-} from "../components/flashcard";
+} from "../../components/flashcard";
 
 type FlashcardFilter = "all" | "marked";
 

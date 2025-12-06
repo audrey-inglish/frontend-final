@@ -1,5 +1,5 @@
-import type { StudyQuestion, UserAnswer, EvaluationResult } from '../../lib/studySession.types';
-import { SpinnerIcon } from '../icons';
+import type { StudyQuestion, UserAnswer, EvaluationResult } from '../../../lib/studySession.types';
+import { SpinnerIcon } from '../../icons';
 
 interface EvaluationConfirmationProps {
   question: StudyQuestion;

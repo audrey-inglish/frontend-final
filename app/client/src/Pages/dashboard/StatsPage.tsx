@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router";
 import {
   useGetDashboard,
   useGetDashboardStats,
-} from "../hooks";
+} from "../../hooks";
 import {
   Navbar,
   LoadingSpinner,
@@ -10,8 +10,8 @@ import {
   StatsCard,
   ScoreHistoryChart,
   RecentQuizzesList,
-} from "../components";
-import { TrophyIcon, ChartIcon, TargetIcon, ClipboardListIcon } from "../components/icons";
+} from "../../components";
+import { TrophyIcon, ChartIcon, TargetIcon, ClipboardListIcon } from "../../components/icons";
 
 export default function StatsPage() {
   const { id } = useParams();

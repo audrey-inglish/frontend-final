@@ -18,7 +18,6 @@ export function useImageToText() {
         reader.readAsDataURL(imageFile);
       });
 
-      // Send to backend for text extraction
       const res = await apiFetch("/api/extractTextFromImage", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

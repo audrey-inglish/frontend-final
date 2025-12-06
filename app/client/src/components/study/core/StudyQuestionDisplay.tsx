@@ -1,6 +1,6 @@
-import type { StudyQuestion } from '../../lib/studySession.types';
-import { useQuestionInput } from '../../hooks/useQuestionInput';
-import { LightbulbIcon, SpinnerIcon } from '../icons';
+import type { StudyQuestion } from '../../../lib/studySession.types';
+import { useQuestionInput } from '../../../hooks/useQuestionInput';
+import { LightbulbIcon, SpinnerIcon } from '../../icons';
 
 interface StudyQuestionDisplayProps {
   question: StudyQuestion;

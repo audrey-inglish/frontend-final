@@ -1,4 +1,4 @@
-import { SpinnerIcon } from "../icons";
+import { SpinnerIcon } from "../../icons";
 
 export function GeneratingConcepts() {
   return (

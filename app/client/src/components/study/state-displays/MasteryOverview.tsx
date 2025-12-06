@@ -1,5 +1,5 @@
-import type { TopicMastery } from '../../lib/studySession.types';
-import { isTopicMastered } from '../../lib/studySession.config';
+import type { TopicMastery } from '../../../lib/studySession.types';
+import { isTopicMastered } from '../../../lib/studySession.config';
 
 interface MasteryOverviewProps {
   masteryLevels: TopicMastery[];

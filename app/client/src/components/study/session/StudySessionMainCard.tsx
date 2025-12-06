@@ -1,10 +1,10 @@
-import { StudyQuestionDisplay } from "./StudyQuestionDisplay";
-import { EvaluationConfirmation } from "./EvaluationConfirmation";
-import { HintConfirmation } from "./HintConfirmation";
-import { HintSuggestionConfirmation } from "./HintSuggestionConfirmation";
-import { SessionEndConfirmation } from "./SessionEndConfirmation";
-import { StudySessionLoading } from "./StudySessionLoading";
-import type { StudySessionState } from "../../hooks/study/useStudySession";
+import { StudyQuestionDisplay } from "../core/StudyQuestionDisplay";
+import { EvaluationConfirmation } from "../confirmations/EvaluationConfirmation";
+import { HintConfirmation } from "../confirmations/HintConfirmation";
+import { HintSuggestionConfirmation } from "../confirmations/HintSuggestionConfirmation";
+import { SessionEndConfirmation } from "../confirmations/SessionEndConfirmation";
+import { StudySessionLoading } from "../core/StudySessionLoading";
+import type { StudySessionState } from "../../../hooks/study/useStudySession";
 
 interface StudySessionMainCardProps {
   sessionState: StudySessionState;

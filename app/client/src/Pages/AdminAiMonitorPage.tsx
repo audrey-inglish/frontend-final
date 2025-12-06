@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useGetAdminAiActionLogs } from "../hooks/aiActionLogs/useAiActionLogs";
+import { useGetAdminAiActionLogs } from "../hooks/useAiActionLogs";
 import {
   Navbar,
   AdminRoute,

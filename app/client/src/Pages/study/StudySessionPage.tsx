@@ -1,16 +1,16 @@
 import { useParams, useNavigate } from "react-router";
 import { useAuth } from "react-oidc-context";
-import { useGetDashboard, useGetNotes } from "../hooks";
-import { Navbar, LoadingSpinner, ProtectedRoute } from "../components";
+import { useGetDashboard, useGetNotes } from "../../hooks";
+import { Navbar, LoadingSpinner, ProtectedRoute } from "../../components";
 import {
   GeneratingConcepts,
   NoTopicsFound,
   StudySessionWrapper,
-} from "../components/study";
-import { extractStudyTopics } from "../lib/studyTopicExtractor";
-import { ConceptGenerationProvider, useConceptGeneration } from "../contexts";
-import type { Dashboard } from "../schemas/dashboard";
-import type { Note } from "../schemas/note";
+} from "../../components/study";
+import { extractStudyTopics } from "../../lib/studyTopicExtractor";
+import { ConceptGenerationProvider, useConceptGeneration } from "../../contexts";
+import type { Dashboard } from "../../schemas/dashboard";
+import type { Note } from "../../schemas/note";
 
 function StudySessionContent({
   dashboard,

@@ -1,6 +1,6 @@
-import { useGetSessionAiActions } from "../../hooks/aiActionLogs/useAiActionLogs";
+import { useGetSessionAiActions } from "../../../hooks/useAiActionLogs";
 import { AiActionLogEntry } from "./AiActionLogEntry";
-import CloseIcon from "../icons/CloseIcon";
+import CloseIcon from "../../icons/actions/CloseIcon";
 
 interface AiActionLogModalProps {
   sessionId: string;
@@ -15,7 +15,6 @@ export function AiActionLogModal({ sessionId, onClose }: AiActionLogModalProps) 
   return (
     <div className="fixed inset-0 bg-neutral-400/70 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
-        {/* Header */}
         <div className="flex justify-between items-center p-6 border-b border-neutral-200">
           <h2 className="text-2xl font-bold text-neutral-900">
             AI Decision Log
@@ -29,7 +28,6 @@ export function AiActionLogModal({ sessionId, onClose }: AiActionLogModalProps) 
           </button>
         </div>
 
-        {/* Content */}
         <div className="flex-1 overflow-y-auto p-6">
           {isLoading && (
             <div className="flex justify-center items-center py-12">
@@ -55,7 +53,6 @@ export function AiActionLogModal({ sessionId, onClose }: AiActionLogModalProps) 
           )}
         </div>
 
-        {/* Footer */}
         <div className="p-6 border-t border-neutral-200 bg-neutral-50">
           <button onClick={onClose} className="btn w-full">
             Close

@@ -14,18 +14,20 @@ export type {
 
 export { useStudySession } from "../../hooks/study/useStudySession";
 
-export { StudySession } from "./StudySession";
-export { StudyQuestionDisplay } from "./StudyQuestionDisplay";
-export { EvaluationConfirmation } from "./EvaluationConfirmation";
-export { HintConfirmation } from "./HintConfirmation";
-export { MasteryOverview } from "./MasteryOverview";
-export { SessionStart } from "./SessionStart";
-export { SessionComplete } from "./SessionComplete";
-export { SessionProgress } from "./SessionProgress";
-export { ApiKeyRequired } from "./ApiKeyRequired";
-export { GeneratingConcepts } from "./GeneratingConcepts";
-export { NoTopicsFound } from "./NoTopicsFound";
-export { StudySessionWrapper } from "./StudySessionWrapper";
+export { StudySession } from "./session/StudySession";
+export { StudySessionWrapper } from "./session/StudySessionWrapper";
+
+export { StudyQuestionDisplay } from "./core/StudyQuestionDisplay";
+export { SessionStart } from "./core/SessionStart";
+
+export { EvaluationConfirmation } from "./confirmations/EvaluationConfirmation";
+export { HintConfirmation } from "./confirmations/HintConfirmation";
+
+export { MasteryOverview } from "./state-displays/MasteryOverview";
+export { SessionComplete } from "./state-displays/SessionComplete";
+export { SessionProgress } from "./state-displays/SessionProgress";
+export { GeneratingConcepts } from "./state-displays/GeneratingConcepts";
+export { NoTopicsFound } from "./state-displays/NoTopicsFound";
 
 export { requestNextStep } from "../../lib/agent/nextStepService";
 export { requestEvaluation } from "../../lib/agent/evaluationService";

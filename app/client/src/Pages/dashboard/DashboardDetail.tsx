@@ -5,7 +5,7 @@ import {
   useGetNotes,
   useNoteEditor,
   useDashboardEditor,
-} from "../hooks";
+} from "../../hooks";
 import {
   Navbar,
   LoadingSpinner,
@@ -13,11 +13,11 @@ import {
   ConceptsSection,
   ProtectedRoute,
   StudyTools,
-} from "../components";
-import { DashboardHeader } from "../components/dashboard/DashboardHeader";
-import { ConceptGenerationProvider, useConceptGeneration } from "../contexts";
-import type { Dashboard } from "../schemas/dashboard";
-import type { Note } from "../schemas/note";
+} from "../../components";
+import { DashboardHeader } from "../../components/dashboard/DashboardHeader";
+import { ConceptGenerationProvider, useConceptGeneration } from "../../contexts";
+import type { Dashboard } from "../../schemas/dashboard";
+import type { Note } from "../../schemas/note";
 
 function DashboardContent({ 
   dashboard, 

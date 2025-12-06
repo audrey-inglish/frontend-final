@@ -1,4 +1,4 @@
-import { TrophyIcon } from '../icons';
+import { TrophyIcon } from '../../icons';
 
 interface SessionEndConfirmationProps {
   sessionSummary: string;

@@ -1,20 +1,13 @@
 import { useState, useCallback } from "react";
 import type {
   StudySessionState,
-  UserAnswer,
-  EvaluationResult,
 } from "../../lib/studySession.types";
-import { requestNextStep } from "../../lib/agent/nextStepService";
-import { requestEvaluation } from "../../lib/agent/evaluationService";
-import {
-  initializeMastery,
-  argsToQuestion,
-  calculateMasteryLevel,
-  applyMasteryUpdates,
-} from "../../lib/studySession.utils";
+import { initializeMastery } from "../../lib/studySession.utils";
 import { useHintManagement } from "./useHintManagement";
 import { useEvaluationManagement } from "./useEvaluationManagement";
 import { useAutonomousActionManagement } from "./useAutonomousActionManagement";
+import { useSessionStart } from "./useSessionStart";
+import { useAnswerSubmission } from "./useAnswerSubmission";
 
 interface UseStudySessionOptions {
   topics: string[];
@@ -91,118 +84,20 @@ export function useStudySession({
     setError,
   });
 
-  const startSession = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
+  const { startSession } = useSessionStart({
+    sessionState,
+    setSessionState,
+    setIsLoading,
+    setError,
+  });
 
-    try {
-      const nextStepArgs = await requestNextStep(sessionState);
-      const question = argsToQuestion(nextStepArgs, `q-${Date.now()}`);
-
-      setSessionState((prev: StudySessionState) => ({
-        ...prev,
-        active: true,
-        currentQuestion: question,
-        questionHistory: [...prev.questionHistory, question],
-      }));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to start session");
-    } finally {
-      setIsLoading(false);
-    }
-  }, [sessionState]);
-
-  const submitAnswer = useCallback(
-    async (answer: string) => {
-      if (!sessionState.currentQuestion) {
-        setError("No current question");
-        return;
-      }
-
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        const userAnswer: UserAnswer = {
-          questionId: sessionState.currentQuestion.id,
-          answer,
-          timestamp: new Date().toISOString(),
-        };
-
-        const evaluationArgs = await requestEvaluation(
-          sessionState,
-          answer
-        );
-
-        setSessionState((prev: StudySessionState) => {
-          const currentQuestion = prev.currentQuestion;
-          if (!currentQuestion) {
-            console.error('submitAnswer called but no current question in state');
-            return prev;
-          }
-          
-          const updatedMastery = applyMasteryUpdates(
-            prev.masteryLevels,
-            evaluationArgs.masteryUpdates
-          );
-
-          const evaluation: EvaluationResult = {
-            questionId: currentQuestion.id,
-            isCorrect: evaluationArgs.isCorrect,
-            explanation: evaluationArgs.explanation,
-            correctAnswer: evaluationArgs.correctAnswer,
-            masteryUpdates: updatedMastery,
-          };
-
-          const masteryWithCounters = updatedMastery.map((m) => {
-            if (m.topic === currentQuestion.topic) {
-              const newQuestionsAnswered = m.questionsAnswered + 1;
-              const newQuestionsCorrect =
-                m.questionsCorrect + (evaluation.isCorrect ? 1 : 0);
-              const calculatedLevel = calculateMasteryLevel(
-                newQuestionsCorrect,
-                newQuestionsAnswered
-              );
-
-              return {
-                ...m,
-                questionsAnswered: newQuestionsAnswered,
-                questionsCorrect: newQuestionsCorrect,
-                level: calculatedLevel,
-                lastAsked: userAnswer.timestamp,
-              };
-            }
-            return m;
-          });
-
-
-          setTimeout(async () => {
-            await executeAutonomousDecision(masteryWithCounters);
-          }, 0);
-
-          return {
-            ...prev,
-            answerHistory: [...prev.answerHistory, userAnswer],
-            evaluationHistory: [...prev.evaluationHistory, evaluation],
-            masteryLevels: masteryWithCounters,
-            pendingEvaluation: {
-              question: currentQuestion,
-              answer: userAnswer,
-              evaluation,
-            },
-          };
-        });
-
-        setIsLoading(false);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "Failed to evaluate answer"
-        );
-        setIsLoading(false);
-      }
-    },
-    [sessionState, executeAutonomousDecision]
-  );
+  const { submitAnswer } = useAnswerSubmission({
+    sessionState,
+    setSessionState,
+    setIsLoading,
+    setError,
+    executeAutonomousDecision,
+  });
 
   const endSession = useCallback(() => {
     setSessionState((prev: StudySessionState) => ({

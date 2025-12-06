@@ -15,7 +15,7 @@ const BodySchema = z.object({
  */
 router.post("/", async (req, res) => {
   console.log("Extract text from image request received");
-  
+
   try {
     const parsed = BodySchema.safeParse(req.body);
     if (!parsed.success) {
@@ -27,28 +27,28 @@ router.post("/", async (req, res) => {
     }
 
     const { imageDataUrl } = parsed.data;
-    
-    console.log("Image data received, length:", imageDataUrl.length);
 
-    // Use AI vision model to extract text from the image
+    console.log("Image data received, length:", imageDataUrl.length);
     console.log("Starting AI vision analysis...");
 
     const extractionPrompt = `Analyze this image and extract ALL visible text content.
 
-This appears to be a student's notes or study material. Please:
-1. Extract all text you can see in the image
-2. Preserve the structure and organization of the notes
-3. Include headings, bullet points, and any other formatting cues
-4. If there are diagrams or charts, describe them briefly
+      This appears to be a student's notes or study material. Please:
+      1. Extract all text you can see in the image
+      2. Preserve the structure and organization of the notes
+      3. Include headings, bullet points, and any other formatting cues
+      4. If there are diagrams or charts, describe them briefly
 
-Return the extracted text in a clear, readable format. Do NOT add any commentary or explanations - just return the extracted text content as you see it.`;
+      Return the extracted text in a clear, readable format. Do NOT add any commentary or explanations - just return the extracted text content as you see it.`;
 
     let aiResponse: string;
     try {
-      const base = process.env.AI_BASE_URL ?? "http://ai-snow.reindeer-pinecone.ts.net:9292";
+      const base =
+        process.env.AI_BASE_URL ??
+        "http://ai-snow.reindeer-pinecone.ts.net:9292";
       const url = `${base}/v1/chat/completions`;
       const apiKey = process.env.OPENAI_API_KEY;
-      
+
       const headers: Record<string, string> = {
         "Content-Type": "application/json",
       };
@@ -79,7 +79,7 @@ Return the extracted text in a clear, readable format. Do NOT add any commentary
       });
 
       const responseText = await response.text();
-      
+
       if (!response.ok) {
         console.error("AI API error:", response.status, responseText);
         throw new Error(`AI API error: ${response.status}`);
@@ -87,12 +87,12 @@ Return the extracted text in a clear, readable format. Do NOT add any commentary
 
       const responseJson = JSON.parse(responseText);
       aiResponse = responseJson?.choices?.[0]?.message?.content ?? "";
-      
+
       if (!aiResponse) {
         console.error("No content in AI response");
         throw new Error("No content extracted from image");
       }
-      
+
       console.log("AI Response received, length:", aiResponse.length);
       console.log("Extracted text preview:", aiResponse.substring(0, 200));
     } catch (aiError) {
@@ -109,7 +109,7 @@ Return the extracted text in a clear, readable format. Do NOT add any commentary
     });
   } catch (error) {
     console.error("Extract text from image error:", error);
-    
+
     res.status(500).json({
       error: "Failed to extract text from image",
       details: error instanceof Error ? error.message : "Unknown error",

@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useStudySession } from "../../hooks/study/useStudySession";
-import { SessionStart } from "./SessionStart";
-import { SessionComplete } from "./SessionComplete";
-import { SessionProgress } from "./SessionProgress";
-import { AiActionLogModal } from "./AiActionLogModal";
+import { useStudySession } from "../../../hooks/study/useStudySession";
+import { SessionStart } from "../core/SessionStart";
+import { SessionComplete } from "../state-displays/SessionComplete";
+import { SessionProgress } from "../state-displays/SessionProgress";
+import { AiActionLogModal } from "../ai-actions/AiActionLogModal";
 import { StudySessionHeader } from "./StudySessionHeader";
 import { StudySessionMainCard } from "./StudySessionMainCard";
 
@@ -56,7 +56,6 @@ export function StudySession({
     );
   }
 
-  // Show session start if session hasn't started yet
   if (!sessionState.active) {
     return (
       <SessionStart

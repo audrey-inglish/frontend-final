@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import apiFetch from "../../lib/apiFetch";
+import apiFetch from "../lib/apiFetch";
 import {
   AiActionLogsArraySchema,
   type AiActionLogCreate,
-} from "../../schemas/aiActionLog";
+} from "../schemas/aiActionLog";
 
 export const aiActionLogKeys = {
   all: ["ai-action-logs"] as const,

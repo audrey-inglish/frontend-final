@@ -15,20 +15,16 @@ export function useNoteEditor({ dashboardId }: UseNoteEditorOptions) {
   const deleteNote = useDeleteNote();
   const { extractTextFromImage, isProcessing: isProcessingImage } = useImageToText();
 
-  // Form visibility and edit state
   const [showNoteForm, setShowNoteForm] = useState(false);
   const [editingNoteId, setEditingNoteId] = useState<number | null>(null);
 
-  // Form field state
   const [noteTitle, setNoteTitle] = useState("");
   const [noteContent, setNoteContent] = useState("");
 
-  // Draft key for localStorage - different key for create vs edit
   const draftKey = editingNoteId
     ? `mindset.draft.note.${editingNoteId}`
     : `mindset.draft.dashboard.${dashboardId}`;
 
-  // Load draft from localStorage when opening create form (not edit)
   useEffect(() => {
     if (showNoteForm && !editingNoteId) {
         const draft = localStorage.getItem(draftKey);
@@ -40,12 +36,10 @@ export function useNoteEditor({ dashboardId }: UseNoteEditorOptions) {
     }
   }, [showNoteForm, editingNoteId, draftKey]);
 
-  // Clear draft from localStorage
   const clearDraft = () => {
       localStorage.removeItem(draftKey);
   };
 
-  // Handler: Create a new note
   const handleCreateNote = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -67,7 +61,6 @@ export function useNoteEditor({ dashboardId }: UseNoteEditorOptions) {
     setShowNoteForm(false);
   };
 
-  // Handler: Open edit form with existing note data
   const handleEditNote = (noteId: number, title: string, content: string) => {
     setEditingNoteId(noteId);
     setNoteTitle(title);
@@ -75,7 +68,6 @@ export function useNoteEditor({ dashboardId }: UseNoteEditorOptions) {
     setShowNoteForm(true);
   };
 
-  // Handler: Update an existing note
   const handleUpdateNote = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -97,7 +89,6 @@ export function useNoteEditor({ dashboardId }: UseNoteEditorOptions) {
     setShowNoteForm(false);
   };
 
-  // Handler: Delete a note (with confirmation)
   const handleDeleteNote = async (noteId: number, title: string) => {
     if (!confirm(`Delete note "${title}"?`)) return;
 
@@ -105,7 +96,6 @@ export function useNoteEditor({ dashboardId }: UseNoteEditorOptions) {
     showSuccessToast("Note deleted");
   };
 
-  // Handler: Cancel form and clear state
   const handleCancelNoteForm = () => {
     setShowNoteForm(false);
     setEditingNoteId(null);
@@ -113,12 +103,10 @@ export function useNoteEditor({ dashboardId }: UseNoteEditorOptions) {
     setNoteContent("");
   };
 
-  // Handler: Toggle form visibility
   const handleToggleNoteForm = () => {
     setShowNoteForm(!showNoteForm);
   };
 
-  // Handler: Upload image and extract text
   const handleImageUpload = async (file: File) => {
     const extractedText = await extractTextFromImage(file);
     
@@ -129,7 +117,6 @@ export function useNoteEditor({ dashboardId }: UseNoteEditorOptions) {
 
     setNoteContent(extractedText);
     
-    // Optionally suggest a title if one isn't set
     if (!noteTitle.trim()) {
       setNoteTitle("Notes from Image");
     }

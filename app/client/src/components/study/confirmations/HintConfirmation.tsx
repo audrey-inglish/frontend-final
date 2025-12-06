@@ -1,5 +1,5 @@
-import type { ProvideHintArgs } from '../../lib/studySession.types';
-import { SpinnerIcon, InfoIcon } from '../icons';
+import type { ProvideHintArgs } from '../../../lib/studySession.types';
+import { SpinnerIcon, InfoIcon } from '../../icons';
 
 interface HintConfirmationProps {
   hint: ProvideHintArgs;
