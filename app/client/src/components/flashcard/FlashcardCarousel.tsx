@@ -31,7 +31,7 @@ export function FlashcardCarousel({
           back={card.back}
           id={card.id}
           needsReview={card.needs_review}
-          onToggleReview={onToggleReview}
+          onToggleReview={card.id ? onToggleReview : undefined}
         />
       ))}
     </Carousel>

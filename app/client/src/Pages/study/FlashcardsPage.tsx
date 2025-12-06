@@ -63,6 +63,11 @@ export default function FlashcardsPage() {
   };
 
   const handleToggleReview = (flashcardId: number, currentState: boolean) => {
+    if (!savedFlashcards?.some(card => card.id === flashcardId)) {
+      console.warn('Cannot mark unsaved flashcard');
+      return;
+    }
+    
     markFlashcard.mutate({
       flashcardId,
       needsReview: !currentState,
@@ -80,7 +85,9 @@ export default function FlashcardsPage() {
   const hasFlashcards = flashcards && flashcards.length > 0;
   const markedCount = savedFlashcards?.filter((card) => card.needs_review).length ?? 0;
 
-  const isFlashcardsLoading = flashcardsLoading && !savedFlashcards && !flashcardGenerator.flashcards;
+  // Only show loading spinner if we're loading AND don't have dashboard data yet
+  // This allows the empty state to show immediately
+  const isFlashcardsLoading = flashcardsLoading && !hasFlashcards && dashboardLoading;
 
   return (
     <ProtectedRoute>
