@@ -73,7 +73,7 @@ export default function FlashcardsPage() {
     setCurrentIndex(0);
   };
 
-  const isLoading = dashboardLoading || notesLoading || flashcardsLoading;
+  const isLoading = dashboardLoading || notesLoading || flashcardsLoading || flashcardGenerator.isGenerating;
   // Prefer saved flashcards (with IDs) over freshly generated ones
   const flashcards = savedFlashcards ?? flashcardGenerator.flashcards ?? [];
   const hasFlashcards = flashcards && flashcards.length > 0;

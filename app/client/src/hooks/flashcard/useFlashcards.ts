@@ -80,9 +80,9 @@ export function useGenerateFlashcards() {
         flashcard_set: flashcardSet,
       };
     },
-    onSuccess: (_, variables) => {
+    onSuccess: async (_, variables) => {
       if (variables.dashboard_id) {
-        queryClient.invalidateQueries({
+        await queryClient.invalidateQueries({
           queryKey: flashcardKeys.list(variables.dashboard_id),
         });
       }
