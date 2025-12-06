@@ -76,12 +76,12 @@ export default function FlashcardsPage() {
   };
 
   // Prefer saved flashcards (with IDs) over freshly generated ones
-  const flashcards = savedFlashcards ?? flashcardGenerator.flashcards ?? [];
+  // Use savedFlashcards if we have them AND they're not empty, otherwise fall back to generated ones
+  const flashcards = (savedFlashcards && savedFlashcards.length > 0) 
+    ? savedFlashcards 
+    : (flashcardGenerator.flashcards ?? []);
   const hasFlashcards = flashcards && flashcards.length > 0;
   const markedCount = savedFlashcards?.filter((card) => card.needs_review).length ?? 0;
-
-  // Only show loading spinner if we're loading AND don't have dashboard data yet
-  // This allows the empty state to show immediately
   const isFlashcardsLoading = flashcardsLoading && !hasFlashcards && dashboardLoading;
 
   return (

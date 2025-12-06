@@ -24,6 +24,7 @@ router.post("/", async (req, res) => {
   }
 
   const { text, dashboard_id } = parsed.data;
+  console.log(`[generateFlashcards] Received request with dashboard_id: ${dashboard_id}`);
   const client = getOpenAIClient();
   const model = process.env.OPENAI_MODEL ?? "gpt-oss-120b";
 
@@ -89,6 +90,7 @@ Return ONLY a JSON array. Each array item must be an object with keys:
     }
 
     if (dashboard_id) {
+      console.log(`[generateFlashcards] Saving ${validated.data.length} flashcards to database for dashboard ${dashboard_id}`);
       try {
         // Verify dashboard exists
         const dashboard = await db.oneOrNone(
@@ -137,6 +139,7 @@ Return ONLY a JSON array. Each array item must be an object with keys:
           });
         }
 
+        console.log(`[generateFlashcards] Successfully saved ${savedFlashcards.length} flashcards to database`);
   return res.json({ flashcard_set: flashcardSet as FlashcardSetType, flashcards: savedFlashcards });
       } catch (dbErr) {
         const message = dbErr instanceof Error ? dbErr.message : String(dbErr);
@@ -150,6 +153,7 @@ Return ONLY a JSON array. Each array item must be an object with keys:
       }
     }
 
+    console.log(`[generateFlashcards] No dashboard_id provided, returning ${validated.data.length} unsaved flashcards`);
     return res.json({ flashcards: validated.data });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
