@@ -1,5 +1,4 @@
 interface FlashcardActionButtonsProps {
-  onBack: () => void;
   onRegenerate: () => Promise<void>;
   isGenerating: boolean;
   disableRegenerate?: boolean;
@@ -7,7 +6,6 @@ interface FlashcardActionButtonsProps {
 }
 
 export function FlashcardActionButtons({
-  onBack,
   onRegenerate,
   isGenerating,
   disableRegenerate = false,
@@ -17,13 +15,10 @@ export function FlashcardActionButtons({
 
   return (
     <div className={`flex justify-center gap-4 ${className}`}>
-      <button onClick={() => onBack()} className="btn-secondary bg-accent-200 text-blue-white hover:bg-accent-300">
-        Back to Dashboard
-      </button>
       <button
         onClick={() => onRegenerate()}
         disabled={regenDisabled}
-        className="btn-secondary bg-accent-200 text-blue-white hover:bg-accent-300"
+        className="btn-secondary bg-accent-200 text-blue-white hover:bg-accent-300 w-full"
       >
         {isGenerating ? "Regenerating..." : "Regenerate Flashcards"}
       </button>

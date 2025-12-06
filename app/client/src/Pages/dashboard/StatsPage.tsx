@@ -33,7 +33,6 @@ export default function StatsPage() {
 
           {!isLoading && dashboard && stats && (
             <>
-              {/* Header */}
               <div className="mb-8">
                 <h1 className="text-3xl font-bold text-primary-800 mb-2">
                   Statistics: {dashboard.title}
@@ -43,7 +42,6 @@ export default function StatsPage() {
                 </p>
               </div>
 
-              {/* No data state */}
               {stats.total_quizzes === 0 ? (
                 <div className="card p-12 text-center">
                   <div className="text-neutral-400 mb-4">
@@ -64,7 +62,6 @@ export default function StatsPage() {
                 </div>
               ) : (
                 <>
-                  {/* Stats Cards Grid */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <StatsCard
                       title="Total Quizzes"
@@ -99,13 +96,11 @@ export default function StatsPage() {
                     />
                   </div>
 
-                  {/* Charts and Lists Grid */}
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                     <ScoreHistoryChart data={stats.score_history} />
                     <RecentQuizzesList quizzes={stats.recent_quizzes} />
                   </div>
 
-                  {/* Action Buttons */}
                   <div className="flex gap-4 justify-center">
                     <button
                       onClick={() => navigate(`/dashboard/${dashboardId}`)}

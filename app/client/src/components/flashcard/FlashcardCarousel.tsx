@@ -18,6 +18,7 @@ export function FlashcardCarousel({
   onToggleReview,
 }: FlashcardCarouselProps) {
   return (
+    <div className="mt-8">
     <Carousel
       currentIndex={currentIndex}
       onPrevious={onPrevious}
@@ -34,5 +35,6 @@ export function FlashcardCarousel({
         />
       ))}
     </Carousel>
+    </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router";
+import { useParams } from "react-router";
 import { useAuth } from "react-oidc-context";
 import {
   useGetDashboard,
@@ -14,14 +14,12 @@ import {
   FlashcardEmptyState,
   FlashcardFilter,
   FlashcardCarousel,
-  FlashcardActionButtons,
 } from "../../components/flashcard";
 
 type FlashcardFilter = "all" | "marked";
 
 export default function FlashcardsPage() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const dashboardId = Number(id);
   const auth = useAuth();
 
@@ -91,7 +89,12 @@ export default function FlashcardsPage() {
 
           {!isLoading && dashboard && (
             <>
-              <FlashcardPageHeader dashboardTitle={dashboard.title} />
+              <FlashcardPageHeader 
+                dashboardTitle={dashboard.title} 
+                dashboardId={dashboardId}
+                onRegenerate={hasFlashcards ? handleGenerateFlashcards : undefined}
+                isGenerating={flashcardGenerator.isGenerating}
+              />
 
               {!hasFlashcards ? (
                 <FlashcardEmptyState
@@ -100,7 +103,7 @@ export default function FlashcardsPage() {
                   hasNotes={!!notes && notes.length > 0}
                 />
               ) : (
-                <div className="space-y-6">
+                <div className="space-y-2">
                   {savedFlashcards && savedFlashcards.length > 0 && (
                     <FlashcardFilter
                       filter={filter}
@@ -115,14 +118,6 @@ export default function FlashcardsPage() {
                     onPrevious={handlePrevious}
                     onNext={handleNext}
                     onToggleReview={handleToggleReview}
-                  />
-
-                  <FlashcardActionButtons
-                    onBack={() => navigate(`/dashboard/${dashboardId}`)}
-                    onRegenerate={handleGenerateFlashcards}
-                    isGenerating={flashcardGenerator.isGenerating}
-                    disableRegenerate={false}
-                    className="mt-6"
                   />
                 </div>
               )}
